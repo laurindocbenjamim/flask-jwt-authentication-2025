@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <script>
+        // Load external components
+        function loadComponent(url, elementId) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                })
+                .catch(error => console.error('Error loading component:', error));
+        }
+
+        // Load navbar and body content
+        //loadComponent('navbar.html', 'navbar');
+        //loadComponent('body-content.html', 'body-content');
+
+
+        
+    </script>
+    <style>
+        #body-content{
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- navbar.html -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#"><i class="fas fa-home"></i> Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link btn-outline-primary" ><i class="fas fa-user"></i> <span id="username">Username</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-link" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="body-content" class="container mt-5">
+        <style>
+            .cube-container {
+                perspective: 1000px;
+            }
+
+            .cube {
+                position: relative;
+                width: 200px;
+                transform-style: preserve-3d;
+                transform: rotateX(-30deg) rotateY(-45deg);
+                animation: rotate 10s infinite linear;
+            }
+
+            .cube div {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                background: rgba(255, 255, 255, 0.9);
+                border: 1px solid #ccc;
+                line-height: 200px;
+                font-size: 40px;
+                text-align: center;
+            }
+
+            .front {
+                transform: translateZ(100px);
+            }
+
+            .back {
+                transform: rotateY(180deg) translateZ(100px);
+            }
+
+            .right {
+                transform: rotateY(90deg) translateZ(100px);
+            }
+
+            .left {
+                transform: rotateY(-90deg) translateZ(100px);
+            }
+
+            .top {
+                transform: rotateX(90deg) translateZ(100px);
+            }
+
+            .bottom {
+                transform: rotateX(-90deg) translateZ(100px);
+            }
+
+            @keyframes rotate {
+                from {
+                    transform: rotateX(-30deg) rotateY(-45deg);
+                }
+
+                to {
+                    transform: rotateX(-30deg) rotateY(315deg);
+                }
+            }
+        </style>
+
+        <div class="cube-container">
+            <div class="cube">
+                <div class="front">1</div>
+                <div class="back">2</div>
+                <div class="right">3</div>
+                <div class="left">4</div>
+                <div class="top">5</div>
+                <div class="bottom">6</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const usernameSpan = document.getElementById('username')
+        const loginLink = document.getElementById('login-link')
+        const logoutLink = document.getElementById('logout-link')
+        const userID = localStorage.getItem('user_id')
+        const userName= localStorage.getItem('username')
+        const fullName = localStorage.getItem('fullname')
+
+        if(userName){
+            loginLink.style.display='none'
+            logoutLink.style.display='block'
+            usernameSpan.textContent=`${fullName} [${userName}]`;
+        }else{
+            alert(userName)
+        }
+
+        loginLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            alert("OOiii")
+            //loadComponent('login.html', 'body-content');
+        });
+
+        logoutLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            //loadComponent('logout.html', 'body-content');
+        });
+
+        function logout() {
+        localStorage.removeItem('jwtToken');
+        }
+
+    </script>
+</body>
+
+</html>

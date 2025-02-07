@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Cookies Authentication</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="mt-5">Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <h2 class="mt-5">Test JWT TOken</h2>
+        <form id="jwtTestForm">
+            <div class="form-group">
+                <label for="token">JWT Token</label>
+                <input type="text" class="form-control" id="token" name="token" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Validate</button>
+        </form>
+
+        <div id="adminArea" class="mt-5" style="display: none;">
+            <h2>Admin Area</h2>
+            <button id="testProtectionButton" class="btn btn-success">Test protection</button>
+            <button id="logoutButton" class="btn btn-danger">Logout</button>
+            <h3 class="mt-3">User Data</h3>
+            <pre id="userData"></pre>
+        </div>
+    </div>
+
+    <script>
+
+        class AuthUser{
+
+            async login(options) {
+                await fetch('/login_with_cookies', options);
+            }
+
+            async logout(options) {
+                await fetch('/logout_with_cookies', options);
+            }
+
+            async getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            async makeRequestWithJWT() {
+                const options = {
+                    method: 'post',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+                    },
+                };
+                const response = await fetch('/protected', options);
+                const result = await response.json();
+                return result; 
+            }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate login and get JWT token
+            const token = 'your-jwt-token'; // Replace with actual token from server
+
+            localStorage.setItem('jwtToken', token);
+            const endpoint = 'http://localhost:5000';
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            });
+            const formData = JSON.stringify({ "username": username, "password": password });
+
+            fetchUserData('POST', endpoint, formData, headers)
+            showAdminArea();
+        });
+
+        document.getElementById('jwtTestForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const token = document.getElementById('token').value;
+
+            const endpoint = 'http://localhost:5000/test-token';
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${encodeURIComponent(token)}`
+            });
+            const formData = JSON.stringify({ "token": jwtTestForm });
+
+            fetchUserData('POST', endpoint, formData, headers)
+        })
+
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            localStorage.removeItem('jwtToken');
+            document.getElementById('adminArea').style.display = 'none';
+        });
+
+        document.getElementById('testProtectionButton').addEventListener('click', (event) => {
+            event.preventDefault()
+            const token = localStorage.getItem('jwtToken');
+
+            const endpoint = 'http://localhost:5000/protected';
+            const headers = new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${encodeURIComponent(token)}`
+            });
+            const formData = null;
+
+            fetchUserData('GET', endpoint, formData, headers)
+        })
+
+        function showAdminArea() {
+            const token = localStorage.getItem('jwtToken');
+            if (token) {
+                document.getElementById('adminArea').style.display = 'block';
+                //fetchUserData(token);
+            }
+        }
+
+        function fetchUserDat(token) {
+            // Simulate fetching user data
+            const userData = {
+                username: 'admin',
+                email: 'admin@example.com'
+            };
+
+            document.getElementById('userData').textContent = JSON.stringify(userData, null, 2);
+        }
+
+        // Check if user is already logged in
+        if (localStorage.getItem('jwtToken')) {
+            showAdminArea();
+        }
+
+        function fetchUserData(method, endpoint, formData, headers) {
+            const request = method === 'POST' ? {
+                method: method,
+                body: formData,
+                headers: headers
+            } : {
+                method: method,
+                headers: headers
+            };
+
+            fetch(endpoint, request)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.access_token) {
+                        localStorage.setItem('jwtToken', data.access_token)
+                        document.getElementById('token').value = data.access_token;
+                    } else if (data.id) {
+                        localStorage.setItem('user_id', data.id)
+                        localStorage.setItem('username', data.username)
+                        localStorage.setItem('fullname', data.full_name)
+
+                        //alert(`ID: ${data.id}_ Username: ${data.username}__" Fullname: ${data.full_name}`)
+                        window.location.href = '/admin.html'
+                    }
+                    document.getElementById('userData').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
