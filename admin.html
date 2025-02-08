@@ -7,7 +7,7 @@
     <title>Main Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
+    <script src="components.js"></script>
     <script>
         // Load external components
         function loadComponent(url, elementId) {
@@ -134,6 +134,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+
+const auth = new AuthJWTNoCookies()
+
         const usernameSpan = document.getElementById('username')
         const loginLink = document.getElementById('login-link')
         const logoutLink = document.getElementById('logout-link')

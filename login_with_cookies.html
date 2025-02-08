@@ -23,16 +23,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
 
-        <h2 class="mt-5">Test JWT TOken</h2>
-        <form id="jwtTestForm">
-            <div class="form-group">
-                <label for="token">JWT Token</label>
-                <input type="text" class="form-control" id="token" name="token" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Validate</button>
-        </form>
-
-        <div id="adminArea" class="mt-5" style="display: none;">
+        <div id="adminArea" class="mt-5" style="display: ;">
             <h2>Admin Area</h2>
             <button id="testProtectionButton" class="btn btn-success">Test protection</button>
             <button id="logoutButton" class="btn btn-danger">Logout</button>
@@ -43,14 +34,24 @@
 
     <script>
 
-        class AuthUser{
-
+        class AuthUser {
+            constructor() {
+                this.baseURL = window.location.origin;
+                this.serverEndpoint = 'http://localhost:5000';
+            }
             async login(options) {
-                await fetch('/login_with_cookies', options);
+                const response = await fetch(`${this.serverEndpoint}/login-w-cookies`, options);
+                return response.json();
+            }
+
+            async makeRequest(options, endpoint) {
+                const response = await fetch(`${this.serverEndpoint}/${endpoint}`, options);
+                return response.json();
             }
 
             async logout(options) {
-                await fetch('/logout_with_cookies', options);
+                const response = fetch(`${this.serverEndpoint}/logout_with_cookies`, options);
+                return response.json();
             }
 
             async getCookie(name) {
@@ -64,67 +65,130 @@
                     method: 'post',
                     credentials: 'same-origin',
                     headers: {
-                        'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+                        'X-CSRF-TOKEN': await this.getCookie('csrf_access_token'),
                     },
                 };
-                const response = await fetch('/protected', options);
-                const result = await response.json();
-                return result; 
-            }
+                //try {
+                    const response = await fetch(`${this.serverEndpoint}/protected`, options);
+                    
+                    const result = await response.json();
+                    return result;
+                //} catch (error) {
+                    //console.error('Error making request with JWT:', error);
+                    //return { error: error.message };
+                //}
+                //return result;
+            };
+
+            async handlingErrors(response){
+                let errorMessage = "";
+                if (!response.ok) {
+                        
+                        switch (response.status) {
+                            case 400:
+                                errorMessage = 'Bad Request';
+                                break;
+                            case 401:
+                                errorMessage = 'Unauthorized';
+                                break;
+                            case 415:
+                                errorMessage = 'Unsupported Media Type';
+                                break;
+                            case 422:
+                                errorMessage = 'Unprocessable Entity';
+                                break;
+                            case 423:
+                                errorMessage = 'Locked';
+                                break;
+                            case 500:
+                                errorMessage = 'Internal Server Error';
+                                break;
+                            default:
+                                errorMessage = `HTTP error! status: ${response.status}`;
+                        }
+                        return errorMessage
+                    }
+            };
         };
 
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
+        const auth = new AuthUser();
+
+        document.getElementById('loginForm').addEventListener('submit', async (event)=> {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Simulate login and get JWT token
-            const token = 'your-jwt-token'; // Replace with actual token from server
-
-            localStorage.setItem('jwtToken', token);
-            const endpoint = 'http://localhost:5000';
-            const headers = new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            });
             const formData = JSON.stringify({ "username": username, "password": password });
 
-            fetchUserData('POST', endpoint, formData, headers)
-            showAdminArea();
+            const options = {
+                    method: 'post',
+                    body: formData,
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Login with cookies tarting...")
+            const response = await auth.login(options)
+            console.log(response)
+            if(!response.ok){
+                const message = await auth.handlingErrors(response)
+                console.log(message)  
+                console.error("Login failed!")
+                
+            }else{
+                console.log("Login successfull!")
+            }             
+            console.log('Process  finished!')
         });
 
-        document.getElementById('jwtTestForm').addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const token = document.getElementById('token').value;
-
-            const endpoint = 'http://localhost:5000/test-token';
-            const headers = new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${encodeURIComponent(token)}`
-            });
-            const formData = JSON.stringify({ "token": jwtTestForm });
-
-            fetchUserData('POST', endpoint, formData, headers)
-        })
-
-        document.getElementById('logoutButton').addEventListener('click', function () {
-            localStorage.removeItem('jwtToken');
-            document.getElementById('adminArea').style.display = 'none';
-        });
-
-        document.getElementById('testProtectionButton').addEventListener('click', (event) => {
+        document.getElementById('logoutButton').addEventListener('click', async () =>{
             event.preventDefault()
-            const token = localStorage.getItem('jwtToken');
+            const options = {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: JSON.stringify({"action": "logout"}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Logout process with cookies tarting...")
+            const endpoint = 'logout_with_cookies';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+            if(!response.ok){
+                const message = await auth.handlingErrors(response)
+                console.log(message)  
+                console.error("Logout process failed!")                
+            }else{
+                console.log("Logout process done successfully!")
+            }             
+            console.log('Process  finished!')
+        });
 
-            const endpoint = 'http://localhost:5000/protected';
-            const headers = new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${encodeURIComponent(token)}`
-            });
-            const formData = null;
-
-            fetchUserData('GET', endpoint, formData, headers)
+        document.getElementById('testProtectionButton').addEventListener('click', async(event) => {
+            event.preventDefault()
+            const options = {
+                    method: 'get',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Accessing protected route with cookies tarting...")
+            const endpoint = 'protected';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+            if(!response.ok){
+                const message = await auth.handlingErrors(response)
+                console.log(message)                
+            }else{
+                console.log("Accessed protected successfully!")
+            }             
+            console.log('Process  finished!')
         })
 
         function showAdminArea() {
@@ -145,10 +209,7 @@
             document.getElementById('userData').textContent = JSON.stringify(userData, null, 2);
         }
 
-        // Check if user is already logged in
-        if (localStorage.getItem('jwtToken')) {
-            showAdminArea();
-        }
+       
 
         function fetchUserData(method, endpoint, formData, headers) {
             const request = method === 'POST' ? {
