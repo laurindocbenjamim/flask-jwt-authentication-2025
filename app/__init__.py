@@ -21,60 +21,12 @@ from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
+from app.config import Config, db
+from app.models import User, TokenBlocklist, TokenBlocklist2
+from app.blueprints import auth_api, admin_api
+from app.routes import routes
 
 app = Flask(__name__)
-
-db = SQLAlchemy()
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Text, nullable=False, unique=True)
-    full_name = db.Column(db.Text, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
-
-    # NOTE: In a real application make sure to properly hash and salt passwords
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)   
-     
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "password": self.password_hash,
-            "full_name": self.full_name,
-        }
-
-
-# This could be expanded to fit the needs of your application. For example,
-# it could track who revoked a JWT, when a token expires, notes for why a
-# JWT was revoked, an endpoint to un-revoked a JWT, etc.
-# Making jti an index can significantly speed up the search when there are
-# tens of thousands of records. Remember this query will happen for every
-# (protected) request,
-# If your database supports a UUID type, this can be used for the jti column
-# as well
-class TokenBlocklist(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    jti = db.Column(db.String(36), nullable=False, index=True)
-    type = db.Column(db.String(16), nullable=False)
-    user_id = db.Column(
-        db.ForeignKey('user.id'),
-        default=lambda: current_user.id,
-        nullable=False,
-    )
-    created_at = db.Column(
-        db.DateTime,
-        server_default=func.now(),
-        nullable=False,
-    )
-
-class TokenBlocklist2(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    jti = db.Column(db.String(36), nullable=False, index=True)
-    created_at = db.Column(
-        db.DateTime,
-        nullable=False,
-    )
 
 
 def create_app():
@@ -100,6 +52,7 @@ def create_app():
 
     CORS(app, supports_credentials=True, 
          resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
+                    r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/test-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/protected": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
@@ -107,6 +60,10 @@ def create_app():
     
     jwt_ex = JWTManager(app)
 
+
+    # Binding the blueprint Views
+    app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
+    app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     # Using the additional_claims_loader, we can specify a method that will be
     # called when creating JWTs. The decorated method must take the identity
     # we are creating a token for and return a dictionary of additional
@@ -156,133 +113,8 @@ def create_app():
 
         return token is not None
 
-
-    @app.route('/', methods=['GET', 'POST'])
-    def login_without_cookies():
-
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
-        
-
-        user = User.query.filter_by(username=username).one_or_none()
-        if not user or not user.check_password(password):
-            return jsonify({"error": "Wrong username or password", "user": user.to_dict()}), 401
-        # Generate a JWT token
-       
-        access_token = create_access_token(identity=str(user.id))
-
-        return make_response(jsonify({"secret_key": secret_key, 
-                                      "access_token": access_token,
-                                      "username": username
-                                      }),200)
-    
-    # Login with cookie
-    @app.route('/login-w-cookies', methods=['GET', 'POST'])
-    def login_with_cookies():
-        response = jsonify({"msg": "login successful"}), 200
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
-        
-
-        user = User.query.filter_by(username=username).one_or_none()
-        if not user or not user.check_password(password):
-            return jsonify({"error": "Wrong username or password", "user": user.to_dict()}), 401
-        # Generate a JWT token
-       
-        access_token = create_access_token(identity=str(user.id))
-
-        response = make_response(jsonify({"status_code": 200,
-                                      "username": username
-                                      }),200)
-        set_access_cookies(response, access_token)
-        return response
-    
-    # Logout with cookies
-    @app.route("/logout_with_cookies", methods=["GET", "POST"])
-    def logout_with_cookies():
-        response = jsonify({'msg':"logout successful", 'status_code':200})
-        unset_jwt_cookies(response)
-        return response
-
-    # Endpoint for revoking the current users access token. Saved the unique
-    # identifier (jti) for the JWT into our database.
-    @app.route("/logout-with-revoking-token", methods=["GET", "POST"])
-    @jwt_required()
-    def modify_token():
-        jti = get_jwt()["jti"]
-        now = datetime.now(timezone.utc)
-        try:
-            db.session.add(TokenBlocklist2(jti=jti, created_at=now))
-            db.session.commit()
-        except Exception as e:
-            return jsonify(error=str(e))
-        response = jsonify(msg="JWT revoked", time=now, jtid=jti)
-        #unset_jwt_cookies(response)
-        return response
-
-    @app.route("/logout_with_revoking_token_2", methods=["get", "post"])
-    @jwt_required(verify_type=False)
-    def modify_token_2():
-        token = get_jwt()
-        jti = token["jti"]
-        ttype = token["type"]
-        now = datetime.now(timezone.utc)
-       
-
-        try:
-            db.session.add(TokenBlocklist(jti=jti, type=ttype, created_at=now))
-            db.session.commit()
-            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!")
-        except Exception as e:
-            return jsonify(error=str(e))        
-        
-        #unset_jwt_cookies(response)
-        return response
-
-
-    @app.route('/protected', methods=['GET'])
-    @jwt_required()
-    def ptotected():
-        
-        claims = get_jwt()
-        response = make_response(jsonify(
-            status_code=200,
-            foo="bar",
-            message="Welcome to protected route!",
-            claims=claims,
-            id=current_user.id,
-            full_name=current_user.full_name,
-            username=current_user.username,
-            ), 200)
-
-        return response
-
-    @app.route("/only_headers")
-    @jwt_required(locations=["headers"])
-    def only_headers():
-        return jsonify(foo="baz")
-
-    @app.route('/test-token', methods=['POST'])
-    def test_jwt_token():
-        data = request.get_json()
-
-        token = data.get('token')
-
-        # Replace this with the token generated in Flask
-        if(not token):
-            return f"Token is required!"
-
-        # Replace with the same secret key you used in Flask
-
-        try:
-            decoded = jwt.decode(token, secret_key, algorithms=["HS256"])
-            return jsonify({'token_received': token, 'decoded': decoded})
-        except jwt.ExpiredSignatureError as e:
-            return f"❌ Token has expired {str(e)}"
-        except jwt.InvalidTokenError as e:
-            return f"❌ Token is invalid {str(e)}"
+    # Call generic routes
+    routes(app, secret_key)
 
     
     return app

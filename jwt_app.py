@@ -4,7 +4,9 @@ import sqlalchemy
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from app import create_app, db, User, TokenBlocklist
+from app.config import db
+from app.models import User, TokenBlocklist
+from app import create_app
 #from app.models import User
 from werkzeug.security import generate_password_hash
 
