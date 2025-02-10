@@ -17,6 +17,7 @@ from flask_jwt_extended import (
     set_access_cookies,
     unset_jwt_cookies
 )
+from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
@@ -55,9 +56,19 @@ class User(db.Model):
 class TokenBlocklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36), nullable=False, index=True)
-    created_at = db.Column(db.DateTime, nullable=False)
-    
-    
+    type = db.Column(db.String(16), nullable=False)
+    user_id = db.Column(
+        db.ForeignKey('user.id'),
+        default=lambda: current_user.id,
+        nullable=True,
+    )
+    created_at = db.Column(
+        db.DateTime,
+        server_default=func.now(),
+        nullable=True,
+    )
+
+
 def create_app():
     
     ACCESS_EXPIRES = timedelta(minutes=30) # Default: timedelta(minutes=15)
@@ -128,6 +139,14 @@ def create_app():
         identity = jwt_data["sub"]
         return User.query.filter_by(id=identity).one_or_none()
 
+    # Callback function to check if a JWT exists in the database blocklist
+    @jwt_ex.token_in_blocklist_loader
+    def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+        jti = jwt_payload["jti"]
+        token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
+
+        return token is not None
+
 
     @app.route('/', methods=['GET', 'POST'])
     def login_without_cookies():
@@ -177,6 +196,35 @@ def create_app():
         response = jsonify({'msg':"logout successful", 'status_code':200})
         unset_jwt_cookies(response)
         return response
+
+    # Endpoint for revoking the current users access token. Saved the unique
+    # identifier (jti) for the JWT into our database.
+    @app.route("/logout_with_revoking_token", methods=["DELETE"])
+    @jwt_required()
+    def modify_token():
+        jti = get_jwt()["jti"]
+        now = datetime.now(timezone.utc)
+        db.session.add(TokenBlocklist(jti=jti, created_at=now))
+        db.session.commit()
+
+        response = jsonify(msg="JWT revoked")
+        #unset_jwt_cookies(response)
+        return response
+
+    @app.route("/logout_with_revoking_token_2", methods=["DELETE"])
+    @jwt_required(verify_type=False)
+    def modify_token_2():
+        token = get_jwt()
+        jti = token["jti"]
+        ttype = token["type"]
+        now = datetime.now(timezone.utc)
+        db.session.add(TokenBlocklist(jti=jti, type=ttype, created_at=now))
+        db.session.commit()
+        
+        response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked")
+        #unset_jwt_cookies(response)
+        return response
+
 
     @app.route('/protected', methods=['GET'])
     @jwt_required()

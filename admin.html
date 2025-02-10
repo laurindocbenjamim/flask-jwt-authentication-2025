@@ -179,8 +179,36 @@
         } else {
 
         }
-
+        
         logoutLink.addEventListener('click', async (event) => {
+            event.preventDefault();
+            localStorage.clear()
+            const options = {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: JSON.stringify({"action": "logout"}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Logout process with cookies tarting...")
+            const endpoint = 'logout_with_cookies';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+            if(!response.ok){
+                const message = await auth.handlingErrors(response)
+                console.log(message)  
+                console.error("Logout process failed!")                
+            }else{
+                console.log("Logout process done successfully!")
+            }   
+            //window.location.href = auth.baseURL + '/login_with_cookies.html'          
+            console.log('Process  finished!')
+        });
+
+
+        /* logoutLink.addEventListener('click', async (event) => {
             event.preventDefault();
             localStorage.clear()
             const options = {
@@ -205,9 +233,7 @@
             }   
             window.location.href = auth.baseURL + '/login_with_cookies.html'          
             console.log('Process  finished!')
-        });
-
-
+        });*/
 
     </script>
 </body>

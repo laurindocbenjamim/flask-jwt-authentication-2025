@@ -1,7 +1,10 @@
 
 
 import sqlalchemy
-from app import create_app, db, User
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
+from app import create_app, db, User, TokenBlocklist
 #from app.models import User
 from werkzeug.security import generate_password_hash
 
@@ -18,6 +21,11 @@ if __name__ == '__main__':
             db.session.add(User(full_name="Ann Takamaki", username="panther", password_hash=generate_password_hash("1234")))
             db.session.add(User(full_name="Jester Lavore", username="little_sapphire", password_hash=generate_password_hash("1234")))
             db.session.commit()
+
+            now = datetime.now(timezone.utc)
+            db.session.add(TokenBlocklist(jti='jti', created_at=now))
+            db.session.commit()
+
         except sqlalchemy.exc.IntegrityError as e:
             db.session.rollback()
             print(f"=> This user already exists. \nError: {str(e)}")
