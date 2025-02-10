@@ -8,26 +8,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="components.js"></script>
+
     <script>
-        // Load external components
-        function loadComponent(url, elementId) {
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                })
-                .catch(error => console.error('Error loading component:', error));
-        }
 
-        // Load navbar and body content
-        //loadComponent('navbar.html', 'navbar');
-        //loadComponent('body-content.html', 'body-content');
-
-
-        
     </script>
     <style>
-        #body-content{
+        #body-content {
             background-color: black;
         }
     </style>
@@ -45,13 +31,15 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link btn-outline-primary" ><i class="fas fa-user"></i> <span id="username">Username</span></a>
+                    <a class="nav-link btn-outline-primary"><i class="fas fa-user"></i> <span
+                            id="username">Username</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a class="nav-link" href="login_with_cookies.html" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="logout-link" style="display: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <a class="nav-link" href="#" id="logout-link" style="display: none;"><i
+                            class="fas fa-sign-out-alt"></i> Logout</a>
                 </li>
             </ul>
         </div>
@@ -135,37 +123,91 @@
 
     <script>
 
-const auth = new AuthJWTNoCookies()
+
 
         const usernameSpan = document.getElementById('username')
         const loginLink = document.getElementById('login-link')
         const logoutLink = document.getElementById('logout-link')
+
+
+        const auth = new AuthUser();
+
+        async function getUserData() {
+            
+            const options = {
+                    method: 'get',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Accessing protected route with cookies tarting...")
+            const endpoint = 'protected';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+           
+            if(!response.ok && !response.status_code){
+                const message = await auth.handlingErrors(response)
+                console.log(message)     
+                window.location.href = auth.baseURL + '/login_with_cookies.html'           
+            }else{
+                if(response.status_code ===200){
+                    localStorage.setItem('user_id', response.id)
+                        localStorage.setItem('username', response.username)
+                        localStorage.setItem('fullname', response.full_name)
+                    //window.location.href = auth.baseURL + '/admin.html'
+                    console.log("Accessed protected successfully!")
+                }else if(response.status_code===401 || response.status_code===422){
+                    window.location.href = auth.baseURL + '/login_with_cookies.html'
+                }
+                
+            }             
+            console.log('Process  finished!')
+       
+        }
+        getUserData();
+
         const userID = localStorage.getItem('user_id')
-        const userName= localStorage.getItem('username')
+        const userName = localStorage.getItem('username')
         const fullName = localStorage.getItem('fullname')
 
-        if(userName){
-            loginLink.style.display='none'
-            logoutLink.style.display='block'
-            usernameSpan.textContent=`${fullName} [${userName}]`;
-        }else{
-            alert(userName)
+        if (userName) {
+            loginLink.style.display = 'none'
+            logoutLink.style.display = 'block'
+            usernameSpan.textContent = `${fullName} [${userName}]`;
+        } else {
+
         }
 
-        loginLink.addEventListener('click', function (event) {
+        logoutLink.addEventListener('click', async (event) => {
             event.preventDefault();
-            alert("OOiii")
-            //loadComponent('login.html', 'body-content');
+            localStorage.clear()
+            const options = {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: JSON.stringify({"action": "logout"}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                    },
+                };
+            console.log("Logout process with cookies tarting...")
+            const endpoint = 'logout_with_cookies';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+            if(!response.ok){
+                const message = await auth.handlingErrors(response)
+                console.log(message)  
+                console.error("Logout process failed!")                
+            }else{
+                console.log("Logout process done successfully!")
+            }   
+            window.location.href = auth.baseURL + '/login_with_cookies.html'          
+            console.log('Process  finished!')
         });
 
-        logoutLink.addEventListener('click', function (event) {
-            event.preventDefault();
-            //loadComponent('logout.html', 'body-content');
-        });
 
-        function logout() {
-        localStorage.removeItem('jwtToken');
-        }
 
     </script>
 </body>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JWT Cookies Authentication</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="components.js"></script>
 </head>
 
 <body>
@@ -34,83 +35,7 @@
 
     <script>
 
-        class AuthUser {
-            constructor() {
-                this.baseURL = window.location.origin;
-                this.serverEndpoint = 'http://localhost:5000';
-            }
-            async login(options) {
-                const response = await fetch(`${this.serverEndpoint}/login-w-cookies`, options);
-                return response.json();
-            }
-
-            async makeRequest(options, endpoint) {
-                const response = await fetch(`${this.serverEndpoint}/${endpoint}`, options);
-                return response.json();
-            }
-
-            async logout(options) {
-                const response = fetch(`${this.serverEndpoint}/logout_with_cookies`, options);
-                return response.json();
-            }
-
-            async getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
-
-            async makeRequestWithJWT() {
-                const options = {
-                    method: 'post',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-CSRF-TOKEN': await this.getCookie('csrf_access_token'),
-                    },
-                };
-                //try {
-                    const response = await fetch(`${this.serverEndpoint}/protected`, options);
-                    
-                    const result = await response.json();
-                    return result;
-                //} catch (error) {
-                    //console.error('Error making request with JWT:', error);
-                    //return { error: error.message };
-                //}
-                //return result;
-            };
-
-            async handlingErrors(response){
-                let errorMessage = "";
-                if (!response.ok) {
-                        
-                        switch (response.status) {
-                            case 400:
-                                errorMessage = 'Bad Request';
-                                break;
-                            case 401:
-                                errorMessage = 'Unauthorized';
-                                break;
-                            case 415:
-                                errorMessage = 'Unsupported Media Type';
-                                break;
-                            case 422:
-                                errorMessage = 'Unprocessable Entity';
-                                break;
-                            case 423:
-                                errorMessage = 'Locked';
-                                break;
-                            case 500:
-                                errorMessage = 'Internal Server Error';
-                                break;
-                            default:
-                                errorMessage = `HTTP error! status: ${response.status}`;
-                        }
-                        return errorMessage
-                    }
-            };
-        };
-
+       
         const auth = new AuthUser();
 
         document.getElementById('loginForm').addEventListener('submit', async (event)=> {
@@ -132,13 +57,16 @@
             console.log("Login with cookies tarting...")
             const response = await auth.login(options)
             console.log(response)
-            if(!response.ok){
+            if(!response.ok && !response.status_code){
                 const message = await auth.handlingErrors(response)
                 console.log(message)  
                 console.error("Login failed!")
                 
             }else{
                 console.log("Login successfull!")
+                if(response.username){
+                    window.location.href = auth.baseURL + '/admin.html'
+                }
             }             
             console.log('Process  finished!')
         });
@@ -170,6 +98,11 @@
 
         document.getElementById('testProtectionButton').addEventListener('click', async(event) => {
             event.preventDefault()
+           accessProtectedRoute();
+        })
+
+        
+        async function accessProtectedRoute(){
             const options = {
                     method: 'get',
                     credentials: 'include',
@@ -182,15 +115,23 @@
             const endpoint = 'protected';
             const response = await auth.makeRequest(options, endpoint)
             console.log(response)
-            if(!response.ok){
+           
+            if(!response.ok && !response.status_code){
                 const message = await auth.handlingErrors(response)
                 console.log(message)                
             }else{
-                console.log("Accessed protected successfully!")
+                if(response.status_code ===200){
+                    localStorage.setItem('user_id', response.id)
+                        localStorage.setItem('username', response.username)
+                        localStorage.setItem('fullname', response.full_name)
+                    window.location.href = auth.baseURL + '/admin.html'
+                    console.log("Accessed protected successfully!")
+                }
+                
             }             
             console.log('Process  finished!')
-        })
-
+        }
+        
         function showAdminArea() {
             const token = localStorage.getItem('jwtToken');
             if (token) {

@@ -1,7 +1,9 @@
 
 
 from hmac import compare_digest
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -11,6 +13,7 @@ from flask_jwt_extended import (
     jwt_required,
     current_user,
     get_jwt,
+    get_jwt_identity,
     set_access_cookies,
     unset_jwt_cookies
 )
@@ -39,11 +42,28 @@ class User(db.Model):
             "password": self.password_hash,
             "full_name": self.full_name,
         }
+
+
+# This could be expanded to fit the needs of your application. For example,
+# it could track who revoked a JWT, when a token expires, notes for why a
+# JWT was revoked, an endpoint to un-revoked a JWT, etc.
+# Making jti an index can significantly speed up the search when there are
+# tens of thousands of records. Remember this query will happen for every
+# (protected) request,
+# If your database supports a UUID type, this can be used for the jti column
+# as well
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, nullable=False)
+    
+    
 def create_app():
     
+    ACCESS_EXPIRES = timedelta(minutes=30) # Default: timedelta(minutes=15)
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
-    app.config["JWT_TOKEN_LOCATION"] = ["headers", "cookies", "json", "query_string"]
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 
     # If true this will only allow the cookies that contain your JWTs to be sent
     # over https. In production, this should always be set to True
@@ -56,7 +76,7 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['JWT_ALGORITHM'] = "HS256"
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15) # Default: timedelta(minutes=15)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = ACCESS_EXPIRES
     
 
     CORS(app, supports_credentials=True, 
@@ -79,6 +99,20 @@ def create_app():
             "identity": identity,
         }
     
+    @app.after_request
+    def refresh_expiring_jwts(response):
+        try:
+            exp_timestamp = get_jwt()["exp"]
+            now = datetime.now(timezone.utc)
+            target_timestamp = datetime.timestamp(now + timedelta(minutes=15))
+            if target_timestamp > exp_timestamp:
+                access_token = create_access_token(identity=get_jwt_identity())
+                set_access_cookies(response, access_token)
+            return response
+        except (RuntimeError, KeyError):
+            # Case where there is not a valid JWT. Just return the original response
+            return response
+    
     # Register a callback function that takes whatever object is passed in as the
     # identity when creating JWTs and converts it to a JSON serializable format.
     @jwt_ex.user_identity_loader
@@ -93,6 +127,7 @@ def create_app():
     def user_lookup_callback(_jwt_header, jwt_data):
         identity = jwt_data["sub"]
         return User.query.filter_by(id=identity).one_or_none()
+
 
     @app.route('/', methods=['GET', 'POST'])
     def login_without_cookies():
@@ -112,12 +147,12 @@ def create_app():
         return make_response(jsonify({"secret_key": secret_key, 
                                       "access_token": access_token,
                                       "username": username
-                                      }))
+                                      }),200)
     
     # Login with cookie
     @app.route('/login-w-cookies', methods=['GET', 'POST'])
     def login_with_cookies():
-        response = jsonify({"msg": "login successful"})
+        response = jsonify({"msg": "login successful"}), 200
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
@@ -130,17 +165,16 @@ def create_app():
        
         access_token = create_access_token(identity=str(user.id))
 
-        response = make_response(jsonify({"secret_key": secret_key, 
-                                      "access_token": access_token,
+        response = make_response(jsonify({"status_code": 200,
                                       "username": username
-                                      }))
+                                      }),200)
         set_access_cookies(response, access_token)
         return response
     
     # Logout with cookies
-    @app.route("/logout_with_cookies", methods=["POST"])
+    @app.route("/logout_with_cookies", methods=["GET", "POST"])
     def logout_with_cookies():
-        response = jsonify({"msg": "logout successful"})
+        response = jsonify({'msg':"logout successful", 'status_code':200})
         unset_jwt_cookies(response)
         return response
 
@@ -150,13 +184,14 @@ def create_app():
         
         claims = get_jwt()
         response = make_response(jsonify(
+            status_code=200,
             foo="bar",
             message="Welcome to protected route!",
             claims=claims,
             id=current_user.id,
             full_name=current_user.full_name,
             username=current_user.username,
-            ))
+            ), 200)
 
         return response
 
