@@ -154,12 +154,17 @@
             }else{
                 if(response.status_code ===200){
                     localStorage.setItem('user_id', response.id)
-                        localStorage.setItem('username', response.username)
-                        localStorage.setItem('fullname', response.full_name)
+                    localStorage.setItem('username', response.username)
+                    localStorage.setItem('fullname', response.full_name)
+                    loginLink.style.display = 'none'
+                    logoutLink.style.display = 'block'
+                    usernameSpan.textContent = `${response.full_name} [${response.username}]`;
                     //window.location.href = auth.baseURL + '/admin.html'
                     console.log("Accessed protected successfully!")
                 }else if(response.status_code===401 || response.status_code===422){
-                    window.location.href = auth.baseURL + '/login_with_cookies.html'
+                    setTimeout(()=>{
+                        window.location.href = auth.baseURL + '/login_with_cookies.html'
+                    },250)
                 }
                 
             }             
@@ -184,16 +189,16 @@
             event.preventDefault();
             localStorage.clear()
             const options = {
-                    method: 'POST',
+                    method: 'get',
                     credentials: 'include',
-                    body: JSON.stringify({"action": "logout"}),
+                    //body: JSON.stringify({"action": "logout"}),
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
                     },
                 };
             console.log("Logout process with cookies tarting...")
-            const endpoint = 'logout_with_cookies';
+            const endpoint = 'logout_with_revoking_token_2';//'logout_with_cookies';
             const response = await auth.makeRequest(options, endpoint)
             console.log(response)
             if(!response.ok){

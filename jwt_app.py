@@ -28,17 +28,23 @@ if __name__ == '__main__':
 
         except sqlalchemy.exc.IntegrityError as e:
             db.session.rollback()
-            print(f"=> This user already exists. \nError: {str(e)}")
+            print(f"\n\n => This user already exists. \nError: {str(e)}")
         except Exception as e:
             db.session.rollback()
-            print(f"=> Exception: {str(e)}")
+            print(f"\n\n => Exception: {str(e)}")
         finally:
-            print('=> DB Query processed!')
+            print('\n\n => DB Query processed!')
             try:
+                revoked_tokens = TokenBlocklist.query.all()
                 users = User.query.all()
-                print("======> USERS LIST <======")
+                print("\n\n ======> USERS LIST <======")
                 for user in users:
                     print(user.to_dict())
+                
+                print('\n\n =====> REVOKED JWT Tokens <=====')
+                for token in revoked_tokens:
+                    print(token)
+                print('\n\n')
             except Exception as e:
                 print(f"Error to get Users. {str(e)}")
 

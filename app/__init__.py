@@ -60,12 +60,20 @@ class TokenBlocklist(db.Model):
     user_id = db.Column(
         db.ForeignKey('user.id'),
         default=lambda: current_user.id,
-        nullable=True,
+        nullable=False,
     )
     created_at = db.Column(
         db.DateTime,
         server_default=func.now(),
-        nullable=True,
+        nullable=False,
+    )
+
+class TokenBlocklist2(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False, index=True)
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
     )
 
 
@@ -94,6 +102,7 @@ def create_app():
          resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/test-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/protected": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
+                    r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     })
     
     jwt_ex = JWTManager(app)
@@ -199,29 +208,36 @@ def create_app():
 
     # Endpoint for revoking the current users access token. Saved the unique
     # identifier (jti) for the JWT into our database.
-    @app.route("/logout_with_revoking_token", methods=["DELETE"])
+    @app.route("/logout-with-revoking-token", methods=["GET", "POST"])
     @jwt_required()
     def modify_token():
         jti = get_jwt()["jti"]
         now = datetime.now(timezone.utc)
-        db.session.add(TokenBlocklist(jti=jti, created_at=now))
-        db.session.commit()
-
-        response = jsonify(msg="JWT revoked")
+        try:
+            db.session.add(TokenBlocklist2(jti=jti, created_at=now))
+            db.session.commit()
+        except Exception as e:
+            return jsonify(error=str(e))
+        response = jsonify(msg="JWT revoked", time=now, jtid=jti)
         #unset_jwt_cookies(response)
         return response
 
-    @app.route("/logout_with_revoking_token_2", methods=["DELETE"])
+    @app.route("/logout_with_revoking_token_2", methods=["get", "post"])
     @jwt_required(verify_type=False)
     def modify_token_2():
         token = get_jwt()
         jti = token["jti"]
         ttype = token["type"]
         now = datetime.now(timezone.utc)
-        db.session.add(TokenBlocklist(jti=jti, type=ttype, created_at=now))
-        db.session.commit()
+       
+
+        try:
+            db.session.add(TokenBlocklist(jti=jti, type=ttype, created_at=now))
+            db.session.commit()
+            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!")
+        except Exception as e:
+            return jsonify(error=str(e))        
         
-        response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked")
         #unset_jwt_cookies(response)
         return response
 
