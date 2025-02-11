@@ -27,6 +27,15 @@ class TokenBlocklist(db.Model):
         nullable=False,
     )
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'jti': self.jti,
+            'type': self.type,
+            'user_id': self.user_id,
+            'created_at': self.created_at
+        }
+
 class TokenBlocklist2(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36), nullable=False, index=True)
@@ -34,3 +43,10 @@ class TokenBlocklist2(db.Model):
         db.DateTime,
         nullable=False,
     )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'jti': self.jti,
+            'created_at': self.created_at
+        }

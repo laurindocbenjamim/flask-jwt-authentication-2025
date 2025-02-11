@@ -55,7 +55,8 @@
                     },
                 };
             console.log("Login with cookies tarting...")
-            const response = await auth.login(options)
+            //const response = await auth.login(options)
+            const response = await auth.makeRequest(options, 'api/v1/auth/login')
             console.log(response)
             if(!response.ok && !response.status_code){
                 const message = await auth.handlingErrors(response)

@@ -1,18 +1,31 @@
 from flask_restful import Api, Resource, reqparse
 from app.config import db
-from app.models import User
+from app.models import User, TokenBlocklist, TokenBlocklist2
 
 from flask import (
     Blueprint, jsonify,
     make_response,request
 )
+
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
-    set_access_cookies
+    current_user,
+    get_jwt,
+    get_jwt_identity,
+    set_access_cookies,
+    unset_jwt_cookies
 )
+from sqlalchemy.sql import func
+import secrets
+import jwt
+from werkzeug.security import check_password_hash
 
-auth_api = Blueprint('auth_api', __name__)
+
+auth_api = Blueprint('auth_api', __name__, url_prefix='/api/v1/auth')
 api = Api(auth_api)
 
 class Login(Resource):
@@ -31,7 +44,7 @@ class Login(Resource):
         #data = request.get_json()
         username = data.get('username')
         password = data.get('password')
-        return jsonify(sms="Successfully received data", username=username), 200
+        
 
         user = User.query.filter_by(username=username).one_or_none()
         if not user or not user.check_password(password):
@@ -46,4 +59,32 @@ class Login(Resource):
         set_access_cookies(response, access_token)
         return response
 
+
+class Logout(Resource):
+    @jwt_required(verify_type=False)
+    def get(self):
+        
+        token = get_jwt()
+        jti = token["jti"]
+        ttype = token["type"]
+        now = datetime.now(timezone.utc)
+        block_list=None
+
+        try:
+            block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
+            db.session.add(block_list)
+            db.session.commit()
+            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
+        except Exception as e:
+            return jsonify(error=str(e))        
+        
+        #unset_jwt_cookies(response)
+        return response
+
+
+    
+
+ 
+
 api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')

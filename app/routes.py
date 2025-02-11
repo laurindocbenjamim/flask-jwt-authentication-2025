@@ -1,5 +1,6 @@
 
 
+import secrets
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -20,7 +21,7 @@ from werkzeug.security import check_password_hash
 from app.config import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
-def routes(app, secret_key):
+def routes(app):
     
     @app.route('/', methods=['GET', 'POST'])
     def login_without_cookies():
@@ -37,7 +38,7 @@ def routes(app, secret_key):
        
         access_token = create_access_token(identity=str(user.id))
 
-        return make_response(jsonify({"secret_key": secret_key, 
+        return make_response(jsonify({"secret_key": app.config['SECRET_KEY'], 
                                       "access_token": access_token,
                                       "username": username
                                       }),200)
@@ -78,12 +79,14 @@ def routes(app, secret_key):
     def modify_token():
         jti = get_jwt()["jti"]
         now = datetime.now(timezone.utc)
+        block_list=None
         try:
-            db.session.add(TokenBlocklist2(jti=jti, created_at=now))
+            block_list = TokenBlocklist2(jti=jti, created_at=now)
+            db.session.add(block_list)
             db.session.commit()
         except Exception as e:
             return jsonify(error=str(e))
-        response = jsonify(msg="JWT revoked", time=now, jtid=jti)
+        response = jsonify(msg="JWT revoked", time=now, jtid=jti, block_list=block_list.to_dict())
         #unset_jwt_cookies(response)
         return response
 
@@ -94,12 +97,13 @@ def routes(app, secret_key):
         jti = token["jti"]
         ttype = token["type"]
         now = datetime.now(timezone.utc)
-       
+        block_list=None
 
         try:
-            db.session.add(TokenBlocklist(jti=jti, type=ttype, created_at=now))
+            block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
+            db.session.add(block_list)
             db.session.commit()
-            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!")
+            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
         except Exception as e:
             return jsonify(error=str(e))        
         
@@ -142,9 +146,14 @@ def routes(app, secret_key):
         # Replace with the same secret key you used in Flask
 
         try:
-            decoded = jwt.decode(token, secret_key, algorithms=["HS256"])
+            decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             return jsonify({'token_received': token, 'decoded': decoded})
         except jwt.ExpiredSignatureError as e:
             return f"❌ Token has expired {str(e)}"
         except jwt.InvalidTokenError as e:
             return f"❌ Token is invalid {str(e)}"
+
+    @app.route('/secret-key/gen')
+    def generate_secret_key():
+        secret_key = secrets.token_urlsafe(64)
+        return jsonify(SECRET_KEY=secret_key)

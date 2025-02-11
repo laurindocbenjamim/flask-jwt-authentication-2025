@@ -35,7 +35,8 @@
                             id="username">Username</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="login_with_cookies.html" id="login-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a class="nav-link" href="login_with_cookies.html" id="login-link"><i
+                            class="fas fa-sign-in-alt"></i> Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="logout-link" style="display: none;"><i
@@ -133,26 +134,26 @@
         const auth = new AuthUser();
 
         async function getUserData() {
-            
+
             const options = {
-                    method: 'get',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
-                    },
-                };
+                method: 'get',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                },
+            };
             console.log("Accessing protected route with cookies tarting...")
-            const endpoint = 'protected';
+            const endpoint = 'api/v1/admin/user'; //'protected';
             const response = await auth.makeRequest(options, endpoint)
             console.log(response)
-           
-            if(!response.ok && !response.status_code){
+
+            if (!response.ok && !response.status_code) {
                 const message = await auth.handlingErrors(response)
-                console.log(message)     
-                window.location.href = auth.baseURL + '/login_with_cookies.html'           
-            }else{
-                if(response.status_code ===200){
+                console.log(message)
+                //window.location.href = auth.baseURL + '/login_with_cookies.html'
+            } else {
+                if (response.status_code === 200) {
                     localStorage.setItem('user_id', response.id)
                     localStorage.setItem('username', response.username)
                     localStorage.setItem('fullname', response.full_name)
@@ -161,15 +162,15 @@
                     usernameSpan.textContent = `${response.full_name} [${response.username}]`;
                     //window.location.href = auth.baseURL + '/admin.html'
                     console.log("Accessed protected successfully!")
-                }else if(response.status_code===401 || response.status_code===422){
-                    setTimeout(()=>{
-                        window.location.href = auth.baseURL + '/login_with_cookies.html'
-                    },250)
+                } else if (response.status_code === 401 || response.status_code === 422) {
+                    setTimeout(() => {
+                        //window.location.href = auth.baseURL + '/login_with_cookies.html'
+                    }, 400)
                 }
-                
-            }             
+
+            }
             console.log('Process  finished!')
-       
+
         }
         getUserData();
 
@@ -184,31 +185,34 @@
         } else {
 
         }
-        
+
         logoutLink.addEventListener('click', async (event) => {
             event.preventDefault();
             localStorage.clear()
             const options = {
-                    method: 'get',
-                    credentials: 'include',
-                    //body: JSON.stringify({"action": "logout"}),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
-                    },
-                };
+                method: 'get',
+                credentials: 'include',
+                //body: JSON.stringify({"action": "logout"}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                },
+            };
             console.log("Logout process with cookies tarting...")
-            const endpoint = 'logout_with_revoking_token_2';//'logout_with_cookies';
+            const endpoint = 'api/v1/auth/logout';//'logout_with_cookies';
             const response = await auth.makeRequest(options, endpoint)
             console.log(response)
-            if(!response.ok){
+            if (!response.ok) {
                 const message = await auth.handlingErrors(response)
-                console.log(message)  
-                console.error("Logout process failed!")                
-            }else{
+                console.log(message)
+                console.error("Logout process failed!")
+            } else {
                 console.log("Logout process done successfully!")
-            }   
-            //window.location.href = auth.baseURL + '/login_with_cookies.html'          
+            }
+            setTimeout(() => {
+                console.log("Accessing login page...")
+                //window.location.href = auth.baseURL + '/login_with_cookies.html'
+            }, 400)
             console.log('Process  finished!')
         });
 
