@@ -151,7 +151,9 @@
             if (!response.ok && !response.status_code) {
                 const message = await auth.handlingErrors(response)
                 console.log(message)
-                //window.location.href = auth.baseURL + '/login_with_cookies.html'
+                setTimeout(() => {
+                        window.location.href = auth.baseURL + '/login_with_cookies.html'
+                    }, 400)
             } else {
                 if (response.status_code === 200) {
                     localStorage.setItem('user_id', response.id)
@@ -160,11 +162,11 @@
                     loginLink.style.display = 'none'
                     logoutLink.style.display = 'block'
                     usernameSpan.textContent = `${response.full_name} [${response.username}]`;
-                    //window.location.href = auth.baseURL + '/admin.html'
+                    
                     console.log("Accessed protected successfully!")
                 } else if (response.status_code === 401 || response.status_code === 422) {
                     setTimeout(() => {
-                        //window.location.href = auth.baseURL + '/login_with_cookies.html'
+                        window.location.href = auth.baseURL + '/login_with_cookies.html'
                     }, 400)
                 }
 
@@ -211,7 +213,7 @@
             }
             setTimeout(() => {
                 console.log("Accessing login page...")
-                //window.location.href = auth.baseURL + '/login_with_cookies.html'
+                window.location.href = auth.baseURL + '/login_with_cookies.html'
             }, 400)
             console.log('Process  finished!')
         });

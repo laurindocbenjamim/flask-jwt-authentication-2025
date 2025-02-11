@@ -15,10 +15,9 @@ class Config:
     # over https. In production, this should always be set to True
     JWT_COOKIE_SECURE = False
 
-    secret_key = os.getenv('SECRET_KEY', 'paaoeAtEpkR5IcoMb6AjISxhpSEz7--1iWoB6QloNjRdjsKrVwlVJGKNM8V5su1humYcrblV01svzoTmXg0e3A')
-    SECRET_KEY = os.getenv('SECRET_KEY', secret_key)
+    SECRET_KEY = os.getenv('SECRET_KEY', 'paaoeAtEpkR5IcoMb6AjISxhpSEz7--1iWoB6QloNjRdjsKrVwlVJGKNM8V5su1humYcrblV01svzoTmXg0e3A')
     # Correctly set the secret key and algorithm
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', secret_key)  # Secure key
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "PTUdaZiU9Q4yLPcTB9SX_aqgf6JrZOhM0IS-uIBLumN2gcfKFSpEe2j9AAu8YATgw8Oj4onTgEqnwRwURgupYQ")  # Secure key
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ALGORITHM = "HS256"
