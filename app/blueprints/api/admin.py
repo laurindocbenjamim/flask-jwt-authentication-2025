@@ -1,5 +1,5 @@
 from flask_restful import Api, Resource, reqparse
-
+from app.configs import admin_required
 
 from flask import (
     Blueprint, jsonify,
@@ -30,6 +30,20 @@ class UserData(Resource):
             id=current_user.id,
             full_name=current_user.full_name,
             username=current_user.username,
+            ), 200)
+
+        return response
+
+
+# 
+class Admin(Resource):
+    @admin_required()
+    def get(self):
+        
+        response = make_response(jsonify(
+            status_code=200,
+            foo="bar",
+            message="Welcome to the Admin route!"
             ), 200)
 
         return response

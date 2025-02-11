@@ -9,6 +9,7 @@ class User(db.Model):
     username = db.Column(db.Text, nullable=False, unique=True)
     full_name = db.Column(db.Text, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    type_of_user = db.Column(db.String(30), nullable=True)
 
     # NOTE: In a real application make sure to properly hash and salt passwords
     def check_password(self, password):

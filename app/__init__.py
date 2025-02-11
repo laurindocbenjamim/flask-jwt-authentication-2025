@@ -1,12 +1,14 @@
 
 
+import sqlalchemy
 from hmac import compare_digest
+# from sqlalchemy.exc import AttributeError
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+
 from flask_jwt_extended import (
     JWTManager, 
     create_access_token,
@@ -21,6 +23,7 @@ from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
+from app.configs import DevelopementConfig, ProductionConfig
 from app.config import Config, db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 from app.blueprints import auth_api, admin_api
@@ -53,12 +56,36 @@ def create_app():
     # claims to add to the JWT.
     @jwt_ex.additional_claims_loader
     def add_claims_to_access_token(identity):
-        return {
+
+        claim_data = {
             "aud": "some_audience",
             "foo": "bar",
             "identity": identity,
         }
+        # get user from database
+        user = User.query.filter_by(id=identity).one_or_none()
+
+        try:
+            if user:
+                claim_data['type_of_user'] = user.type_of_user if hasattr(user, 'type_of_user') else None
+                claim_data['is_administractor'] = True if str(user.type_of_user).lower()=='admin' else False
+                claim_data['is_ceo_user'] = True if str(user.type_of_user).lower()=='ceo' else False
+
+        except AttributeError as e:
+            print(f"AttributeError: on add claims. Error: {str(e)}")
+        except Exception as e:
+            print(f"Exception on add claims. Error: {str(e)}")
+        return claim_data
     
+    # Set a callback function to return a custom response whenever an expired
+    # token attempts to access a protected route. This particular callback function
+    # takes the jwt_header and jwt_payload as arguments, and must return a Flask
+    # response. Check the API documentation to see the required argument and return
+    # values for other callback functions.
+    @jwt_ex.expired_token_loader
+    def my_expired_token_callback(jwt_header, jwt_payload):
+        return jsonify(code="dave", err="IToken has expired"), 401
+
     @app.after_request
     def refresh_expiring_jwts(response):
         try:

@@ -82,6 +82,26 @@ class Logout(Resource):
         return response
 
 
+    # Delete
+    @jwt_required(verify_type=False)
+    def delete(self):
+        token = get_jwt()
+        jti = token["jti"]
+        ttype = token["type"]
+        now = datetime.now(timezone.utc)
+        block_list=None
+
+        try:
+            block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
+            db.session.add(block_list)
+            db.session.commit()
+            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
+        except Exception as e:
+            return jsonify(error=str(e))        
+        
+        #unset_jwt_cookies(response)
+        return response
+
     
 
  

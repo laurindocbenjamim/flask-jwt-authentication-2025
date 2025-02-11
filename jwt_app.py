@@ -19,9 +19,9 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         try:
-            db.session.add(User(full_name="Bruce Wayne", username="batman", password_hash=generate_password_hash("1234")))
-            db.session.add(User(full_name="Ann Takamaki", username="panther", password_hash=generate_password_hash("1234")))
-            db.session.add(User(full_name="Jester Lavore", username="little_sapphire", password_hash=generate_password_hash("1234")))
+            db.session.add(User(full_name="Bruce Wayne", username="batman", password_hash=generate_password_hash("1234"),type_of_user="Basic"))
+            db.session.add(User(full_name="Ann Takamaki", username="panther", password_hash=generate_password_hash("1234"),type_of_user="Admin"))
+            db.session.add(User(full_name="Jester Lavore", username="little_sapphire", password_hash=generate_password_hash("1234"),type_of_user="Basic"))
             db.session.commit()
 
             now = datetime.now(timezone.utc)
