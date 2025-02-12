@@ -33,10 +33,13 @@ def admin_required():
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
             claims = get_jwt()
-            if 'is_administrator' in claims and claims["is_administrator"]:
-                return fn(*args, **kwargs)
-            else:
-                return jsonify(msg="Admins only!"), 403
+            try:
+                if 'is_administrator' in claims and claims["is_administrator"]:
+                    return fn(*args, **kwargs)
+                else:
+                    return jsonify(msg="Admins only!", status_code=403)
+            except Exception as e:
+                print(f"Error to create the admin decorator. {str(e)}")
 
         return decorator
 
