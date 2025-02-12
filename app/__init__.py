@@ -1,5 +1,5 @@
 
-
+import os
 import sqlalchemy
 from hmac import compare_digest
 # from sqlalchemy.exc import AttributeError
@@ -23,19 +23,31 @@ from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
-from app.configs import DevelopementConfig, ProductionConfig
-from app.config import Config, db
+from app.configs.config import DevelopmentConfig, ProductionConfig
+from app.config import Config
+from app.configs import load_extentions, db, limiter, cors
+from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
 from app.blueprints import auth_api, admin_api
 from app.routes import routes
+
 
 app = Flask(__name__)
 
 
 def create_app():
     
+    """env = os.getenv("FLASK_ENV", "development")
+
+    if env == "production":
+        app.config.from_object(ProductionConfig)
+    else:
+        app.config.from_object(DevelopmentConfig)"""
+
     app.config.from_object(Config)
 
+    load_extentions(app=app)
+    
     CORS(app, supports_credentials=True, 
          resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},                   
@@ -67,9 +79,12 @@ def create_app():
 
         try:
             if user:
-                claim_data['type_of_user'] = user.type_of_user if hasattr(user, 'type_of_user') else None
-                claim_data['is_administractor'] = True if str(user.type_of_user).lower()=='admin' else False
-                claim_data['is_ceo_user'] = True if str(user.type_of_user).lower()=='ceo' else False
+                claims = create_additional_claims(user=user)
+                if claims:
+                    claim_data.update(claims)
+                #claim_data['type_of_user'] = user.type_of_user if hasattr(user, 'type_of_user') else None
+                #claim_data['is_administrator'] = True if str(user.type_of_user).lower()=='admin' else False
+                #claim_data['is_ceo_user'] = True if str(user.type_of_user).lower()=='ceo' else False
 
         except AttributeError as e:
             print(f"AttributeError: on add claims. Error: {str(e)}")

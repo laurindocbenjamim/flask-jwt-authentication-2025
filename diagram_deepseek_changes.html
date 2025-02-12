@@ -27,6 +27,7 @@
             font-weight: bold;
             color: black;
             cursor: pointer;
+            z-index: 1;
         }
         .circle {
             width: 80px;
@@ -63,6 +64,7 @@
             stroke: pink;
             stroke-width: 4;
             cursor: pointer;
+            pointer-events: all;
         }
         .selected {
             border: 3px dashed white;
@@ -90,22 +92,19 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>Interactive Workflow</h2>
         <p>Click a shape to select it, then click another shape to connect them. Double-click a line to remove it.</p>
         <div class="workflow-container" id="workflow-container">
-            <svg id="svg-lines"></svg>
-
             <div class="shape circle" id="start" style="top: 100px; left: 50px;">Start</div>
             <div class="shape rectangle" id="step1" style="top: 100px; left: 200px;">Step 1</div>
             <div class="shape rectangle" id="step2" style="top: 100px; left: 400px;">Step 2</div>
             <div class="shape diamond" id="decision" style="top: 100px; left: 600px;">Decision</div>
             <div class="shape oval" id="end" style="top: 250px; left: 600px;">End</div>
+            <svg id="svg-lines"></svg>
         </div>
     </div>
 
-    <!-- Context Menu -->
     <div class="context-menu" id="context-menu">
         <button id="delete-connection">Delete Connection</button>
     </div>
@@ -117,26 +116,71 @@
         let selectedShape = null;
         let selectedLineIndex = null;
 
+        function getEdgePoint(sourceEl, targetCenter, containerRect) {
+            const sourceRect = sourceEl.getBoundingClientRect();
+            const sourceCenter = {
+                x: sourceRect.left + sourceRect.width/2,
+                y: sourceRect.top + sourceRect.height/2
+            };
+            
+            // Calculate direction vector
+            const dx = targetCenter.x - sourceCenter.x;
+            const dy = targetCenter.y - sourceCenter.y;
+            
+            if (dx === 0 && dy === 0) return {
+                x: sourceCenter.x - containerRect.left,
+                y: sourceCenter.y - containerRect.top
+            };
+
+            // Calculate intersection with source element's boundaries
+            const ratio = Math.abs(dx / dy);
+            const halfWidth = sourceRect.width/2;
+            const halfHeight = sourceRect.height/2;
+
+            let edgeX, edgeY;
+            
+            if (Math.abs(dx) > Math.abs(dy)) {
+                edgeX = dx > 0 ? sourceRect.right : sourceRect.left;
+                edgeY = sourceCenter.y + (dx > 0 ? halfWidth : -halfWidth) * (dy/dx);
+            } else {
+                edgeY = dy > 0 ? sourceRect.bottom : sourceRect.top;
+                edgeX = sourceCenter.x + (dy > 0 ? halfHeight : -halfHeight) * (dx/dy);
+            }
+
+            return {
+                x: edgeX - containerRect.left,
+                y: edgeY - containerRect.top
+            };
+        }
+
         function updateLines() {
             svg.innerHTML = '';
+            const containerRect = document.getElementById('workflow-container').getBoundingClientRect();
+            
             connections.forEach((conn, index) => {
-                let fromEl = document.getElementById(conn.from);
-                let toEl = document.getElementById(conn.to);
+                const fromEl = document.getElementById(conn.from);
+                const toEl = document.getElementById(conn.to);
 
-                let fromRect = fromEl.getBoundingClientRect();
-                let toRect = toEl.getBoundingClientRect();
-                let containerRect = document.getElementById('workflow-container').getBoundingClientRect();
+                const fromRect = fromEl.getBoundingClientRect();
+                const toRect = toEl.getBoundingClientRect();
 
-                let x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
-                let y1 = fromRect.top + fromRect.height / 2 - containerRect.top;
-                let x2 = toRect.left + toRect.width / 2 - containerRect.left;
-                let y2 = toRect.top + toRect.height / 2 - containerRect.top;
+                const fromCenter = {
+                    x: fromRect.left + fromRect.width/2,
+                    y: fromRect.top + fromRect.height/2
+                };
+                const toCenter = {
+                    x: toRect.left + toRect.width/2,
+                    y: toRect.top + toRect.height/2
+                };
 
-                let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                line.setAttribute('x1', x1);
-                line.setAttribute('y1', y1);
-                line.setAttribute('x2', x2);
-                line.setAttribute('y2', y2);
+                const start = getEdgePoint(fromEl, toCenter, containerRect);
+                const end = getEdgePoint(toEl, fromCenter, containerRect);
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', start.x);
+                line.setAttribute('y1', start.y);
+                line.setAttribute('x2', end.x);
+                line.setAttribute('y2', end.y);
                 line.setAttribute('data-index', index);
                 line.addEventListener('dblclick', openContextMenu);
                 svg.appendChild(line);
@@ -146,12 +190,10 @@
         function openContextMenu(event) {
             event.preventDefault();
             selectedLineIndex = event.target.getAttribute('data-index');
-
-            let contextMenu = document.getElementById('context-menu');
+            const contextMenu = document.getElementById('context-menu');
             contextMenu.style.top = `${event.clientY}px`;
             contextMenu.style.left = `${event.clientX}px`;
             contextMenu.style.display = 'block';
-
             document.addEventListener('click', closeContextMenu);
         }
 
@@ -160,7 +202,7 @@
             document.removeEventListener('click', closeContextMenu);
         }
 
-        document.getElementById('delete-connection').addEventListener('click', function() {
+        document.getElementById('delete-connection').addEventListener('click', () => {
             if (selectedLineIndex !== null) {
                 connections.splice(selectedLineIndex, 1);
                 updateLines();
@@ -174,8 +216,7 @@
         });
 
         function selectShape(event) {
-            let shape = event.target;
-
+            const shape = event.target;
             if (!selectedShape) {
                 selectedShape = shape;
                 shape.classList.add('selected');
@@ -190,18 +231,16 @@
         }
 
         function startDrag(e) {
-            let shape = e.target;
-            let offsetX = e.clientX - shape.getBoundingClientRect().left;
-            let offsetY = e.clientY - shape.getBoundingClientRect().top;
+            const shape = e.target;
+            const offsetX = e.clientX - shape.getBoundingClientRect().left;
+            const offsetY = e.clientY - shape.getBoundingClientRect().top;
 
             function moveShape(e) {
-                let container = document.getElementById('workflow-container').getBoundingClientRect();
-                let x = e.clientX - container.left - offsetX;
-                let y = e.clientY - container.top - offsetY;
-
+                const container = document.getElementById('workflow-container').getBoundingClientRect();
+                const x = e.clientX - container.left - offsetX;
+                const y = e.clientY - container.top - offsetY;
                 shape.style.left = `${x}px`;
                 shape.style.top = `${y}px`;
-
                 updateLines();
             }
 
@@ -216,6 +255,5 @@
 
         updateLines();
     </script>
-
 </body>
 </html>

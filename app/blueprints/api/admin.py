@@ -43,14 +43,16 @@ class Admin(Resource):
         response = make_response(jsonify(
             status_code=200,
             foo="bar",
+            full_name=current_user.full_name,
             message="Welcome to the Admin route!"
             ), 200)
 
         return response
 
 api.add_resource(UserData, '/user')
+api.add_resource(Admin, '/adm_user')
 
-@admin_api.route('/admin')
+@admin_api.route('/adm_test')
 @jwt_required()
 def admin_r():
     return f"This is Admin BP route"

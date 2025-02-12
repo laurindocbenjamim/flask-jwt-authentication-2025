@@ -1,10 +1,10 @@
 from flask_restful import Api, Resource, reqparse
-from app.config import db
+from app.configs import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
 from flask import (
     Blueprint, jsonify,
-    make_response,request
+    make_response,request, current_app
 )
 
 from datetime import datetime
@@ -48,11 +48,12 @@ class Login(Resource):
 
         user = User.query.filter_by(username=username).one_or_none()
         if not user or not user.check_password(password):
-            return jsonify({"error": "Wrong username or password", "user": user.to_dict()}), 401
+            return jsonify({"status_code": 401, "error": "Wrong username or password", "user": user.to_dict()})
         # Generate a JWT token
-       
-        access_token = create_access_token(identity=str(user.id))
 
+        
+        access_token = create_access_token(identity=str(user.id))
+        
         response = make_response(jsonify({"status_code": 200,
                                       "username": username
                                       }),200)

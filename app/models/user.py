@@ -1,5 +1,5 @@
 
-from app.config import db
+from app.configs import db
 from werkzeug.security import check_password_hash
 
 

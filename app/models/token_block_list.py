@@ -1,5 +1,5 @@
 
-from app.config import db
+from app.configs import db
 from flask_jwt_extended import current_user
 from sqlalchemy.sql import func
 

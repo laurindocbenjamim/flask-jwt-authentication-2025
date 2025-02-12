@@ -18,7 +18,7 @@ from flask_jwt_extended import (
 
 import jwt
 from werkzeug.security import check_password_hash
-from app.config import db
+from app.configs import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
 def routes(app):

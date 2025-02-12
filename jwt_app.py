@@ -4,7 +4,8 @@ import sqlalchemy
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from app.config import db
+from app.configs import db
+from flask_migrate import Migrate
 from app.models import User, TokenBlocklist
 from app import create_app
 #from app.models import User
@@ -15,6 +16,8 @@ app = create_app()
 if __name__ == '__main__':
 
     db.init_app(app)
+
+    Migrate(app, db)
 
     with app.app_context():
         db.create_all()
