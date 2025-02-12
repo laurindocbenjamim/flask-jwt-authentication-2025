@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Email</title>
+    <style>
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes burning {
+            0% {
+                background-color: #007bff;
+                box-shadow: 0 0 10px #007bff;
+            }
+            50% {
+                background-color: #ff4500;
+                box-shadow: 0 0 20px #ff4500;
+            }
+            100% {
+                background-color: #007bff;
+                box-shadow: 0 0 10px #007bff;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header img {
+            max-width: 100px;
+            animation: jump 1s infinite;
+        }
+        .content {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            animation: burning 2s infinite;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .header img {
+                max-width: 80px;
+            }
+            .button {
+                padding: 8px 16px;
+                margin: 15px 0;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header img {
+                max-width: 60px;
+            }
+            .button {
+                padding: 6px 12px;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo">
+        </div>
+        <div class="content">
+            <h1>Confirm Your Email</h1>
+            <p>Please click the button below to confirm your email address.</p>
+            <a href="{{ confirm_url }}" class="button">Confirm Email</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -28,7 +28,7 @@ from app.config import Config
 from app.configs import load_extentions, db, limiter, cors
 from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
-from app.blueprints import auth_api, admin_api
+from app.blueprints import auth_api, admin_api, send_email_api
 from app.routes import routes
 
 
@@ -61,6 +61,7 @@ def create_app():
     # Binding the blueprint Views
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
+    app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
     
     # Using the additional_claims_loader, we can specify a method that will be
     # called when creating JWTs. The decorated method must take the identity
@@ -82,9 +83,6 @@ def create_app():
                 claims = create_additional_claims(user=user)
                 if claims:
                     claim_data.update(claims)
-                #claim_data['type_of_user'] = user.type_of_user if hasattr(user, 'type_of_user') else None
-                #claim_data['is_administrator'] = True if str(user.type_of_user).lower()=='admin' else False
-                #claim_data['is_ceo_user'] = True if str(user.type_of_user).lower()=='ceo' else False
 
         except AttributeError as e:
             print(f"AttributeError: on add claims. Error: {str(e)}")
@@ -100,6 +98,23 @@ def create_app():
     @jwt_ex.expired_token_loader
     def my_expired_token_callback(jwt_header, jwt_payload):
         return jsonify(code="dave", err="IToken has expired"), 401
+
+    # Security Middleware
+    """@app.after_request
+        def set_security_headers(response):
+            #Set secure HTTP headers
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+            response.headers['X-XSS-Protection'] = '1; mode=block'
+            return response
+    """
+
+    # Error Handlers
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        """Handle rate limit exceeded errors"""
+        return jsonify(status_code=429, error="Too many requests. Please try again later.")
 
     @app.after_request
     def refresh_expiring_jwts(response):

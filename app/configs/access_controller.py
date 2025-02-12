@@ -44,3 +44,22 @@ def admin_required():
         return decorator
 
     return wrapper
+
+
+def ceo_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt()
+            try:
+                if 'is_ceo_user' in claims and claims["is_ceo_user"]:
+                    return fn(*args, **kwargs)
+                else:
+                    return jsonify(msg="CEO only!", status_code=403)
+            except Exception as e:
+                print(f"Error to create the CEO decorator. {str(e)}")
+
+        return decorator
+
+    return wrapper
