@@ -1,0 +1,893 @@
+{% extends "author_profile/about-laurindo-c-benjamim.html" %}
+
+
+{% block content %}
+
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      width: 100%;
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-bd-primary {
+      --bd-violet-bg: #712cf9;
+      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #6528e0;
+      --bs-btn-hover-border-color: #6528e0;
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #5a23c8;
+      --bs-btn-active-border-color: #5a23c8;
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+
+    .bd-mode-toggle .dropdown-menu .active .bi {
+      display: block !important;
+    }
+
+    /*------------------------------------------------------------------------------*/
+
+    .content {
+      position: relative;
+    }
+
+    main .container .welcome .container-fluid h1 {
+      color: #fff;
+      position: absolute;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+
+    main .container .welcome .container-fluid h1:nth-child(1) {
+      color: transparent;
+      -webkit-text-stroke: 2px rgb(35, 235, 241);
+    }
+
+    main .container .welcome .container-fluid h1:nth-child(2) {
+      color: rgb(10, 190, 49);
+      animation: animate 4s ease-in-out infinite;
+    }
+
+    @keyframes animate {
+
+      0%,
+      100% {
+        clip-path: polygon(0% 45%,
+            16% 44%,
+            33% 50%,
+            54% 60%,
+            70% 61%,
+            84% 59%,
+            100% 52%,
+            100% 100%,
+            0% 100%);
+      }
+
+      50% {
+        clip-path: polygon(0% 60%,
+            15% 65%,
+            34% 66%,
+            51% 62%,
+            67% 50%,
+            84% 45%,
+            100% 46%,
+            100% 100%,
+            0% 100%);
+      }
+    }
+
+
+    .feature-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: .75rem;
+    }
+
+    .icon-square {
+      width: 3rem;
+      height: 3rem;
+      border-radius: .75rem;
+    }
+
+    .text-shadow-1 {
+      text-shadow: 0 .125rem .25rem rgba(0, 0, 0, .25);
+    }
+
+    .text-shadow-2 {
+      text-shadow: 0 .25rem .5rem rgba(0, 0, 0, .25);
+    }
+
+    .text-shadow-3 {
+      text-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25);
+    }
+
+    .card-cover {
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+    }
+
+    .feature-icon-small {
+      width: 3rem;
+      height: 3rem;
+    }
+  </style>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/author_profile_style.css') }}">
+  <link href="{{ url_for('static', filename='assets/css/about-laurindo-c-benjamim.css') }}" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+    <nav class="navbar fixed-top" aria-label="First navbar example">
+
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.d-tuning.com/"><i class="fa fa-terminal"
+            style="color: rgb(35, 235, 241);opacity: 0.5;"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01"
+          aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+          <!--<span class="navbar-toggler-icon"></span>-->
+          <i class="fa-solid fa-bars-staggered" style="color: #FFF;"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample01">
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('profile.laurindo_c_benjamim') }}">About</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
+              <ul class="dropdown-menu" style="background-color: rgba(23, 30, 82, 0.23); ">
+                <li><a class="dropdown-item" href="#">Projects</a></li>
+                <li><a class="dropdown-item" href="#">Articles</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" aria-disabled="true">Contact</a>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+
+    </nav>
+
+  </header>
+
+  <main class="container p-5">
+
+    <div class="container p-4">
+
+      <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis presentation ">
+
+        <div class="row mb-2">
+
+          <div class="col-md-6 image">
+            <div class="row g-0 rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+
+              <div class="col p-4 d-flex flex-column position-static">
+
+                <div class="image-laurindo icon-link gap-1 icon-link-hover stretched-link">
+
+                  <img src="{{ url_for('static', filename='assets/img/Laurindo-03-removebg-preview-edited-v1.png') }}" width="195" height="230"
+                    alt="laurindo-c-benjamim" srcset="">
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-6">
+
+            <div class="row g-0 rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+
+              <div class="col p-2 d-flex flex-column position-static">
+                <h1 class="mb-0">Laurindo C. Benjamim</h1>
+                <strong class="d-inline-block mb-2 " style="color: rgb(58, 58, 58); font-weight:600;">
+                  <h2>Data Engineer</h2>
+                  <h3>Sofware Developer</h3>
+                </strong>
+                <p class="mb-auto">If debugging is the process of removing bugs, then programming
+                  must be the process of putting them in <span style="color: rgb(35, 235, 241);">(by Sam
+                    Redwine)</span>.</p>
+
+                <p class="mb-auto">I call version 1.0 when at first, I do not succeed.</p>
+
+                <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                  Continue reading
+                  <svg class="bi">
+                    <use xlink:href="#chevron-right" />
+                  </svg>
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="row mb-2">
+
+        <div class="col-md-6">
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-warning-emphasis">September/2023 - Present</strong>
+              <h3 class="mb-0">Universidade Catolica Portuguesa do Porto</h3>
+              <div class="mb-1 text-body-secondary">Since September 2023</div>
+              <p class="card-text mb-auto">.</p>
+              <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                Read more
+                <svg class="bi">
+                  <use xlink:href="#chevron-right" />
+                </svg>
+              </a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <img src="{{ url_for('static', filename='assets/img/universidade-catolica-portuguesa-do-porto-without-back-02.png') }}" width="200"
+                height="210" alt="universidade-catolica-portuguesa-image" srcset="">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-warning-emphasis">January/2024 - Present</strong>
+              <h3 class="mb-0">IBM Professional Certificate</h3>
+              <h4 class="mb-0">by Cousera Platform</h4>
+              <div class="mb-1 text-body-secondary">Since January 2024</div>
+              <p class="mb-auto"></p>
+              <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                Read more
+                <svg class="bi">
+                  <use xlink:href="#chevron-right" />
+                </svg>
+              </a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <img src="{{ url_for('static', filename='assets/img/data-engineering-essentials.png') }}" style="margin-top: 7%;" width="185" height="186"
+                alt="data-engineerind-essentials-image" srcset="">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <article>
+
+        <div class="row g-5">
+          <div class="col-md-8 bg-white">
+
+            <article class="blog-post">
+
+              <div style="margin-top: 10%;">
+
+                <h3 class="display-7 link-body-emphasis mb-1" style="font-weight: 700;">SUMMARY</h3>
+                <p class="blog-post-meta">February 27, 2024 by <a href="#">Laurindo</a></p>
+
+                <p>Software developer with 2 years of experiences, with background in Machine Learning,
+                  Web Scraping, ETL with Python, Unitary test and Static test in python, automation test
+                  with Junit, Web developer with Flask, Angular, Node js, JavaScript and Spring Boot for
+                  backend applications, and MySQL.</p>
+
+                <p>Additionaly at last 2 years I worket with Java which I used to build some Desktop applications, and
+                  also at last 5 months I used it
+                  with Spring Boot to build Web applications.</p>
+
+              </div>
+              <hr>
+              <div class="education">
+
+                <h3 class="display-7" style="font-weight: 700;">EDUCATION</h3>
+
+                <div class="educ-01">
+                  <blockquote class="blockquote">
+                    <strong>
+                      <h3>Master degree in Biomedical Engineering</h3>
+                    </strong>
+                  </blockquote>
+                  <p class="blog-post-meta"><i class="fa-solid fa-angles-left"></i> September 2023 | Currently studying
+                    <i class="fa-solid fa-angles-right"></i>
+                  </p>
+
+                  <p>I'm studying at <a href="https://www.porto.ucp.pt/" target="_blank">Universidade Catolica
+                      Portuguesa do Porto, Portugal</a>
+                    since September 2023. It was a good experience at the first semester despite the hard adaptation.
+                  </p>
+                </div>
+
+                <hr>
+                <h3 class="display-7" style="font-weight: 700;">TRAINING & CERTIFICATIONS</h3>
+
+                <div class="cert-01">
+                  <blockquote class="blockquote">
+                    <strong>
+                      <h3>IBM Data Engineering Professional Certificate</h3>
+                    </strong>
+                  </blockquote>
+                  <p class="blog-post-meta"><i class="fa-solid fa-angles-left"></i> January 2024 | Currently studying <i
+                      class="fa-solid fa-angles-right"></i></p>
+
+                  <p>I'm studying at <a
+                      href="https://www.credly.com/badges/72d0d8db-75f6-46c3-aed1-9a6dee998538/public_url"
+                      target="_blank">Cousera Platform</a>
+                    since January 2024. It have been a great experience taking this certification becouse I'm improving
+                    my
+                    knowledges in technologies I already knew before the course
+                    and gaining new ones. That's very exciting and powerfull to me.
+                  </p>
+
+                  <p>
+                    This Certification is comprased by 13 courses in total which at the end of the platform provide you
+                    a Certificate as proof
+                    of your accomplishment.
+                  </p>
+
+                  <strong>My Accomplishments Certificates</strong>
+                  <ul>
+
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                          rel="noopener noreferrer">
+                          Introduction to Data Engineering</a></span></li>
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/d483a21bfffdadd7d5870f90f5e0e780" target="_blank"
+                          rel="noopener noreferrer">
+                          Python for Data Science, AI & Development</a></span></li>
+                          <li><i class="bi bi-check"></i> <strong></strong> <span>
+                            <a href="https://coursera.org/share/e04ff5083b2871a47b28d36a2d04ee54" target="_blank"
+                              rel="noopener noreferrer">
+                            Introduction to Relational Databases (RDBMS)</a></span></li>
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/8eb8acc79339e58fabe8056c246f0bb5" target="_blank"
+                          rel="noopener noreferrer">
+                          Databases and SQL for Data Science with Python</a></span></li>
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/6d429c89f9890673ac60df02af22d290" target="_blank"
+                          rel="noopener noreferrer">
+                          Hands-on Introduction to Linux Commands and Shell Scripting</a></span></li>
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/b2b5302f35b4abd17b44543c43760ec0" target="_blank"
+                          rel="noopener noreferrer">
+                          Python Project for Data Engineering</a></span></li>
+
+
+                  </ul>
+
+                  <p>The course below is part of the
+                    <strong>IBM Full Stack Software Developer Professional Certificate</strong>
+                  </p>
+                  <ul>
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <a href="https://coursera.org/share/b6823f9e1052a64bd450eabc73a9f1e6" target="_blank"
+                          rel="noopener noreferrer">
+                          Developing AI Applications with Python and Flask</a></span></li>
+                  </ul>
+                  <strong>Check my Recognition Credentials</strong>
+                  <ul>
+                    <li>
+                      <img src="{{ url_for('static', filename='assets/img/python-project-for-ai-and-application-development (1).png') }}" width="25"
+                        height="25" alt="">
+                      <a href="https://www.credly.com/badges/72d0d8db-75f6-46c3-aed1-9a6dee998538/public_url"
+                        target="_blank" rel="noopener noreferrer">
+                        Data Engineering Essentials
+                      </a>
+                    </li>
+
+                    <li>
+                      <img src="{{ url_for('static', filename='assets/img/python-project-for-ai-and-application-development (1).png') }}" width="25"
+                        height="25" alt="">
+                      <a href="https://www.credly.com/badges/72d0d8db-75f6-46c3-aed1-9a6dee998538/public_url"
+                        target="_blank" rel="noopener noreferrer">
+                        Python project for ai and application development
+                      </a>
+                    </li>
+
+                    <li>
+                      <img src="{{ url_for('static', filename='assets/img/python-project-for-ai-and-application-development (1).png') }}" width="25"
+                        height="25" alt="">
+                      <a href="https://www.credly.com/badges/ac6da3f9-673f-42cd-84fe-c4b0600a678f/public_url"
+                        target="_blank" rel="noopener noreferrer">
+                        Python project for Data Engineer
+                      </a>
+                    </li>
+
+                    <li>
+                      <img src="{{ url_for('static', filename='assets/img/python-project-for-ai-and-application-development (1).png') }}" width="25"
+                        height="25" alt="">
+                      <a href="https://www.credly.com/badges/0a2f002c-fe6e-4a7a-aff6-a0d7f3b2e503/public_url"
+                        target="_blank" rel="noopener noreferrer">
+                        Relational Databases (RDBMS) Essentials
+                      </a>
+                    </li>
+              
+                  </ul>
+
+                </div>
+
+                <hr>
+
+                <div class="soft-skills">
+                  <h3 class="display-7" style="font-weight: 700;">SOFT SKILLS</h3>
+                  <ol>
+                    <li>Organization</li>
+                    <li>Gathering and Interpreting Data</li>
+                    <li>Creativity</li>
+                    <li>Time Management</li>
+                  </ol>
+
+                </div>
+
+                <hr>
+
+                <div class="soft-skills">
+
+                  <h3 class="display-7" style="font-weight: 700;">TECHNICALL SKILLS</h3>
+                  <blockquote class="blockquote">
+                    <strong>
+                      <h3>Software Developer</h3>
+                    </strong>
+                  </blockquote>
+
+                  <!--<div class="row row-cols-1 row-cols-md-2 g-4">
+                   
+                    <div class="col">
+                      <div class="card">
+                        
+                        <div class="card-body">
+                          <img src="../assets/img/html-5.png" width="20" height="80" class="card-img-top" alt="html-5">
+                          <h5 class="card-title">HTML-5</h5>
+                          <p class="card-text">...</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>-->
+
+                  <ol>
+
+                    <blockquote class="blockquote">
+                      <span><i>Levels descripion</i></span>
+                      <p style="font-size: .9rem;"><b>1 - </b> Beginner Academic, training only | <b>2 -</b>
+                        Intermediate Level <b>1 +</b> small projects or internships
+                        <b>3 -</b> Advanced Level <b>1/2 +</b> project experience | <b>4 –</b> Professional Level
+                        <b>1/2/3 +</b> wide professional experience
+                        | <b>5 -</b> Expert
+                      </p>
+                    </blockquote>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Frontend Tools</th>
+                          <th>Level</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>HTML-5</td>
+                          <td>3</td>
+                        </tr>
+                        <tr>
+                          <td>CSS-3</td>
+                          <td>2</td>
+                        </tr>
+                        <tr>
+                          <td>Bootstrap</td>
+                          <td>2</td>
+                        </tr>
+                        <tr>
+                          <td>JavaScript</td>
+                          <td>2</td>
+                        </tr>
+                        <tr>
+                          <td>Angular</td>
+                          <td>3</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Backend Tools</th>
+                          <th>Level</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Python</td>
+                          <td>3</td>
+                        </tr>
+                        <tr>
+                          <td>Node.js</td>
+                          <td>1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </ol>
+
+                </div>
+
+                <hr>
+
+                <div class="work-exeperiences">
+                  <h3 class="display-7" style="font-weight: 700;">WORK EXPERIENCE</h3>
+
+                  <strong>
+                    <h4>Data Engineer | January 2024</h4>
+                    <p><i>Coursera, for IBM Academic Projects</i></p>
+                  </strong>
+                  <ul>
+
+                    <li><i class="bi bi-check"></i> <strong></strong>
+                      <span>
+                        <p>
+                          Developed a Web application with Flask to analyze emotions in text
+                          phrases using the IBM Watson NLP API. The AI achieves approximately 90%
+                          accuracy in making accurate predictions
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+
+                        </p>
+                      </span>
+                    </li>
+
+                    <li><i class="bi bi-check"></i> <strong></strong>
+                      <span>
+                        <p>
+                          Built a Web application with Flask to
+                          assess sentiments in text phrases using the IBM Watson NLP API.
+                          The AI achieves approximately 90% accuracy in making accurate predictions.
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+                        </p>
+                      </span>
+
+                    </li>
+
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <p>
+                          Developed an application using Web Scraping Processes with python to
+                          extract the top 10 largest bank in the world, and load the data in Database
+                          and CSV file. The software is 100% functional.
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+                        </p>
+                      </span>
+
+                    </li>
+
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <p>
+                          Developed an application to extract car prices from a web page and implement
+                          the Extract, Transform and Load processes (ETL) using Python. The software is 100% functional.
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+                        </p>
+                      </span>
+
+                    </li>
+
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <p>
+                          Developed an application to implement the ETL using Shell Script.
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+                        </p>
+                      </span>
+
+                    </li>
+
+                    <li><i class="bi bi-check"></i> <strong></strong> <span>
+                        <p>
+                          Developed an application to Backup files and directories in runtime using Shell Script and
+                          Crontab.
+
+                          <a href="https://coursera.org/share/99bc8897932cb31d0a7dafb24a712645" target="_blank"
+                            rel="noopener noreferrer">
+                            Link</a>
+                        </p>
+                      </span>
+
+                    </li>
+
+
+                  </ul>
+                  <p>
+                    <b>NOTE:</b> 
+                    I think this is my top job because I'm passionate about dealing with data, collecting, organize, processing, transforming it into something really usable
+                  </p>
+
+                  <strong>
+                    <h4>Waiter | October 2023 – Present</h4>
+                    <p><i>Tapas n’Friends Coliseu, Porto | Portugal </i></p>
+                  </strong>
+                  <ul>
+
+                    <li>
+                      <p>
+                        Opening and closing cash register
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Customer service including order registration, order delivery, with around 90% good
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        opening and cleaning and preparing the work space
+                      </p>
+                    </li>
+
+
+                  </ul>
+
+                  <strong>
+                    <h4>Software Developer | September 2023 – Present</h4>
+                    <p><i>Charkcoders, Gaia | Portugal </i></p>
+                  </strong>
+                  <ul>
+
+                    <li>
+                      <p>
+                        Python Developer trainer for children aged 11 to 17 years old, where 75% of them show good
+                        learning.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Web Developer trainer for children aged 11 to 17 years old, where 90% of them show good
+                        learning.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Game Developer trainer for children aged 8 to 17 years old, where 68% of them show good
+                        learning.
+                      </p>
+                    </li>
+
+
+                  </ul>
+
+                  <strong>
+                    <h4>Waiter | July 2023 - August 2023</h4>
+                    <p><i>Mac Donald Matosinhos, Porto | Portugal </i></p>
+                  </strong>
+                  <ul>
+
+                    <li>
+                      <p>
+                        Customer service including order registration, order delivery, with around 90% good acceptance
+                        and rating in relation to my services.
+                      </p>
+                    </li>
+
+                  </ul>
+
+                  <strong>
+                    <h4>Software Developer | January 2018 - November 2021</h4>
+                    <p><i>Instituto Politécnico Privado Esperança do Lubango | Angola </i></p>
+                  </strong>
+                  <ul>
+
+                    <li>
+                      <p>
+                        Developed a desktop file management application using Java,
+                        with around 98% of the requirements implemented, and 89% of acceptance from the company.
+                      </p>
+                    </li>
+
+                    <li>
+                      <p>
+                        Developed a Web System application academic management purpose,
+                        using the pure PHP for backend and HTML, CSS, Bootstrap, JQuery and Ajax for Frontend with
+                        around 75% of acceptance from the company
+                      </p>
+                    </li>
+
+                  </ul>
+
+                  <strong>
+                    <h4>Software Developer |	March 2019 - September 2021</h4>
+                    <p><i>Instituto Politécnico Privado Esperança do Lubango | Angola </i></p>
+                  </strong>
+                  <p>This was perhaps the most difficult project I have worked on. I had a lot of difficulty collecting 
+                    functional and non-functional requirements of the project from my client. Sometimes customers have a lot of confusing and 
+                    ambiguous ideas and as a Requirements Engineer our job is to understand them very well, 
+                    removing all the confusion and ambiguities and making it clear to our team and also to the customers.
+
+                    That happened because I worked on my own, so had to represent all roles of the project such
+                     as Requirements Engineer, Project Engineer, System Analyst, Developer and so on.
+                  </p>
+                  <ul>
+
+                    <li>
+                      <p>
+                        Created a Web shopping application to run as a desktop using Laravel for backend, 
+                        and Ajax, JQuery, HTML5, CSS, Bootstrap for frontend with around 70% of all requirements implemented but the project was discontinued.
+                      </p>
+                    </li>
+
+                  </ul>
+
+                </div>
+
+                <div class="work-exeperiences">
+                  <h3 class="display-7" style="font-weight: 700;">SKILL LANGUAGES</h3>
+
+                  <ul>
+                    <li>Portuguese  - Native Fluent</li>
+                    <li>English – Intermediate (B1)</li>
+                  </ul>
+                </div>
+
+              </div>
+
+            </article>
+
+
+
+            <nav class="blog-pagination" aria-label="Pagination">
+              <a class="btn btn-outline-primary rounded-pill" href="#">Older</a>
+              <a class="btn btn-outline-secondary rounded-pill disabled" aria-disabled="true">Newer</a>
+            </nav>
+
+          </div>
+
+          <!--------- RIGHT BAR START----------->
+          <div class="col-md-4">
+            <div class="position-sticky" style="top: 2rem;">
+              <div class="p-4 mb-3 bg-body-tertiary rounded">
+                <h4 class="fst-italic">About</h4>
+                <p class="mb-0">I love technologies. Despite I never worked for a Tech company
+                  before I'm still looking for this opportunity. That's why I'm continually studying.
+                </p>
+              </div>
+
+              <div>
+                <!--<h4 class="fst-italic">Recent posts</h4>
+                <ul class="list-unstyled">
+                  <li>
+                    <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                      <svg class="bd-placeholder-img" width="100%" height="96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+                      <div class="col-lg-8">
+                        <h6 class="mb-0">Example blog post title</h6>
+                        <small class="text-body-secondary">January 15, 2023</small>
+                      </div>
+                    </a>
+                  </li>
+                  
+                </ul>-->
+              </div>
+
+              <div class="p-4">
+                <h4 class="fst-italic">Recent projects</h4>
+                <ol class="list-unstyled mb-0">
+                  <li><a href="{{ url_for('projects.projects')}}">All projects</a></li>
+                  <li><a href="https://www.d-tuning.com">Data Tuning</a></li>
+                  <li><a href="{{ url_for('ai.speech')}}">Convert audio speech into text</a></li>
+                </ol>
+
+              </div>
+
+              <div class="p-4">
+
+                <ol class="list-unstyled">
+                  <li><a href="https://www.linkedin.com/in/laurindocbenjamim" target="_blank"><i
+                        class="fa-brands fa-linkedin fa-2x"></i> LinkedIn</a></li>
+                  <li><a href="https://github.com/laurindocbenjamim" target="_blank"><i
+                        class="fa-brands fa-github fa-2x"></i> GitHub</a></li>
+                  <li><a href="https://youtube.com/@laurindocbenjamim?si=If_NcRGFnPVVtxCM"><i
+                        class="fa-brands fa-square-youtube fa-2x"></i> Youtube</a></li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!--------- END RIGHT BAR START----------->
+        </div>
+
+      </article>
+
+
+    </div>
+
+  </main>
+
+  <footer class="py-5 text-center text-body-secondary ">
+    <span>&copy; 2023; All rights reserved</span>
+    <p>Designed by <a href="{{ url_for('profile.laurindo_c_benjamim')}}">Laurindo C. Benjamim</a>.</p>
+
+  </footer>
+
+  <script src="{{ url_for('static', filename='assets/dist/js/bootstrap.bundle.min.js') }}"></script>
+
+</body>
+
+</html>

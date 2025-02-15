@@ -29,6 +29,8 @@ from app.configs import load_extentions, db, limiter, cors
 from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
 from app.blueprints import auth_api, admin_api, send_email_api
+from app.modules_web_site import web_site_app
+from app.modules_author_profile import bp_author
 from app.routes import routes
 
 
@@ -58,10 +60,7 @@ def create_app():
     jwt_ex = JWTManager(app)
 
 
-    # Binding the blueprint Views
-    app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
-    app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
-    app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
+    
     
     # Using the additional_claims_loader, we can specify a method that will be
     # called when creating JWTs. The decorated method must take the identity
@@ -152,6 +151,14 @@ def create_app():
         token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
 
         return token is not None
+
+    
+    # Binding the blueprint Views
+    app.register_blueprint(web_site_app)
+    #app.register_blueprint(bp_author)
+    app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
+    app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
+    app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
 
 
     routes(app=app)
