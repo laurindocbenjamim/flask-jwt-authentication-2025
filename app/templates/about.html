@@ -1,0 +1,300 @@
+{% extends "site.html" %}
+{% block title %}About{% endblock %}
+
+{% block styles %}  
+
+<style>
+    .btn-outline-light:hover {
+        color: var(--primary-color);
+    }
+    .hero {
+        background: linear-gradient(rgba(52, 152, 219, 0.8), rgba(46, 204, 113, 0.8)), url('https://d-tuning.com/images/about-hero.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+    }
+    .timeline {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        background-color: var(--primary-color);
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -3px;
+    }
+    .timeline-container {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+    }
+    .timeline-container::after {
+        content: '';
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        right: -17px;
+        background-color: var(--background-color);
+        border: 4px solid var(--secondary-color);
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+    }
+    .left {
+        left: 0;
+    }
+    .right {
+        left: 50%;
+    }
+    .left::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        right: 30px;
+        border: medium solid var(--primary-color);
+        border-width: 10px 0 10px 10px;
+        border-color: transparent transparent transparent var(--primary-color);
+    }
+    .right::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        left: 30px;
+        border: medium solid var(--primary-color);
+        border-width: 10px 10px 10px 0;
+        border-color: transparent var(--primary-color) transparent transparent;
+    }
+    .right::after {
+        left: -16px;
+    }
+    .timeline-content {
+        padding: 20px 30px;
+        background-color: white;
+        position: relative;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    @media screen and (max-width: 600px) {
+        .timeline::after {
+            left: 31px;
+        }
+        .timeline-container {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+        .timeline-container::before {
+            left: 60px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+        .left::after, .right::after {
+            left: 15px;
+        }
+        .right {
+            left: 0%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+        <section class="mb-5">
+            <h2 class="text-center mb-4">Our Mission</h2>
+            <p class="lead text-center">At Data Tuning, we are committed to democratizing education by providing high-quality, accessible online learning experiences to students worldwide. Our mission is to empower individuals with the knowledge and skills they need to succeed in the rapidly evolving digital landscape.</p>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-center mb-4">Our Journey</h2>
+            <div class="timeline">
+                <!--<div class="timeline-container left">
+                    <div class="timeline-content">
+                        <h3>2010</h3>
+                        <p>Data Tuning is founded with a vision to revolutionize online education.</p>
+                    </div>
+                </div>
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <h3>2012</h3>
+                        <p>Launch of our first Python programming course, setting the foundation for our tech-focused curriculum.</p>
+                    </div>
+                </div>
+                <div class="timeline-container left">
+                    <div class="timeline-content">
+                        <h3>2015</h3>
+                        <p>Introduction of interactive coding environments and real-time feedback systems.</p>
+                    </div>
+                </div>
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <h3>2018</h3>
+                        <p>Expansion into data science and machine learning courses to meet growing industry demands.</p>
+                    </div>
+                </div>-->
+                <div class="timeline-container left">
+                    <div class="timeline-content">
+                        <h3>2023</h3>
+                        <p>Launch of our mobile learning app, making education accessible anytime, anywhere.</p>
+                    </div>
+                </div>
+                <div class="timeline-container right">
+                    <div class="timeline-content">
+                        <h3>2024</h3>
+                        <p>Celebrating over 1 million students worldwide and continuing to innovate in online education.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-center mb-4">Our Team</h2>
+            <div class="row row-cols-1 row-cols-md-3 g-4" style="justify-content: center;">
+                <div class="col">
+                    <div class="card h-100 text-center">
+                        <img src="https://github.com/laurindocbenjamim/dev-images/blob/main/laurindo.jpg?raw=true" class="card-img-top rounded-circle mx-auto mt-3" alt="Sarah Johnson" style="width: 150px; height: 150px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="{{ url_for('profile.laurindo_c_benjamim') }}" target="_blank" rel="noopener noreferrer">Laurindo C.Benjamim</a></h5>
+                            <p class="card-text">Founder & CEO</p>
+                        </div>
+                    </div>
+                </div>
+                <!--  <div class="col">
+                    <div class="card h-100 text-center">
+                        <img src="https://d-tuning.com/images/team-member-2.jpg" class="card-img-top rounded-circle mx-auto mt-3" alt="Michael Chen" style="width: 150px; height: 150px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Michael Chen</h5>
+                            <p class="card-text">Chief Technology Officer</p>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-center mb-4">Our Values</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-lightbulb text-primary me-2"></i>Innovation</h3>
+                            <p class="card-text">We constantly push the boundaries of online education, leveraging cutting-edge technology to enhance learning experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-users text-primary me-2"></i>Community</h3>
+                            <p class="card-text">We foster a supportive global community of learners and educators, promoting collaboration and knowledge sharing.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-star text-primary me-2"></i>Excellence</h3>
+                            <p class="card-text">We are committed to delivering high-quality education, continuously improving our courses and teaching methods.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+   
+
+    <script>
+        // Logout functionality (placeholder)
+        function logout() {
+            alert('Logout functionality would be implemented here.');
+            // In a real application, you would handle the logout process here
+            // For example, clearing session data and redirecting to a login page
+        }
+
+        // Add smooth scrolling to all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animate timeline on scroll
+        const timelineContainers = document.querySelectorAll('.timeline-container');
+        const animateTimeline = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        };
+
+        const options = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver(animateTimeline, options);
+
+        timelineContainers.forEach(container => {
+            container.style.opacity = 0;
+            container.style.transform = container.classList.contains('left') ? 'translateX(-50px)' : 'translateX(50px)';
+            container.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            observer.observe(container);
+        });
+
+        // Implement lazy loading for images
+        document.addEventListener("DOMContentLoaded", function() {
+            let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+            let active = false;
+
+            const lazyLoad = function() {
+                if (active === false) {
+                    active = true;
+
+                    setTimeout(function() {
+                        lazyImages.forEach(function(lazyImage) {
+                            if ((lazyImage.getBoundingClientRect().top <= window.innerHeight && lazyImage.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyImage).display !== "none") {
+                                lazyImage.src = lazyImage.dataset.src;
+                                lazyImage.classList.remove("lazy");
+
+                                lazyImages = lazyImages.filter(function(image) {
+                                    return image !== lazyImage;
+                                });
+
+                                if (lazyImages.length === 0) {
+                                    document.removeEventListener("scroll", lazyLoad);
+                                    window.removeEventListener("resize", lazyLoad);
+                                    window.removeEventListener("orientationchange", lazyLoad);
+                                }
+                            }
+                        });
+
+                        active = false;
+                    }, 200);
+                }
+            };
+
+            document.addEventListener("scroll", lazyLoad);
+            window.addEventListener("resize", lazyLoad);
+            window.addEventListener("orientationchange", lazyLoad);
+        });
+    </script>
+
+
+{% endblock %}

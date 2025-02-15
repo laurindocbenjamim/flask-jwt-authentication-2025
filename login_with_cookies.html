@@ -64,10 +64,16 @@
             console.log(response)
             if(!response.ok && !response.status_code){
                 const message = await auth.handlingErrors(response)
-                console.log(message)  
-                console.error("Login failed!")
                 
+                const sms = await auth.getErrorsSuccessMessage(response.error? response.error : response.message, response.status_code)
+                console.log(message)  
+                console.error("Login failed! "+ sms)
+                errorMessage.textContent = sms;
+                successMessage.textContent = '';
             }else{
+                const sms = await auth.getErrorsSuccessMessage(response.error? response.error : response.message, response.status_code)
+                console.log(sms)  
+                
                 if (response.status_code === 201) {
                     infoMessage.textContent = response.message || 'Login failed. Please try again.';
                     errorMessage.textContent = '';
@@ -84,7 +90,7 @@
                         window.location.href = auth.baseURL + '/admin.html';
                     }, 1000);
                 } else {
-                    errorMessage.textContent = 'An unexpected error occurred. Please try again.';
+                    errorMessage.textContent = 'An unexpected error occurred. Please try again.' + sms;
                     successMessage.textContent = '';
                 }
             }             

@@ -148,5 +148,20 @@ class AuthUser {
             return errorMessages[response.status] || `HTTP error! status: ${response}`;
         }
     };
+
+    async getErrorsSuccessMessage(message = 'Message', status_code){
+        if (status_code) {
+            const errorMessages = {
+                200: message,
+                400: 'Bad Request. ' + message,
+                401: 'Unauthorized. ' + message,
+                415: 'Unsupported Media Type. ' + message,
+                422: 'Unprocessable Entity. ' + message,
+                423: 'Locked. ' + message,
+                500: 'Internal Server Error. ' + message
+            };
+            return errorMessages[status_code] || `HTTP error! status: ${status_code}`;
+        }
+    };
 };
 
