@@ -1,4 +1,10 @@
 
+
+import sys
+import os
+
+sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
+
 from flask import jsonify, current_app
 from flask_restful import Api, Resource, reqparse
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired

@@ -15,7 +15,11 @@ Features:
 - Async email sending
 """
 
+import sys
 import os
+
+sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
+
 from flask import Blueprint, request,current_app, make_response, jsonify
 from markupsafe import escape
 from flask_restful import Api

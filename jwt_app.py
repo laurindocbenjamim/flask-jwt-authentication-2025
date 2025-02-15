@@ -12,12 +12,13 @@ from app import create_app
 from werkzeug.security import generate_password_hash
 
 app = create_app()
+# This function is used to migrate the database
+Migrate(app, db)
+    
+ # Init the db
+db.init_app(app)
 
 if __name__ == '__main__':
-
-    db.init_app(app)
-
-    Migrate(app, db)
 
     with app.app_context():
         db.create_all()

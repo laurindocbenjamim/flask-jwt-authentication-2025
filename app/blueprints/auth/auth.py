@@ -1,3 +1,9 @@
+
+import sys
+import os
+
+sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
+
 from flask_restful import Api, Resource, reqparse
 from app.configs import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
@@ -22,7 +28,8 @@ from flask_jwt_extended import (
 from sqlalchemy.sql import func
 import secrets
 import jwt
-from werkzeug.security import check_password_hash
+from app.blueprints.emails import send_confirmation_email
+
 
 
 auth_api = Blueprint('auth_api', __name__, url_prefix='/api/v1/auth')
@@ -36,12 +43,7 @@ class Login(Resource):
         data = parser.parse_args()
         
         # Here you would add your authentication logic
-        #if data['username'] == 'admin' and data['password'] == 'password':
-        #    access_token = create_access_token(identity={'username': data['username']})
-        #    return jsonify(access_token=access_token)
-        #return make_response(jsonify(message="Invalid credentials"), 401)
-        #response = jsonify({"msg": "login successful"}), 200
-        #data = request.get_json()
+        
         username = data.get('username')
         password = data.get('password')
         
@@ -51,12 +53,15 @@ class Login(Resource):
             return jsonify({"status_code": 401, "error": "Wrong username or password", "user": user.to_dict()})
         # Generate a JWT token
 
+        if not user.confirmed:
+            status = send_confirmation_email(user.email)
+            if not status:
+                return make_response(jsonify(status_code=401, error="Your account has not been confirmed yet."),401)
+            return make_response(jsonify(status_code=201, message=f"Your account has not been confirmed yet. We've sent a confirmation link to [{user.email}]. "),200)
         
         access_token = create_access_token(identity=str(user.id))
         
-        response = make_response(jsonify({"status_code": 200,
-                                      "username": username
-                                      }),200)
+        response = make_response(jsonify({"status_code": 200}),200)
         set_access_cookies(response, access_token)
         return response
 

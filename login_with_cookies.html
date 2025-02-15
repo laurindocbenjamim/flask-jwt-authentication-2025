@@ -10,9 +10,9 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container text-justify-center">
         <h2 class="mt-5">Login</h2>
-        <form id="loginForm">
+        <form class="col-lg-7" id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required>
@@ -21,22 +21,26 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" name="password" id="password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="mt-3" >
+                <div class="error-message text-danger" id="error-message"></div>
+                <div class="info-message text-info" id="info-message"></div>
+                <div class="success-message text-success" id="success-message"></div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
         </form>
 
-        <div id="adminArea" class="mt-5" style="display: ;">
-            <h2>Admin Area</h2>
-            <button id="testProtectionButton" class="btn btn-success">Test protection</button>
-            <button id="logoutButton" class="btn btn-danger">Logout</button>
-            <h3 class="mt-3">User Data</h3>
-            <pre id="userData"></pre>
-        </div>
+        
     </div>
 
     <script>
 
        
         const auth = new AuthUser();
+        const infoMessage = document.getElementById('info-message')
+        const successMessage = document.getElementById('success-message')
+        const errorMessage =document.getElementById('error-message')
 
         document.getElementById('loginForm').addEventListener('submit', async (event)=> {
             event.preventDefault();
@@ -64,9 +68,24 @@
                 console.error("Login failed!")
                 
             }else{
-                console.log("Login successfull!")
-                if(response.username){
-                    window.location.href = auth.baseURL + '/admin.html'
+                if (response.status_code === 201) {
+                    infoMessage.textContent = response.message || 'Login failed. Please try again.';
+                    errorMessage.textContent = '';
+                    successMessage.textContent = '';
+                }else if (response.status_code === 400 || response.status_code === 403 || response.status_code === 401) {
+                    infoMessage.textContent = '';
+                    errorMessage.textContent = response.error || 'Login failed. Please try again.';
+                    successMessage.textContent = '';
+                } else if (response.status_code === 200) {
+                    infoMessage.textContent = '';
+                    successMessage.textContent = 'Login successful! Redirecting...';
+                    errorMessage.textContent = '';
+                    setTimeout(() => {
+                        window.location.href = auth.baseURL + '/admin.html';
+                    }, 1000);
+                } else {
+                    errorMessage.textContent = 'An unexpected error occurred. Please try again.';
+                    successMessage.textContent = '';
                 }
             }             
             console.log('Process  finished!')

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DT Logo</title>
+    <title>Exact DT. Logo</title>
     <style>
         * {
             margin: 0;
@@ -15,82 +15,49 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
             background-color: #f8f8f8;
         }
 
-        .logo-container {
-            display: flex;
-            gap: 50px;
-        }
-
         .logo {
-            width: 250px;
-            height: 250px;
-        }
-
-        .pentagon {
-            fill: none;
-            stroke: black;
-            stroke-width: 3;
+            width: 300px;
+            height: 200px;
         }
 
         .letter {
             stroke: black;
-            stroke-width: 4;
+            stroke-width: 3;
             fill: none;
         }
     </style>
 </head>
 <body>
 
-    <h2>DT. Logo Without Pentagon</h2>
-    <div class="logo-container">
-        <!-- Logo Without Pentagon -->
-        <div class="logo">
-            <svg width="250" height="200" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- "D" -->
-                <path d="M 70 150 Q 70 50 110 50 T 110 150 Z" class="letter" />
-                <line x1="70" y1="50" x2="70" y2="150" class="letter" />
-                
-                <!-- "T" -->
-                <line x1="130" y1="50" x2="170" y2="50" class="letter" />
-                <line x1="150" y1="50" x2="150" y2="150" class="letter" />
-                
-                <!-- Small box on "T" -->
-                <rect x="145" y="35" width="10" height="10" class="letter" />
-                
-                <!-- "dot" -->
-                <circle cx="190" cy="160" r="7" class="letter"/>
-            </svg>
-        </div>
-    </div>
+    <!-- DT. Logo with Double Lines -->
+    <svg class="logo" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- "D" Outer Line -->
+        <path d="M 65 150 Q 65 50 105 50 T 105 150 Z" class="letter" />
+        <line x1="65" y1="50" x2="65" y2="150" class="letter" />
+        <!-- "D" Inner Line -->
+        <path d="M 75 150 Q 75 50 115 50 T 115 150 Z" class="letter" />
+        <line x1="75" y1="50" x2="75" y2="150" class="letter" />
 
-    <h2>DT. Logo Inside Pentagon</h2>
-    <div class="logo-container">
-        <!-- Logo With Pentagon -->
-        <div class="logo">
-            <svg width="250" height="250" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
-                <!-- Pentagon -->
-                <polygon points="125,20 30,90 60,200 190,200 220,90" class="pentagon"/>
+        <!-- "T" Outer Line -->
+        <line x1="125" y1="50" x2="165" y2="50" class="letter" />
+        <line x1="145" y1="50" x2="145" y2="150" class="letter" />
+        <!-- "T" Inner Line -->
+        <line x1="130" y1="50" x2="170" y2="50" class="letter" />
+        <line x1="150" y1="50" x2="150" y2="150" class="letter" />
 
-                <!-- "D" -->
-                <path d="M 70 150 Q 70 80 110 80 T 110 150 Z" class="letter" />
-                <line x1="70" y1="80" x2="70" y2="150" class="letter" />
-                
-                <!-- "T" -->
-                <line x1="130" y1="80" x2="170" y2="80" class="letter" />
-                <line x1="150" y1="80" x2="150" y2="150" class="letter" />
+        <!-- Small box on "T" (Double Lines) -->
+        <rect x="140" y="35" width="10" height="10" class="letter" />
+        <rect x="147" y="35" width="10" height="10" class="letter" />
 
-                <!-- Small box on "T" -->
-                <rect x="145" y="65" width="10" height="10" class="letter" />
-                
-                <!-- "dot" -->
-                <circle cx="190" cy="180" r="7" class="letter"/>
-            </svg>
-        </div>
-    </div>
+        <!-- "dot" Outer -->
+        <circle cx="185" cy="160" r="7" class="letter"/>
+        <!-- "dot" Inner -->
+        <circle cx="185" cy="160" r="5" class="letter"/>
+    </svg>
 
 </body>
 </html>

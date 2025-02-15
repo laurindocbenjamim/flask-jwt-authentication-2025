@@ -100,15 +100,15 @@ def create_app():
         return jsonify(code="dave", err="IToken has expired"), 401
 
     # Security Middleware
-    """@app.after_request
-        def set_security_headers(response):
-            #Set secure HTTP headers
-            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
-            response.headers['X-Content-Type-Options'] = 'nosniff'
-            response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-            response.headers['X-XSS-Protection'] = '1; mode=block'
-            return response
-    """
+    @app.after_request
+    def set_security_headers(response):
+        #Set secure HTTP headers
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        return response
+    
 
     # Error Handlers
     @app.errorhandler(429)

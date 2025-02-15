@@ -1,4 +1,8 @@
 
+import sys
+import os
+
+sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
 from app.models import User
 from app.configs import db
