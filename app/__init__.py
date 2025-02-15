@@ -24,7 +24,7 @@ import secrets
 import jwt
 from werkzeug.security import check_password_hash
 from app.configs.config import DevelopmentConfig, ProductionConfig
-from app.config import Config
+from app.config import Config, DevelopmentConfig, ProductionConfig
 from app.configs import load_extentions, db, limiter, cors
 from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
@@ -44,7 +44,7 @@ def create_app():
     else:
         app.config.from_object(DevelopmentConfig)"""
 
-    app.config.from_object(Config)
+    app.config.from_object(DevelopmentConfig)
 
     load_extentions(app=app)
     

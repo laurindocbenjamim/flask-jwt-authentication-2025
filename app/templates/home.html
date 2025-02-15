@@ -1,0 +1,219 @@
+{% extends "site.html" %}
+{% block title %}Home{% endblock %}
+
+{% block styles %}  
+<style>
+
+  @import url("https://fonts.googleapis.com/css2?family=Anton&family=Arimo:ital,wght@1,400;1,600&family=Bricolage+Grotesque&family=Jaro:opsz@6..72&family=Jersey+25+Charted&family=Pacifico&family=Roboto:ital,wght@0,500;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@1,300;1,400;1,500;1,600;1,800;1,900&display=swap");
+
+
+  body{
+    /*background: linear-gradient(to right, #0a0318, #2e3157, #000c25);*/
+  }
+  
+  .welcome-title {
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+  
+    font-size: 4rem;
+    font-style: normal;
+    color: rgb(240, 240, 243)
+  }
+    
+
+      /* Background Animation */
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    .code-section {
+        background-color: #494d53;
+        color: #abb2bf;
+        padding: 3rem 0;
+        margin: 4rem 0;
+    }
+
+    .code-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .code-editor {
+        width: 30%;
+        background-color: #21252b;
+        border-radius: 8px;
+        box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.23);
+        overflow: hidden;
+    }
+    .code-header {
+        background-color: #191a21;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    .code-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    .red { background-color: #ff5f56; }
+    .yellow { background-color: #ffbd2e; }
+    .green { background-color: #27c93f; }
+    .code-content {
+        padding: 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: .6rem;
+        white-space: pre-wrap;
+        overflow: hidden;
+    }
+    .code-description {
+        width: 35%;
+       
+        padding: 1.5rem;
+       
+        border-radius: 8px;
+        margin-left: 3%;
+    }
+
+    /*.fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }*/
+
+    @media (max-width: 768px) {
+        .service-card {
+            width: 100%;
+        }
+        .code-container {
+            flex-direction: column;
+        }
+        .code-editor, .code-description {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .code-description{
+            margin-left: 0;
+        }
+
+    }
+   
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<section class="features text-center">
+  <h2 class="mb-5">Why Choose Data Tuning?</h2>
+  <div class="row">
+      <div class="col-md-4 mb-4">
+          <i class="fas fa-laptop-code feature-icon mb-3"></i>
+          <h3>Interactive Learning</h3>
+          <p>Engage with hands-on exercises and real-world projects</p>
+      </div>
+      <div class="col-md-4 mb-4">
+          <i class="fas fa-users feature-icon mb-3"></i>
+          <h3>Expert Instructors</h3>
+          <p>Learn from industry professionals and experienced educators</p>
+      </div>
+      <div class="col-md-4 mb-4">
+          <i class="fas fa-certificate feature-icon mb-3"></i>
+          <h3>Recognized Certifications</h3>
+          <p>Earn valuable certificates to boost your career</p>
+      </div>
+  </div>
+</section>
+
+
+<section class="code-section fade-in">
+    <div class="container code-container">
+        <div class="code-editor">
+            <div class="code-header">
+                <div class="code-dot red"></div>
+                <div class="code-dot yellow"></div>
+                <div class="code-dot green"></div>
+            </div>
+            <div class="code-content" id="code-content"></div>
+        </div>
+        <div class="code-description">
+            <h3>Data-Driven Insights</h3>
+            <p>Our team of expert data scientists can help you analyze your product performance, identify trends, and make data-driven decisions to boost your business growth.</p>
+            <p>We use cutting-edge tools and techniques to transform raw data into actionable insights, giving you a competitive edge in the market.</p>
+        </div>
+    </div>
+</section>
+
+<section class="popular-courses my-5">
+  <h2 class="text-center mb-4">Popular Courses</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col">
+          <div class="card h-100">
+              <img src="https://page-images.websim.ai/Introduction%20to%20Python_1024x495xMcX91ZnPkVAmUE2bEx39b066e88dcc8.jpg" class="card-img-top" alt="Python Basics course image">
+              <div class="card-body">
+                  <h5 class="card-title">Python Courses</h5>
+                  <p class="card-text">Learn the fundamentals of Python programming</p>
+                  <a href="#" class="btn btn-primary">Learn More</a>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <img src="https://page-images.websim.ai/Advanced%20Web%20Development_1024x495xMcX91ZnPkVAmUE2bEx6676ca5ffa2d.jpg" class="card-img-top" alt="Web Development course image">
+              <div class="card-body">
+                  <h5 class="card-title">Web Development</h5>
+                  <p class="card-text">Master HTML, CSS, and JavaScript</p>
+                  <a href="https://d-tuning.com/courses/web-development" class="btn btn-primary">Learn More</a>
+              </div>
+          </div>
+      </div>
+      <div class="col">
+          <div class="card h-100">
+              <img src="https://page-images.websim.ai/Data%20Science%20Fundamentals_1024x495xMcX91ZnPkVAmUE2bEx8e0dae080f1d5.jpg" class="card-img-top" alt="Data Science course image">
+              <div class="card-body">
+                  <h5 class="card-title">Data Science</h5>
+                  <p class="card-text">Analyze and visualize data with Python</p>
+                  <a href="https://d-tuning.com/courses/data-science" class="btn btn-primary">Learn More</a>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<section class="testimonials my-5">
+  <h2 class="text-center mb-4">What Our Students Say</h2>
+  <div class="row">
+      <div class="col-md-6 mb-4">
+          <div class="card">
+              <div class="card-body">
+                  <p class="card-text">"Data Tuning's Python course helped me land my dream job as a software developer. The hands-on projects were incredibly valuable!"</p>
+                  <footer class="blockquote-footer">Sarah J., Software Developer</footer>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6 mb-4">
+          <div class="card">
+              <div class="card-body">
+                  <p class="card-text">"The Data Science course was challenging but rewarding. I now have the skills to analyze complex datasets and make data-driven decisions."</p>
+                  <footer class="blockquote-footer">Michael T., Data Analyst</footer>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+      
+{% endblock %}

@@ -27,11 +27,23 @@ class Config(MySmtpConfig):
     # over https. In production, this should always be set to True
     JWT_COOKIE_SECURE = False
 
-    SECRET_KEY = os.getenv('SECRET_KEY', 'paaoeAtEpkR5IcoMb6AjISxhpSEz7--1iWoB6QloNjRdjsKrVwlVJGKNM8V5su1humYcrblV01svzoTmXg0e3A')
+    SECRET_KEY = os.getenv('SECRET_KEY', '12345')
     # Correctly set the secret key and algorithm
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "PTUdaZiU9Q4yLPcTB9SX_aqgf6JrZOhM0IS-uIBLumN2gcfKFSpEe2j9AAu8YATgw8Oj4onTgEqnwRwURgupYQ")  # Secure key
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "543210")  # Secure key
     #SQLALCHEMY_DATABASE_URI = "sqlite://"
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///development.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ALGORITHM = "HS256"
     JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES
+
+class DevelopmentConfig(Config):
+    PORT=5000
+    DEBUG = True
+    LOG_LEVEL = "DEBUG"
+    MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))
+
+class ProductionConfig(Config):
+    PORT=5000
+    DEBUG = False
+    LOG_LEVEL = "ERROR"
+    MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))

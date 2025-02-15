@@ -4,7 +4,7 @@ import secrets
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from flask import jsonify, make_response, request
+from flask import (jsonify, make_response, request, render_template)
 
 from flask_jwt_extended import (     
     create_access_token,
@@ -22,8 +22,17 @@ from app.configs import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
 def routes(app):
-    
-    @app.route('/', methods=['GET', 'POST'])
+
+    @app.route('/')
+    def index():
+
+        welcome_title = "Welcome to Data Tuning"
+        welcome_message = "Empowering learners with cutting-edge online education"
+        response = make_response(render_template('home.html', title='Home', welcome_title=welcome_title,  welcome_message=welcome_message))
+        return response
+
+
+    @app.route('/login_without_cookies', methods=['GET', 'POST'])
     def login_without_cookies():
 
         data = request.get_json()

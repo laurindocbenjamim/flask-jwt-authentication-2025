@@ -1,0 +1,247 @@
+{% extends "site.html" %}
+{% block title %}{{title}}{% endblock %}
+
+{% block styles %}  
+<style>
+    .courses-hero {
+        background: linear-gradient(rgba(52, 152, 219, 0.8), rgba(46, 204, 113, 0.8)), url('https://d-tuning.com/images/courses-hero.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+    }
+    .course-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .course-img {
+        height: 200px;
+        object-fit: cover;
+    }
+    .filters {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="filters animate__animated animate__fadeIn">
+    <h3 class="mb-3">Filter Courses</h3>
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category">
+                <option value="">All Categories</option>
+                <option value="programming">Programming</option>
+                <option value="data-science">Data Science</option>
+                <option value="web-development">Web Development</option>
+                <option value="ai-ml">AI & Machine Learning</option>
+            </select>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="level" class="form-label">Level</label>
+            <select class="form-select" id="level">
+                <option value="">All Levels</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="duration" class="form-label">Duration</label>
+            <select class="form-select" id="duration">
+                <option value="">Any Duration</option>
+                <option value="short">Short (0-4 weeks)</option>
+                <option value="medium">Medium (5-12 weeks)</option>
+                <option value="long">Long (13+ weeks)</option>
+            </select>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="price" class="form-label">Price</label>
+            <select class="form-select" id="price">
+                <option value="">Any Price</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary mt-3" onclick="filterCourses()">Apply Filters</button>
+</div>
+
+<div class="row" id="courseList">
+    <!-- Course cards will be dynamically inserted here -->
+</div>
+
+<nav aria-label="Course pagination" class="mt-5">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav>
+<script>
+    // Sample course data
+    const courses = [
+    {
+        id: 1,
+        title: "Python Courses",
+        description: "Learn the basics of Python programming language.",
+        image: "https://page-images.websim.ai/Introduction%20to%20Python_1024x495xMcX91ZnPkVAmUE2bEx39b066e88dcc8.jpg",
+        category: "programming",
+        level: "beginner",
+        duration: "short",
+        price: "free",
+        link: "{{ url_for('course.python_courses')}}"
+    },
+    {
+        id: 2,
+        title: "Data Science Fundamentals",
+        description: "Explore the core concepts of data science and analytics.",
+        image: "https://page-images.websim.ai/Data%20Science%20Fundamentals_1024x495xMcX91ZnPkVAmUE2bEx8e0dae080f1d5.jpg",
+        category: "data-science",
+        level: "intermediate",
+        duration: "medium",
+        price: "paid",
+        link: "{{ url_for('course.python_courses')}}"
+    },
+    {
+        id: 3,
+        title: "Advanced Web Development",
+        description: "Master modern web technologies and frameworks.",
+        image: "https://page-images.websim.ai/Advanced%20Web%20Development_1024x495xMcX91ZnPkVAmUE2bEx6676ca5ffa2d.jpg",
+        category: "web-development",
+        level: "advanced",
+        duration: "long",
+        price: "paid",
+        link: "{{ url_for('course.python_courses')}}"
+    },
+    {
+        id: 4,
+        title: "Machine Learning Basics",
+        description: "Get started with machine learning algorithms and applications.",
+        image: "https://page-images.websim.ai/Machine%20Learning%20Basics_1024x495xMcX91ZnPkVAmUE2bExa2c0bbec24f94.jpg",
+        category: "ai-ml",
+        level: "intermediate",
+        duration: "medium",
+        price: "paid",
+        link: "{{ url_for('course.python_courses')}}"
+    },
+    {
+        id: 5,
+        title: "JavaScript for Beginners",
+        description: "Learn the fundamentals of JavaScript programming.",
+        image: "https://page-images.websim.ai/JavaScript%20for%20Beginners_1024x495xMcX91ZnPkVAmUE2bExd817f92e6c5bc.jpg",
+        category: "programming",
+        level: "beginner",
+        duration: "short",
+        price: "free",
+        link: "{{ url_for('course.python_courses')}}"
+    },
+    {
+        id: 6,
+        title: "Responsive Web Design",
+        description: "Create beautiful, responsive websites using HTML and CSS.",
+        image: "https://page-images.websim.ai/Responsive%20Web%20Design_1024x495xMcX91ZnPkVAmUE2bEx90583ad58321b.jpg",
+        category: "web-development",
+        level: "beginner",
+        duration: "medium",
+        price: "paid",
+        link: "{{ url_for('course.python_courses')}}"
+    }
+   ];
+   
+   // Function to create course cards
+   function createCourseCard(course) {
+    return `
+        <div class="col-md-4 mb-4">
+            <div class="card course-card animate__animated animate__fadeIn">
+                <img src="${course.image}" class="card-img-top course-img" alt="${course.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${course.title}</h5>
+                    <p class="card-text">${course.description}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-tag me-2"></i>${course.category}
+                            <i class="fas fa-level-up-alt ms-3 me-2"></i>${course.level}
+                            <i class="fas fa-clock ms-3 me-2"></i>${course.duration}
+                        </small>
+                    </p>
+                    <a href="${course.link}" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    `;
+   }
+   
+   // Function to display courses
+   function displayCourses(filteredCourses = courses) {
+    const courseList = document.getElementById('courseList');
+    courseList.innerHTML = '';
+    filteredCourses.forEach(course => {
+        courseList.innerHTML += createCourseCard(course);
+    });
+   }
+   
+   // Function to filter courses
+   function filterCourses() {
+    const category = document.getElementById('category').value;
+    const level = document.getElementById('level').value;
+    const duration = document.getElementById('duration').value;
+    const price = document.getElementById('price').value;
+   
+    const filteredCourses = courses.filter(course => {
+        return (!category || course.category === category) &&
+               (!level || course.level === level) &&
+               (!duration || course.duration === duration) &&
+               (!price || course.price === price);
+    });
+   
+    displayCourses(filteredCourses);
+   }
+   
+   // Initial display of courses
+   displayCourses();
+   
+   // Add animations to elements when they come into view
+   const animateOnScroll = (entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+            observer.unobserve(entry.target);
+        }
+    });
+   };
+   
+   const options = {
+    threshold: 0.1
+   };
+   
+   const observer = new IntersectionObserver(animateOnScroll, options);
+   
+   document.querySelectorAll('.course-card').forEach(el => {
+    observer.observe(el);
+   });
+   </script>
+
+{% endblock %}
+
+{% block scripts %}
+
+{%endblock%}

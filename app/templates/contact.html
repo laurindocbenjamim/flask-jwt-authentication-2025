@@ -1,0 +1,113 @@
+
+{% extends "site.html" %}
+{% block title %}{{title}}{% endblock %}
+
+{% block styles %}  
+<style>
+
+  @import url("https://fonts.googleapis.com/css2?family=Anton&family=Arimo:ital,wght@1,400;1,600&family=Bricolage+Grotesque&family=Jaro:opsz@6..72&family=Jersey+25+Charted&family=Pacifico&family=Roboto:ital,wght@0,500;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@1,300;1,400;1,500;1,600;1,800;1,900&display=swap");
+
+
+  body{
+    /*background: linear-gradient(to right, #0a0318, #2e3157, #000c25);*/
+  }
+  
+  .welcome-title {
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+  
+    font-size: 4rem;
+    font-style: normal;
+    color: rgb(240, 240, 243)
+  }
+    
+
+  .contact-hero {
+    background: linear-gradient(rgba(52, 152, 219, 0.8), rgba(46, 204, 113, 0.8)), url('https://d-tuning.com/images/contact-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+}
+.contact-form {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+.contact-info {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 10px;
+    padding: 30px;
+}
+.contact-info a {
+    color: white;
+    text-decoration: none;
+}
+.contact-info a:hover {
+    text-decoration: underline;
+}
+.map-container {
+    height: 300px;
+    width: 100%;
+}
+
+   
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="contact-form">
+            <h2 class="mb-4">Send us a message</h2>
+            <form id="contactForm" method="POST">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="contact-info">
+            <h2 class="mb-4">Contact Information</h2>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Rua Aires de Ornelas, 197, 1ºEsq., 4000-023</p>
+                    <p><i class="fas fa-phone me-2"></i> <a href="tel:+351933443506">+(351) 93 344 3506</a></p>
+                    <p><i class="fas fa-envelope me-2"></i> <a href="mailto:devccodes@gmail.com">devccodes@gmail.com</a></p>
+                    <h3 class="mt-4 mb-3">Follow Us</h3>
+            <a href="https://facebook.com/d-tuning" class="me-3"><i class="fab fa-facebook-f fa-2x"></i></a>
+            <a href="https://twitter.com/d-tuning" class="me-3"><i class="fab fa-twitter fa-2x"></i></a>
+            <a href="https://linkedin.com/company/d-tuning" class="me-3"><i class="fab fa-linkedin-in fa-2x"></i></a>
+            <a href="https://instagram.com/d-tuning"><i class="fab fa-instagram fa-2x"></i></a>
+        </div>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="mb-4">Our Location</h2>
+        <div class="map-container">
+            <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3172.3325395304414!2d-122.01462168530234!3d37.33463524513264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb596e9e188fd%3A0x3b0d8391510688f0!2sApple%20Park!5e0!3m2!1sen!2sus!4v1621436761410!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>-->
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d24033.10722677663!2d-8.5983232!3d41.1533312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2spt!4v1724502503604!5m2!1sen!2spt" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
