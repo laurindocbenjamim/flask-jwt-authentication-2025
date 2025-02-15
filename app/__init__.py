@@ -44,7 +44,7 @@ def create_app():
     else:
         app.config.from_object(DevelopmentConfig)"""
 
-    app.config.from_object(DevelopmentConfig)
+    app.config.from_object(Config)
 
     load_extentions(app=app)
     
