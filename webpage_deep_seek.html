@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechFinance Academy</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- AOS for scroll animations -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <style>
+    /* Base Body & Ondulated Background */
+    body {
+      background: #e0f7fa;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .ondulated-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      z-index: -1;
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, #0d6efd, #6f42c1);
+      color: #fff;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+    .creative-shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .creative-shape.shape1 {
+      width: 150px;
+      height: 150px;
+      top: -50px;
+      left: -50px;
+    }
+    .creative-shape.shape2 {
+      width: 200px;
+      height: 200px;
+      bottom: -100px;
+      right: -100px;
+    }
+    /* Software Process Cycle Diagram */
+    .process-diagram {
+      width: 100%;
+      height: 250px;
+    }
+    /* Footer */
+    footer {
+      background: #343a40;
+      color: #fff;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ondulated SVG Background -->
+  <svg class="ondulated-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#ffffff" fill-opacity="1" d="M0,256L48,229.3C96,203,192,149,288,138.7C384,128,480,160,576,192C672,224,768,256,864,245.3C960,235,1056,181,1152,160C1248,139,1344,149,1392,154.7L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+  </svg>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">TechFinance Academy</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
+          <li class="nav-item"><a class="nav-link" href="#testimonials">Testimonials</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item">
+            <button class="nav-link btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Creative Shapes -->
+  <section class="hero d-flex align-items-center" id="home">
+    <div class="container text-center" data-aos="fade-up">
+      <h1 class="display-4">Empower Your Future with Tech & Finance Courses</h1>
+      <p class="lead">Learn from industry experts and get the skills you need to succeed.</p>
+      <a href="#courses" class="btn btn-outline-light mt-3">Explore Courses</a>
+    </div>
+    <!-- Creative Floating Shapes -->
+    <div class="creative-shape shape1" data-aos="zoom-in"></div>
+    <div class="creative-shape shape2" data-aos="zoom-in" data-aos-delay="200"></div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-5">
+    <div class="container" data-aos="fade-right">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>About Us</h2>
+          <p>At TechFinance Academy, we provide cutting-edge courses in technology and finance, designed to empower professionals and enthusiasts alike. Our mission is to deliver practical knowledge and skills to help you excel in today's competitive market.</p>
+        </div>
+        <div class="col-md-6">
+          <img src="https://source.unsplash.com/500x300/?education,online" alt="About us" class="img-fluid rounded">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="py-5 bg-light">
+    <div class="container" data-aos="fade-left">
+      <h2 class="text-center mb-4">Our Services</h2>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <i class="fas fa-laptop-code fa-3x mb-3"></i>
+          <h4>Tech Courses</h4>
+          <p>From web development to data science, our tech courses are designed to keep you ahead of the curve with real-world projects.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <i class="fas fa-chart-line fa-3x mb-3"></i>
+          <h4>Finance Courses</h4>
+          <p>Gain advanced financial literacy and investment strategies from industry experts to grow your wealth effectively.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <i class="fas fa-user-graduate fa-3x mb-3"></i>
+          <h4>Career Guidance</h4>
+          <p>Receive personalized mentoring and career advice to jumpstart your professional journey in tech and finance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses Section -->
+  <section id="courses" class="py-5">
+    <div class="container" data-aos="fade-up">
+      <h2 class="text-center mb-4">Our Courses</h2>
+      <div class="row">
+        <!-- Course Card 1 -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <img src="https://source.unsplash.com/400x200/?web-development" class="card-img-top" alt="Full-Stack Web Development">
+            <div class="card-body">
+              <h5 class="card-title">Full-Stack Web Development</h5>
+              <p class="card-text">Learn front-end and back-end technologies to build robust web applications from scratch.</p>
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#course1Details" aria-expanded="false">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <!-- Collapsible Course Details -->
+          <div class="collapse mt-2" id="course1Details">
+            <div class="card card-body">
+              <h6>Course Description:</h6>
+              <p>This comprehensive course covers HTML, CSS, JavaScript, and popular frameworks like React and Node.js. Build real-world projects, master RESTful APIs, and explore deployment practices.</p>
+              <h6>Curriculum:</h6>
+              <ul>
+                <li>Introduction to HTML &amp; CSS</li>
+                <li>JavaScript Fundamentals &amp; ES6</li>
+                <li>Frontend Frameworks (React/Angular)</li>
+                <li>Backend Development with Node.js &amp; Express</li>
+                <li>Database Integration (SQL/NoSQL)</li>
+                <li>Deployment and DevOps Basics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Course Card 2 -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <img src="https://source.unsplash.com/400x200/?data-science" class="card-img-top" alt="Data Science & Analytics">
+            <div class="card-body">
+              <h5 class="card-title">Data Science &amp; Analytics</h5>
+              <p class="card-text">Unlock the power of data with our in-depth course covering analysis, visualization, and machine learning.</p>
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#course2Details" aria-expanded="false">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <!-- Collapsible Course Details -->
+          <div class="collapse mt-2" id="course2Details">
+            <div class="card card-body">
+              <h6>Course Description:</h6>
+              <p>Dive into the world of data science with modules on statistical analysis, data visualization using tools like Tableau, and machine learning algorithms with Python and R.</p>
+              <h6>Curriculum:</h6>
+              <ul>
+                <li>Introduction to Data Science &amp; Python</li>
+                <li>Data Wrangling and Cleaning</li>
+                <li>Exploratory Data Analysis &amp; Visualization</li>
+                <li>Statistical Methods &amp; Inference</li>
+                <li>Machine Learning Fundamentals</li>
+                <li>Real-World Projects and Case Studies</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Course Card 3 -->
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <img src="https://source.unsplash.com/400x200/?finance,investment" class="card-img-top" alt="Investment Strategies">
+            <div class="card-body">
+              <h5 class="card-title">Investment Strategies</h5>
+              <p class="card-text">Learn effective investment techniques and portfolio management from seasoned finance experts.</p>
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#course3Details" aria-expanded="false">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <!-- Collapsible Course Details -->
+          <div class="collapse mt-2" id="course3Details">
+            <div class="card card-body">
+              <h6>Course Description:</h6>
+              <p>This course covers various investment strategies, risk management, and portfolio diversification techniques essential for building and preserving wealth.</p>
+              <h6>Curriculum:</h6>
+              <ul>
+                <li>Fundamentals of Financial Markets</li>
+                <li>Understanding Investment Vehicles</li>
+                <li>Risk Assessment and Management</li>
+                <li>Portfolio Diversification Strategies</li>
+                <li>Advanced Investment Techniques</li>
+                <li>Market Analysis and Real-World Applications</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="py-5">
+    <div class="container" data-aos="fade-up">
+      <h2 class="text-center mb-4">Meet Our Team</h2>
+      <div class="row">
+        <div class="col-md-3 text-center">
+          <img src="https://source.unsplash.com/150x150/?woman,face" class="rounded-circle mb-2" alt="Team member">
+          <h5>Jane Doe</h5>
+          <p>Lead Instructor</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <img src="https://source.unsplash.com/150x150/?man,face" class="rounded-circle mb-2" alt="Team member">
+          <h5>John Smith</h5>
+          <p>Course Coordinator</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <img src="https://source.unsplash.com/150x150/?designer" class="rounded-circle mb-2" alt="Team member">
+          <h5>Emily Johnson</h5>
+          <p>UX/UI Designer</p>
+        </div>
+        <div class="col-md-3 text-center">
+          <img src="https://source.unsplash.com/150x150/?developer" class="rounded-circle mb-2" alt="Team member">
+          <h5>Michael Brown</h5>
+          <p>Developer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="py-5 bg-light">
+    <div class="container" data-aos="fade-left">
+      <h2 class="text-center mb-4">What Our Students Say</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card p-3">
+            <p>"This platform transformed my career! The courses are well-structured and engaging."</p>
+            <h6>- Sarah W.</h6>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <p>"I love the interactive approach to learning. Highly recommended for anyone looking to upskill."</p>
+            <h6>- Mark T.</h6>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <p>"A fantastic learning experience with top-notch instructors. The course content is very relevant."</p>
+            <h6>- Lisa R.</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5">
+    <div class="container" data-aos="fade-right">
+      <h2 class="text-center mb-4">Get in Touch</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <form>
+            <div class="mb-3">
+              <label for="contactName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="contactName" placeholder="Your name">
+            </div>
+            <div class="mb-3">
+              <label for="contactEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="contactEmail" placeholder="Your email">
+            </div>
+            <div class="mb-3">
+              <label for="contactMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="contactMessage" rows="4" placeholder="Your message"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Software Process Cycle Diagram -->
+  <section id="process" class="py-5 bg-light">
+    <div class="container" data-aos="fade-up">
+      <h2 class="text-center mb-4">Our Process</h2>
+      <div class="d-flex justify-content-center">
+        <svg class="process-diagram" viewBox="0 0 1000 250">
+          <!-- Connecting Line -->
+          <line x1="50" y1="125" x2="950" y2="125" stroke="#0d6efd" stroke-width="2"/>
+          <!-- Step Circles and Labels -->
+          <circle cx="150" cy="125" r="30" fill="#0d6efd"/>
+          <text x="150" y="125" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14">Plan</text>
+          
+          <circle cx="350" cy="125" r="30" fill="#0d6efd"/>
+          <text x="350" y="125" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14">Design</text>
+          
+          <circle cx="550" cy="125" r="30" fill="#0d6efd"/>
+          <text x="550" y="125" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14">Develop</text>
+          
+          <circle cx="750" cy="125" r="30" fill="#0d6efd"/>
+          <text x="750" y="125" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14">Test</text>
+          
+          <circle cx="950" cy="125" r="30" fill="#0d6efd"/>
+          <text x="950" y="125" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14">Deploy</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p>&copy; 2025 TechFinance Academy. All rights reserved.</p>
+      <div>
+        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-white me-2"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="loginEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="loginPassword">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Register</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="registerName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="registerName" placeholder="Enter your name">
+            </div>
+            <div class="mb-3">
+              <label for="registerEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="registerEmail" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="registerPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="registerPassword">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+  </script>
+</body>
+</html>
