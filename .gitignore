@@ -1,0 +1,28 @@
+# Environment files
+*.env
+*.env_app
+*.pylau_env
+
+# Python cache
+__pycache__
+*.py[cod]
+
+# Logs
+*.log
+logs/
+app/static/logs/
+
+# Media files
+*.mp3
+*.mp4
+*.wav
+*.mkv
+*.webm
+*.avi
+
+# Documents
+*.pdf
+
+# OS generated files
+.DS_Store
+Thumbs.db
