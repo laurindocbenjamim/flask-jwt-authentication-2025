@@ -21,7 +21,7 @@ gunicorn
 hvac #install vault
 httpx
 matplotlib
-openai-whisper
+#openai-whisper
 openai
 pdf2image
 pdfkit
