@@ -23,7 +23,8 @@ from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
-from app.configs.config import DevelopmentConfig, ProductionConfig
+
+#from app.configs.config import DevelopmentConfig, ProductionConfig
 from app.config import Config, DevelopmentConfig, ProductionConfig
 from app.configs import load_extentions, db, limiter, cors
 from app.configs import create_additional_claims
@@ -39,14 +40,14 @@ app = Flask(__name__)
 
 def create_app():
     
-    """env = os.getenv("FLASK_ENV", "development")
+    env = os.getenv("FLASK_ENV", "development")
 
     if env == "production":
         app.config.from_object(ProductionConfig)
     else:
-        app.config.from_object(DevelopmentConfig)"""
+        app.config.from_object(DevelopmentConfig)
 
-    app.config.from_object(Config)
+    #app.config.from_object(Config)
 
     load_extentions(app=app)
     
@@ -57,6 +58,7 @@ def create_app():
                     r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
                     })
     
+    #csrf.init_app(app=app)
     jwt_ex = JWTManager(app)
 
 
