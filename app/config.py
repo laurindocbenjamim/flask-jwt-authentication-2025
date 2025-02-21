@@ -29,7 +29,7 @@ class Config(MySmtpConfig):
 
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Correctly set the secret key and algorithm
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', "543210")  # Secure key
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '543210')  # Secure key
     #SQLALCHEMY_DATABASE_URI = "sqlite://"
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///development.db")
     if not SQLALCHEMY_DATABASE_URI.startswith("sqlite://"):
@@ -38,6 +38,8 @@ class Config(MySmtpConfig):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ALGORITHM = "HS256"
     JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES
+
+    CORS_ORIGIN = os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com').split(',')
 
 class DevelopmentConfig(Config):
     PORT=5000

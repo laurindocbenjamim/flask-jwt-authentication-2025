@@ -7,6 +7,7 @@ from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
 from flask import Flask, jsonify, make_response, request
+from flask_wtf.csrf import CSRFError
 from flask_cors import CORS
 
 from flask_jwt_extended import (
@@ -26,7 +27,7 @@ from werkzeug.security import check_password_hash
 
 #from app.configs.config import DevelopmentConfig, ProductionConfig
 from app.config import Config, DevelopmentConfig, ProductionConfig
-from app.configs import load_extentions, db, limiter, cors
+from app.configs import load_extentions, db, limiter, cors, csrf
 from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
 from app.blueprints import auth_api, admin_api, send_email_api
@@ -36,6 +37,7 @@ from app.routes import routes
 
 
 app = Flask(__name__)
+#csrf = CSRFProtect()
 
 
 def create_app():
@@ -48,20 +50,25 @@ def create_app():
         app.config.from_object(DevelopmentConfig)
 
     #app.config.from_object(Config)
+    """
+    If some errorr occurred with the CSRFProtect library implementation try
+        pip uninstall babel
+        pip install babel
 
+    """
     load_extentions(app=app)
-    
-    CORS(app, supports_credentials=True, 
-         resources={r"/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
-                    r"/api/*": {"origins": ["http://localhost:5000", "http://localhost:52330"]},                   
-                    r"/protected": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
-                    r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
-                    })
-    
     #csrf.init_app(app=app)
     jwt_ex = JWTManager(app)
 
+    
+    
+    """cors_origin = app.config['CORS_ORIGIN']
 
+    CORS(app, supports_credentials=True,  resources={r"/*": {"origins": ["http://localhost:5000"]},
+                    r"/api/*": {"origins": ["http://localhost:5000"]},                   
+                    r"/protected": {"origins": ["http://localhost:5000"]},
+                    r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
+    })"""
     
     
     # Using the additional_claims_loader, we can specify a method that will be
@@ -117,6 +124,10 @@ def create_app():
         """Handle rate limit exceeded errors"""
         return jsonify(status_code=429, error="Too many requests. Please try again later.")
 
+    @app.errorhandler(CSRFError)
+    def handler_csrf_error(e):
+        return jsonify(status_code=400, error=e.description)
+
     @app.after_request
     def refresh_expiring_jwts(response):
         try:
@@ -154,10 +165,14 @@ def create_app():
 
         return token is not None
 
-    
+    csrf.exempt(auth_api)
+    csrf.exempt(bp_author)
+    csrf.exempt(admin_api)
+    csrf.exempt(send_email_api)
+
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
-    #app.register_blueprint(bp_author)
+    #app.register_blueprint(bp_author)    
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')

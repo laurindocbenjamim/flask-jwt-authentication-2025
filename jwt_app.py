@@ -44,13 +44,14 @@ if __name__ == '__main__':
                 revoked_tokens = TokenBlocklist.query.all()
                 users = User.query.all()
                 print("\n\n ======> USERS LIST <======")
-                for user in users:
-                    print(user.to_dict())
+                #for user in users:
+                #    print(user.to_dict())
                 
                 print('\n\n =====> REVOKED JWT Tokens <=====')
-                for token in revoked_tokens:
-                    print(token)
+                #for token in revoked_tokens:
+                #    print(token)
                 print('\n\n')
+                #print(f"CORS-ORIGIN: {app.config['CORS_ORIGIN']}")
             except Exception as e:
                 print(f"Error to get Users. {str(e)}")
 
