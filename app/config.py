@@ -23,10 +23,6 @@ class Config(MySmtpConfig):
     # be sent to your web application. By default, this will be only headers.
     JWT_TOKEN_LOCATION = ["cookies"]
 
-    # If true this will only allow the cookies that contain your JWTs to be sent
-    # over https. In production, this should always be set to True
-    JWT_COOKIE_SECURE = False
-
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Correctly set the secret key and algorithm
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '543210')  # Secure key
@@ -48,9 +44,17 @@ class DevelopmentConfig(Config):
     FLASK_ENV=os.environ.get('FLASK_ENV', 'development')
     MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))
 
+    # If true this will only allow the cookies that contain your JWTs to be sent
+    # over https. In production, this should always be set to True
+    JWT_COOKIE_SECURE = False
+
 class ProductionConfig(Config):
     PORT=5000
     DEBUG = False
     LOG_LEVEL = "ERROR"
     FLASK_ENV=os.environ.get('FLASK_ENV', 'production')
     MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))
+
+    # If true this will only allow the cookies that contain your JWTs to be sent
+    # over https. In production, this should always be set to True
+    JWT_COOKIE_SECURE = True
