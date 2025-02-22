@@ -1,6 +1,5 @@
 
 import os, secrets
-#from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail, Message
 from flask_limiter import Limiter
 from datetime import timedelta
