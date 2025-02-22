@@ -38,7 +38,7 @@ class Config(MySmtpConfig):
     # over https. In production, this should always be set to True
     JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"
 
-    CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com').split(',')]
+    CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, https://laurindocbenjamim.github.io').split(',')]
 
 class DevelopmentConfig(Config):
     PORT=5000
