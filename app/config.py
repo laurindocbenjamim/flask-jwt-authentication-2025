@@ -33,6 +33,7 @@ class Config(MySmtpConfig):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ALGORITHM = "HS256"
     JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES
+    JWT_COOKIE_SAMESITE=os.environ.get('JWT_COOKIE_SAMESITE', 'Lax')
     # If true this will only allow the cookies that contain your JWTs to be sent
     # over https. In production, this should always be set to True
     JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"
