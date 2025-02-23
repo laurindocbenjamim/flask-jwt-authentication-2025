@@ -2,6 +2,7 @@
 import os
 import sqlalchemy
 from hmac import compare_digest
+import logging
 # from sqlalchemy.exc import AttributeError
 from datetime import datetime
 from datetime import timedelta
@@ -24,6 +25,7 @@ from sqlalchemy.sql import func
 import secrets
 import jwt
 from werkzeug.security import check_password_hash
+
 
 #from app.configs.config import DevelopmentConfig, ProductionConfig
 from app.config import Config, DevelopmentConfig, ProductionConfig
@@ -59,8 +61,7 @@ def create_app():
     load_extentions(app=app)
     #csrf.init_app(app=app)
     jwt_ex = JWTManager(app)
-
-    
+    app.logger.setLevel(logging.INFO)
     
     """cors_origin = app.config['CORS_ORIGIN']
 

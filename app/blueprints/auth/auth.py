@@ -62,13 +62,14 @@ class Login(Resource):
         access_token = create_access_token(identity=str(user.id))
         
         response = make_response(jsonify({"status_code": 200}),200)
-        set_access_cookies(response, access_token)
+        set_access_cookies(response, access_token, domain="www.d-tuning.com", samesite="None", secure=True)
+        current_app.logger.info(f"Set-Cookies headers: {response.headers}")
         return response
 
 
 class Logout(Resource):
     @jwt_required(verify_type=False)
-    def get(self):
+    def get(self): 
         
         token = get_jwt()
         jti = token["jti"]
