@@ -53,9 +53,9 @@ def create_user(new_user: User):
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
         return False, f"IntegrityError: Maybe this user already exists."
-    #except db.OperationalError as e:
-    #    db.session.rollback()
-    #    return False, f"OperationalError: {str(e)}"
+    except sqlalchemy.exc.OperationalError as e:
+        db.session.rollback()
+        return False, f"OperationalError: {str(e)}"
     except Exception as e:
         db.session.rollback()
         return False, f"Unexpected error: {str(e)}"
