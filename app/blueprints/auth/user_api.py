@@ -11,8 +11,9 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from app.configs import limiter
 from app.models import User
 from app.factory import create_user, confirm_user_email
+from app.factory import get_user_parser
 
-class UserRegisterApi(Resource):
+class UserApi(Resource):
     @limiter.limit("5 per minute")
     def post(self):
         """
@@ -21,13 +22,13 @@ class UserRegisterApi(Resource):
         GET: Display registration form
         POST: Process registration request
         """
-        parser = reqparse.RequestParser()
-        parser.add_argument('username', required=True, help="Username cannot be blank!")
-        parser.add_argument('password', required=True, help="Password cannot be blank!")
+        parser = get_user_parser()
         data = parser.parse_args()
-        email = data.get('username')
-        password = data.get('password')
+        #email = data.get('username')
+        #password = data.get('password')
         
+        return jsonify(data_form=data)
+    
         # Input validation
         if not email or not password:
             return jsonify(status_code=404, error='Email and password are required')
@@ -72,5 +73,10 @@ class UserRegisterApi(Resource):
             return jsonify(status_code=401,error=response)
         
         return jsonify(status_code=200, message=response)
+    
+    def get(self):
+        users = User.query.all()
+        serialized_users = User.serialize_all(users)
+        return jsonify(status_code=200, users=serialized_users)
 
 
