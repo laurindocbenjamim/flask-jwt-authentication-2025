@@ -28,7 +28,7 @@ from flask_jwt_extended import (
     current_user,
 )
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
-from app.configs import mail, limiter
+from app.utils import mail, limiter
 from app.models import User
 from app.factory import confirm_user_email
 

@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
 from flask_restful import Api, Resource, reqparse
-from app.configs import db
+from app.utils import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
 from flask import (

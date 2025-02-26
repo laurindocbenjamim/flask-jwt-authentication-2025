@@ -4,7 +4,7 @@ import sqlalchemy
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from app.configs import db
+from app.utils import db
 from flask_migrate import Migrate
 from app.models import User, TokenBlocklist
 from app import create_app

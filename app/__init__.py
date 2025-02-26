@@ -1,4 +1,5 @@
 
+# sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 import os
 import sqlalchemy
 from hmac import compare_digest
@@ -27,12 +28,12 @@ import jwt
 from werkzeug.security import check_password_hash
 
 
-#from app.configs.config import DevelopmentConfig, ProductionConfig
 from app.config import Config, DevelopmentConfig, ProductionConfig
-from app.configs import load_extentions, db, limiter, cors, csrf
-from app.configs import create_additional_claims
+
+from app.utils import load_extentions, db, limiter, cors, csrf
+from app.utils import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
-from app.blueprints import auth_api, admin_api, send_email_api
+from app.blueprints import user_api_bp,auth_api, admin_api, send_email_api
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
@@ -166,6 +167,7 @@ def create_app():
 
         return token is not None
 
+    csrf.exempt(user_api_bp)
     csrf.exempt(auth_api)
     csrf.exempt(bp_author)
     csrf.exempt(admin_api)
@@ -174,6 +176,7 @@ def create_app():
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
     #app.register_blueprint(bp_author)    
+    app.register_blueprint(user_api_bp, url_prefix='/api/v1/user')
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
