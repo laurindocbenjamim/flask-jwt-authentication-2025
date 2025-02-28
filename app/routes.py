@@ -33,7 +33,7 @@ def routes(app):
         server.sendmail("iledmd3@gmail.com", "laurindocbenjamim@example.com", "Test Email")
         server.quit()
 
-        return jsonify({"status_code": 200, "message": "User has been created successfully"}), 200
+        return jsonify({"status_code": 200, "message": "The test message has been sent successfully"}), 200
     
     @app.route('/')
     def index():
