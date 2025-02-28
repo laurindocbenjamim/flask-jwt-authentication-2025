@@ -23,7 +23,7 @@ from app.models import User, TokenBlocklist, TokenBlocklist2
 
 def routes(app):
 
-    @app.route('/test_send_email', methods=['POST'])
+    @app.route('/test_send_email', methods=['GET'])
     def test_send_email():
         import smtplib
 
