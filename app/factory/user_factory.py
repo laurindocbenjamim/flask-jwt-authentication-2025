@@ -61,6 +61,36 @@ def create_user(new_user: User):
         return False, f"Unexpected error: {str(e)}"
     #finally:
 
+
+def delete_user(user_id: int):
+    """
+    Delete user and add it to the database.
+
+    Args:
+        new_user (User): The user object to be added to the database.
+
+    Returns:
+        tuple: A tuple containing a boolean indicating success or failure, and the user object or error message.
+    """
+    if not user:
+        return False, "User object is None"
+    try:
+        
+        user = User.query.get(user_id)
+        if not user:
+            return False, "User not found"
+        
+        db.session.delete(user)
+        db.session.commit()
+        return True, user_id
+    except sqlalchemy.exc.OperationalError as e:
+        db.session.rollback()
+        return False, f"OperationalError: {str(e)}"
+    except Exception as e:
+        db.session.rollback()
+        return False, f"Unexpected error: {str(e)}"
+    #finally:
+
         
 
 
