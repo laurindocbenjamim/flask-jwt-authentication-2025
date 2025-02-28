@@ -27,7 +27,7 @@ def routes(app):
     def test_send_email():
         import smtplib
 
-        server = smtplib.SMTP('smtp.gmail.com', 465) # 465 or 587
+        server = smtplib.SMTP('smtp.gmail.com', 587) # 465 or 587
         server.starttls()
         server.login("iledmd3@gmail.com", "aecnrbosvgdvahzw")
         server.sendmail("iledmd3@gmail.com", "laurindocbenjamim@example.com", "Test Email")
