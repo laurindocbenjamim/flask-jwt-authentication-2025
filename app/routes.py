@@ -23,6 +23,18 @@ from app.models import User, TokenBlocklist, TokenBlocklist2
 
 def routes(app):
 
+    @app.route('/test_send_email', methods=['POST'])
+    def test_send_email():
+        import smtplib
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login("your_email@gmail.com", "your_password")
+        server.sendmail("your_email@gmail.com", "recipient@example.com", "Test Email")
+        server.quit()
+
+        return jsonify({"status_code": 200, "message": "User has been created successfully"}), 200
+    
     @app.route('/')
     def index():
 
