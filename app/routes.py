@@ -29,8 +29,8 @@ def routes(app):
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login("your_email@gmail.com", "your_password")
-        server.sendmail("your_email@gmail.com", "recipient@example.com", "Test Email")
+        server.login("iledmd3@gmail.com", "aecnrbosvgdvahzw")
+        server.sendmail("iledmd3@gmail.com", "laurindocbenjamim@example.com", "Test Email")
         server.quit()
 
         return jsonify({"status_code": 200, "message": "User has been created successfully"}), 200

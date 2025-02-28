@@ -106,7 +106,7 @@ class UserApi(Resource):
         
         status, sms = delete_user(user_id=user_id)
         if not status:
-            return jsonify(status_code=400, message="Failed to remove user!")
+            return jsonify(status_code=400, message=f"Failed to remove user!{sms}")
         
         return jsonify(status_code=200, message="User deleted successfully")
     

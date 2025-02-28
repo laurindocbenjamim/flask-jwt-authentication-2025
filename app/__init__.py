@@ -42,6 +42,11 @@ from app.routes import routes
 app = Flask(__name__)
 #csrf = CSRFProtect()
 
+# Email Utilities
+def send_async_email(mail,msg):
+    """Send email asynchronously"""
+    with app.app_context():
+        mail.send(msg)
 
 def create_app():
     
