@@ -101,8 +101,8 @@ class UserApi(Resource):
         Delete a user by ID
         """
 
-        if not user_id or isinstance(user_id, int):
-            return jsonify(status_code=400, message="Invalid user identity")
+        if not user_id or not isinstance(user_id, int):
+            return jsonify(status_code=400, message=f"Invalid user identity.")
         
         status, sms = delete_user(user_id=user_id)
         if not status:

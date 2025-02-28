@@ -72,7 +72,7 @@ def delete_user(user_id: int):
     Returns:
         tuple: A tuple containing a boolean indicating success or failure, and the user object or error message.
     """
-    if not user:
+    if not user_id:
         return False, "User object is None"
     try:
         
