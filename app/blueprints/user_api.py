@@ -17,4 +17,4 @@ user_api_bp = Blueprint('user_api', __name__, url_prefix='/api/v1/user')
 api = Api(user_api_bp)
 
 from app.blueprints.auth import UserApi
-api.add_resource(UserApi, '/dao')
+api.add_resource(UserApi, '/dao/<int:user_id>', '/dao')
