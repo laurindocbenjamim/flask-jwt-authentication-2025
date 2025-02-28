@@ -13,6 +13,10 @@ from app.models import User
 from app.factory import (
     create_user, confirm_user_email, create_user_object, delete_user
 )
+
+from app.utils import admin_required
+from flask_jwt_extended import jwt_required,current_user
+
 from app.factory import (
     get_user_parser,
     sanitize_name,
@@ -96,6 +100,7 @@ class UserApi(Resource):
         #db.session.commit()
         return jsonify(status_code=200, message="User updated successfully", user=user.serialize())
     
+    @jwt_required()
     def delete(self, user_id):
         """
         Delete a user by ID
