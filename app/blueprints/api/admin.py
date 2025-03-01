@@ -11,17 +11,10 @@ from flask import (
     make_response,request
 )
 from flask_jwt_extended import (
-    create_access_token,
     jwt_required,
     current_user,
-    get_jwt,
-    get_jwt_identity,
-    set_access_cookies,
-    unset_jwt_cookies
+    get_jwt
 )
-
-admin_api = Blueprint('admin_api', __name__, url_prefix='/api/v1/admin')
-api = Api(admin_api)
 
 class UserData(Resource):
     @jwt_required()
@@ -54,11 +47,5 @@ class Admin(Resource):
 
         return response
 
-api.add_resource(UserData, '/user')
-api.add_resource(Admin, '/adm_user')
 
-@admin_api.route('/adm_test')
-@jwt_required()
-def admin_r():
-    return f"This is Admin BP route"
 

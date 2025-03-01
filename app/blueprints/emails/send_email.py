@@ -33,13 +33,15 @@ from app.models import User
 from app.factory import confirm_user_email
 
 from app.blueprints.emails.send_confirm_email import SendConfirmEmailApi, SendConfirmEmailToNewUserApi
+from app.blueprints.emails.sendgrid_email_api import SendGridEmailApi
 # Application Configuration
 
-send_email_api = Blueprint("send_email", __name__)
+send_email_api = Blueprint("send_email", __name__, url_prefix='/api/v1/email')
 api = Api(send_email_api)
 
 api.add_resource(SendConfirmEmailApi, '/send-confirm')
 api.add_resource(SendConfirmEmailToNewUserApi, '/send-confirm-to-new-user')
+api.add_resource(SendGridEmailApi, '/send')
 
 @send_email_api.route('/confirm_email')
 @limiter.limit("5 per minute")

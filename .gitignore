@@ -26,3 +26,5 @@ app/static/logs/
 # OS generated files
 .DS_Store
 Thumbs.db
+sendgrid.env
+sendgrid.env

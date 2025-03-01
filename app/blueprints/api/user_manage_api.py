@@ -26,8 +26,9 @@ from app.factory import (
     sanitize_country
 )
 
-class UserApi(Resource):
-    @limiter.limit("5 per minute")
+class UserManagementApi(Resource):
+    @admin_required()
+    @limiter.limit("20 per minute")
     def post(self):
         """
         User registration endpoint
@@ -46,8 +47,8 @@ class UserApi(Resource):
             return jsonify(status_code=400, error=sms)
         return jsonify(status_code=200, message="User has been created successfull")
 
-    @jwt_required()
-    @limiter.limit("5 per minute")
+    @admin_required()
+    @limiter.limit("20 per minute")
     def patch(self, token):
         """
         Email confirmation endpoint
@@ -76,8 +77,8 @@ class UserApi(Resource):
         
         return jsonify(status_code=200, message=response)
     
-    @jwt_required()
-    @limiter.limit("5 per minute")
+    @admin_required()
+    @limiter.limit("20 per minute")
     def put(self, user_id):
         """
         Update user details
@@ -103,7 +104,7 @@ class UserApi(Resource):
         #db.session.commit()
         return jsonify(status_code=200, message="User updated successfully", user=user.serialize())
     
-    @jwt_required()
+    @admin_required()
     @limiter.limit("5 per minute")
     def delete(self, user_id):
         """
@@ -119,24 +120,11 @@ class UserApi(Resource):
         
         return jsonify(status_code=200, message="User deleted successfully")
     
-    @jwt_required()
-    @limiter.limit("10 per minute")
-    def get(self,user_id):
-        """
-        Retrieve a list of all users and return them in a serialized format.
-        Args:
-            user_id (int): The ID of the user (not used in this method).
-        Returns:
-            Response: A JSON response containing the status code and a list of serialized users.
-        """
-        
-        if not user_id or not isinstance(user_id, int):
-            return jsonify(status_code=400, error="Invalid user ID")
-
-        user = User.query.get(user_id)
-        if not user:
-            return jsonify(status_code=404, error="User not found")
-
-        return jsonify(status_code=200, user=user.to_dict())
+    @admin_required()
+    @limiter.limit("15 per minute")
+    def get(self):
+        users = User.query.all()
+        serialized_users = User.serialize_all(users)
+        return jsonify(status_code=200, users=serialized_users)
 
 
