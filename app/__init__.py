@@ -73,15 +73,12 @@ def create_app():
     #csrf.init_app(app=app)
     jwt_ex = JWTManager(app)
     app.logger.setLevel(logging.INFO)
-    
-    """cors_origin = app.config['CORS_ORIGIN']
-
-    CORS(app, supports_credentials=True,  resources={r"/*": {"origins": ["http://localhost:5000"]},
-                    r"/api/*": {"origins": ["http://localhost:5000"]},                   
-                    r"/protected": {"origins": ["http://localhost:5000"]},
-                    r"/logout-with-revoking-token": {"origins": ["http://localhost:5000", "http://localhost:52330"]},
-    })"""
-    
+    app.logger.setLevel(logging.DEBUG)
+    app.logger.setLevel(logging.ERROR)
+    app.logger.setLevel(logging.WARNING)
+    app.logger.setLevel(logging.CRITICAL)
+    app.logger.setLevel(logging.FATAL)
+    app.logger.setLevel(logging.NOTSET)
     
     # Using the additional_claims_loader, we can specify a method that will be
     # called when creating JWTs. The decorated method must take the identity
