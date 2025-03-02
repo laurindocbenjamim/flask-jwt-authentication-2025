@@ -90,7 +90,11 @@ class SendGridEmailApi(Resource):
             sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
             response = sg.send(message)
             
-            return jsonify(status_code=response.status_code, message=response.body, headers=response.headers)
+            return jsonify(
+                status_code=response.status_code,
+                message=response.body.decode('utf-8') if response.body else None,
+                headers=dict(response.headers)
+            )
         except Exception as e:
             return jsonify(status_code=400, message=str(e))
         

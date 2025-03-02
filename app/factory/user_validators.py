@@ -1,5 +1,6 @@
 from flask_restful import reqparse
 import re
+from flask import current_app
 
 def sanitize_name(name):
     """Remove extra spaces and allow alphabetic characters and digits."""
@@ -85,11 +86,13 @@ def get_user_parser():
     
     #parser.add_argument('email', type=validate_email, required=True, help="Valid email is required!")
 
+    ALLOWED_COUNTRIES=current_app.config['ALLOWED_COUNTRIES']
+    
     parser.add_argument('firstName', required=True, type=sanitize_name, help="First name cannot be blank!")
     parser.add_argument('lastName', required=True, type=sanitize_name, help="Last name cannot be blank!")
     parser.add_argument('username', required=True, type=sanitize_username, help="Username cannot be blank!")
     parser.add_argument('email', required=True, type=sanitize_email, help="Enter a valid email!")
-    parser.add_argument('country', required=True, type=sanitize_country, choices=["USA", "Canada", "UK", "Portugal", "Angola"], help="Country cannot be blank!")
+    parser.add_argument('country', required=True, type=sanitize_country, choices=ALLOWED_COUNTRIES, help="Country cannot be blank!")
     parser.add_argument('phoneNumber', required=True, type=sanitize_phone, help="Phone number cannot be blank!")
     parser.add_argument('password', required=True, type=validate_password, help="Enter a valid password!")
     return parser

@@ -33,7 +33,12 @@ from app.config import Config, DevelopmentConfig, ProductionConfig
 from app.utils import load_extentions, db, limiter, cors, csrf
 from app.utils import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
-from app.blueprints import user_api_bp,auth_api, admin_api, send_email_api
+from app.blueprints import (user_api_bp,
+                            auth_api, 
+                            admin_api, 
+                            send_email_api,
+                            web_scrapping_api_bp
+                            )
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
@@ -180,6 +185,7 @@ def create_app():
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
+    app.register_blueprint(web_scrapping_api_bp, url_prefix='/api/v1/web-scrapping')
     #app.register_blueprint(bp_author)    
     app.register_blueprint(user_api_bp, url_prefix='/api/v1/user')
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')

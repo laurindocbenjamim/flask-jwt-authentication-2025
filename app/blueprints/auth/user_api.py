@@ -38,7 +38,7 @@ class UserApi(Resource):
         parser = get_user_parser()
         data = parser.parse_args()
         data["type_of_user"] = "normal"
-        data["user_confirmed"] = False
+        data["user_confirmed"] = True
     
         
         status, sms = create_user(new_user=create_user_object(data))
@@ -119,7 +119,7 @@ class UserApi(Resource):
         
         return jsonify(status_code=200, message="User deleted successfully")
     
-    @jwt_required()
+    #@jwt_required()
     @limiter.limit("10 per minute")
     def get(self,user_id):
         """

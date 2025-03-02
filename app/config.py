@@ -40,6 +40,8 @@ class Config(MySmtpConfig):
 
     CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, https://laurindocbenjamim.github.io').split(',')]
 
+    ALLOWED_COUNTRIES=["Angola", "Portugal","Brasil", "Espanha","Nigeria", "Ghana", "Kenya", "Togo", "South Africa"]
+
 class DevelopmentConfig(Config):
     PORT=5000
     DEBUG = True
