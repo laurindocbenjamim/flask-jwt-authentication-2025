@@ -5,7 +5,7 @@ from flask import current_app
 def sanitize_name(name):
     """Remove extra spaces and allow alphabetic characters and digits."""
     name = name.strip()
-    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s'-]+$", name):  # Allows letters, digits, spaces, hyphens, and apostrophes
+    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.'-]+$", name):  # Allows letters, digits, spaces, periods, hyphens, and apostrophes
         raise ValueError("Name contains invalid characters!")
     return name.title()  # Capitalizes first letter of each word
 
