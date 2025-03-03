@@ -26,7 +26,7 @@ def sanitize_email(email):
 def sanitize_country(country):
     """Allow only letters and spaces in country name."""
     country = country.strip()
-    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s-]+$", country):  # Supports accented letters
+    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s-+]+$", country):  # Supports accented letters
         raise ValueError("Invalid country name!")
     return country.title()
 
@@ -93,6 +93,7 @@ def get_user_parser():
     parser.add_argument('username', required=True, type=sanitize_username, help="Username cannot be blank!")
     parser.add_argument('email', required=True, type=sanitize_email, help="Enter a valid email!")
     parser.add_argument('country', required=True, type=sanitize_country, choices=ALLOWED_COUNTRIES, help="Country cannot be blank!")
+    parser.add_argument('country_tel_code', required=True, type=sanitize_country, help="Country telephone code cannot be blank!")
     parser.add_argument('phoneNumber', required=True, type=sanitize_phone, help="Phone number cannot be blank!")
     parser.add_argument('password', required=True, type=validate_password, help="Enter a valid password!")
     return parser

@@ -50,7 +50,7 @@ class Login(Resource):
 
         user = User.query.filter_by(username=username).one_or_none()
         if not user or not user.check_password(password):
-            return jsonify({"status_code": 401, "error": "Wrong username or password", "user": user.to_dict()})
+            return jsonify({"status_code": 401, "error": "Wrong username or password"})
         # Generate a JWT token
 
         if not user.confirmed:
