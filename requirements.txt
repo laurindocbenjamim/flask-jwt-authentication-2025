@@ -45,4 +45,5 @@ requests
 unidecode
 WTForms
 yfinance
+kagglehub[pandas-datasets]
 

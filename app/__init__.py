@@ -31,7 +31,7 @@ from app.config import Config, DevelopmentConfig, ProductionConfig
 from app.configs import load_extentions, db, limiter, cors, csrf
 from app.configs import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
-from app.blueprints import user_api_bp,auth_api, admin_api, send_email_api
+from app.blueprints import (user_api_bp,auth_api, admin_api, send_email_api, kaggle_bp_api)
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
@@ -166,10 +166,13 @@ def create_app():
 
         return token is not None
 
+
+    # Binding the blueprint API
     csrf.exempt(auth_api)
     csrf.exempt(bp_author)
     csrf.exempt(admin_api)
     csrf.exempt(send_email_api)
+    csrf.exempt(kaggle_bp_api)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -178,6 +181,7 @@ def create_app():
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
+    app.register_blueprint(kaggle_bp_api, url_prefix='/api/v1/kagglehub')
 
 
     routes(app=app)
