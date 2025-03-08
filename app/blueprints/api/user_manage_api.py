@@ -49,7 +49,7 @@ class UserManagementApi(Resource):
         """
         return f"deleted"
     
-    #@admin_required()
+    @admin_required()
     @limiter.limit("15 per minute")
     def get(self):
         users = User.query.all()
