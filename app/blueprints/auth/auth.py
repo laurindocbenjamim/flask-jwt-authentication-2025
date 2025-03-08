@@ -64,7 +64,11 @@ class Login(Resource):
         access_token = create_access_token(identity=str(user.id))
         
         response = make_response(jsonify({'status_code': 200, 'message':"User logger successfull!"}),200)
+        """
         set_access_cookies(response, access_token, domain="www.d-tuning.com")
+        removed becasue of the error: "Cookies is missing. And Token has been revoked"
+        """
+        set_access_cookies(response, access_token)
         current_app.logger.info(f"Set-Cookies headers: {response.headers}")
         return response
 

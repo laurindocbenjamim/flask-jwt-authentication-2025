@@ -22,12 +22,15 @@ class UserData(Resource):
         claims = get_jwt()
         response = make_response(jsonify(
             status_code=200,
-            foo="bar",
+            #foo="bar",
             message="Welcome to protected route!",
-            claims=claims,
+            is_administrator=claims['is_administrator'],
+            is_ceo_user=claims['is_ceo_user'],
             id=current_user.id,
-            full_name=current_user.full_name,
+            full_name=current_user.firstname + " " + current_user.lastname,
+            email=current_user.email,
             username=current_user.username,
+            type_of_user=current_user.type_of_user,
             ), 200)
 
         return response
