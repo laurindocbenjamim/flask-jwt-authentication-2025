@@ -5,12 +5,12 @@ import os
 
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
-from flask import jsonify, current_app
+from flask import jsonify, current_app, make_response
 from flask_restful import Api, Resource, reqparse
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from app.utils import limiter
 from app.models import User
-from app.factory import create_user, confirm_user_email
+from app.factory import create_user, confirm_user_email, create_user_object
 from app.factory import get_user_parser
 
 class UserApi(Resource):
@@ -24,26 +24,18 @@ class UserApi(Resource):
         """
         parser = get_user_parser()
         data = parser.parse_args()
-        #email = data.get('username')
-        #password = data.get('password')
         
-        return jsonify(data_form=data)
-    
-        # Input validation
-        if not email or not password:
-            return jsonify(status_code=404, error='Email and password are required')
         
-        if User.query.filter_by(email=email).first():
-            return jsonify(status_code=401, error='Email already registered')
+        if User.query.filter_by(email=data.get('email')).first():
+            return make_response(jsonify(status_code=401, error='Email already registered'),401)
         
         # Create new user
-        new_user = User(email=email)
-        new_user.set_password(password)
+        new_user = create_user_object(data)
         
         status, sms = create_user(new_user=new_user)
         if not status:
-            return jsonify(status_code=400, error=sms)
-        return jsonify(status_code=200, message="User has been created successfull")
+            return make_response(jsonify(status_code=400, error=sms),400)
+        return make_response(jsonify(status_code=200, message="User has been created successfull"),200)
 
     @limiter.limit("5 per minute")
     def patch(self, token):

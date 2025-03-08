@@ -7,6 +7,36 @@ sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 from app.models import User
 from app.utils import db
 
+def create_user_object(data: dict):
+    """
+    Create a new user object.
+
+    Args:
+        data (dict): The user data.
+
+    Returns:
+        User: The user object.
+    """
+    if not data:
+        return None
+
+    new_user = User(
+        email = data.get('email'),
+        username = data.get('username'),
+        firstname = data.get('firstName'),
+        lastname = data.get('lastName'),
+        country = data.get('country'),
+        country_tel_code = data.get('country_tel_code'),
+        phone_number = data.get('phoneNumber'),
+        address = data.get('address'),
+        address_2 = data.get('address_2'),
+        postal_code = data.get('postal_code'),
+        confirmed = True,
+        type_of_user = 'basic'
+    )
+    new_user.set_password(data.get('password'))
+    return new_user
+
 
 def create_user(new_user: User):
     """
