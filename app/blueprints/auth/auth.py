@@ -87,9 +87,9 @@ class Logout(Resource):
             block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
             db.session.add(block_list)
             db.session.commit()
-            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
+            response = make_response(jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict()), 200)
         except Exception as e:
-            return jsonify(error=str(e))        
+            response = make_response(jsonify(error=str(e)),500)      
         
         #unset_jwt_cookies(response)
         return response
