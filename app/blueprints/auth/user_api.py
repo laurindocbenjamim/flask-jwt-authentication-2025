@@ -5,7 +5,7 @@ import os
 
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
-from flask import jsonify, current_app
+from flask import jsonify, current_app, make_response
 from flask_restful import Api, Resource, reqparse
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from app.utils import limiter
@@ -43,8 +43,8 @@ class UserApi(Resource):
         
         status, sms = create_user(new_user=create_user_object(data))
         if not status:
-            return jsonify(status_code=400, error=sms)
-        return jsonify(status_code=200, message="User has been created successfull")
+            return make_response(jsonify(status_code=400, error=sms), 400)
+        return make_response(jsonify(status_code=200, message="User has been created successfull"), 200)
 
     @jwt_required()
     @limiter.limit("5 per minute")
@@ -111,13 +111,13 @@ class UserApi(Resource):
         """
 
         if not user_id or not isinstance(user_id, int):
-            return jsonify(status_code=400, message=f"Invalid user identity.")
+            return make_response(jsonify(status_code=400, message=f"Invalid user identity."), 401)
         
         status, sms = delete_user(user_id=user_id)
         if not status:
-            return jsonify(status_code=400, message=f"Failed to remove user!{sms}")
+            return make_response(jsonify(status_code=401, message=sms) , 401)
         
-        return jsonify(status_code=200, message="User deleted successfully")
+        return make_response(jsonify(status_code=200, message="User deleted successfully"), 200)
     
     #@jwt_required()
     @limiter.limit("10 per minute")
@@ -131,12 +131,12 @@ class UserApi(Resource):
         """
         
         if not user_id or not isinstance(user_id, int):
-            return jsonify(status_code=400, error="Invalid user ID")
+            return make_response(jsonify(status_code=401, error="Invalid user ID"), 401)
 
         user = User.query.get(user_id)
         if not user:
-            return jsonify(status_code=404, error="User not found")
+            return make_response(jsonify(status_code=401, error="User not found"), 401)
 
-        return jsonify(status_code=200, user=user.to_dict())
+        return make_response(jsonify(status_code=200, user=user.to_dict()), 200)
 
 

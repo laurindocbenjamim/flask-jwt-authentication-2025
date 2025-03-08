@@ -5,7 +5,7 @@ from flask import current_app
 def sanitize_name(name):
     """Remove extra spaces and allow alphabetic characters and digits."""
     name = name.strip()
-    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.'-]+$", name):  # Allows letters, digits, spaces, periods, hyphens, and apostrophes
+    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.'-+]+$", name):  # Allows letters, digits, spaces, periods, hyphens, and apostrophes
         raise ValueError("Name contains invalid characters!")
     return name.title()  # Capitalizes first letter of each word
 
@@ -86,14 +86,14 @@ def get_user_parser():
     
     #parser.add_argument('email', type=validate_email, required=True, help="Valid email is required!")
 
-    ALLOWED_COUNTRIES=current_app.config['ALLOWED_COUNTRIES']
+    ALLOWED_COUNTRIES = current_app.config.get('ALLOWED_COUNTRIES', [])
     
     parser.add_argument('firstName', required=True, type=sanitize_name, help="First name cannot be blank!")
     parser.add_argument('lastName', required=True, type=sanitize_name, help="Last name cannot be blank!")
     parser.add_argument('username', required=True, type=sanitize_username, help="Username cannot be blank!")
     parser.add_argument('email', required=True, type=sanitize_email, help="Enter a valid email!")
-    parser.add_argument('country', required=True, type=sanitize_country, choices=ALLOWED_COUNTRIES, help="Country cannot be blank!")
-    parser.add_argument('country_tel_code', required=True, type=sanitize_country, help="Country telephone code cannot be blank!")
+    parser.add_argument('country', required=True, type=sanitize_name, choices=ALLOWED_COUNTRIES, help=f"Country cannot be blank!")
+    parser.add_argument('country_tel_code', required=True, type=sanitize_name, help="Country's phone code cannot be blank!")
     parser.add_argument('phoneNumber', required=True, type=sanitize_phone, help="Phone number cannot be blank!")
-    parser.add_argument('password', required=True, type=validate_password, help="Enter a valid password!")
+    parser.add_argument('password', required=True, type=validate_password, help="Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
     return parser

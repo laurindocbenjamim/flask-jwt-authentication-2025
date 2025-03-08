@@ -49,8 +49,10 @@ class Login(Resource):
         
 
         user = User.query.filter_by(username=username).one_or_none()
-        if not user or not user.check_password(password):
-            return jsonify({"status_code": 401, "error": "Wrong username or password"})
+        if not user:
+            return make_response(jsonify(status_code=401, error="User has not found."),401)
+        if not user.check_password(password):
+            return make_response(jsonify(status_code=401, error="Wrong password. Try again"),401)
         # Generate a JWT token
 
         if not user.confirmed:
@@ -61,7 +63,7 @@ class Login(Resource):
         
         access_token = create_access_token(identity=str(user.id))
         
-        response = make_response(jsonify({'status_code': 200}),200)
+        response = make_response(jsonify({'status_code': 200, 'message':"User logger successfull!"}),200)
         set_access_cookies(response, access_token, domain="www.d-tuning.com")
         current_app.logger.info(f"Set-Cookies headers: {response.headers}")
         return response

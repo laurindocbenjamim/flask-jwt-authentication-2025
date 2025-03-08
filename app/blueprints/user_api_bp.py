@@ -17,6 +17,7 @@ user_api_bp = Blueprint('user_api', __name__, url_prefix='/api/v1/user')
 api = Api(user_api_bp)
 
 from app.blueprints.auth import UserApi
+from app.blueprints.api import UserManagementApi
 """
     Create (POST): http://<your-domain>/api/v1/user/dao
     Read (GET): http://<your-domain>/api/v1/user/dao (for all users) or http://<your-domain>/api/v1/user/dao/2 (for a specific user)
@@ -24,3 +25,4 @@ from app.blueprints.auth import UserApi
     Delete (DELETE): http://<your-domain>/api/v1/user/dao/2
 """
 api.add_resource(UserApi, '/dao/<int:user_id>', '/dao')
+api.add_resource(UserManagementApi, '/manager/<int:user_id>', '/manager')

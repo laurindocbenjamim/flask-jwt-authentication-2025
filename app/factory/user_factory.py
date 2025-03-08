@@ -52,7 +52,14 @@ def create_user(new_user: User):
     #except db.IntegrityError as e:
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
-        return False, f"IntegrityError: Maybe this user already exists."
+        error_message = str(e.orig)
+        if "email" in error_message:
+            return False, "IntegrityError: The email already exists."
+        if "username" in error_message:
+            return False, "IntegrityError: The username already exists."
+        if "phone_number" in error_message:
+            return False, "IntegrityError: The phone number already exists."
+        return False, f"IntegrityError: {error_message}"
     except sqlalchemy.exc.OperationalError as e:
         db.session.rollback()
         return False, f"OperationalError: {str(e)}"

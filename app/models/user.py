@@ -28,7 +28,7 @@ class User(db.Model):
     lastname = db.Column(db.Text, nullable=False)
     country = db.Column(db.String(100))
     country_tel_code = db.Column(db.String(6))
-    phone_number = db.Column(db.String(10))
+    phone_number = db.Column(db.String(10), unique=True)
     address = db.Column(db.Text)
     address_2 = db.Column(db.Text)
     postal_code = db.Column(db.String(8))
