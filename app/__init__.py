@@ -28,8 +28,8 @@ from werkzeug.security import check_password_hash
 
 #from app.configs.config import DevelopmentConfig, ProductionConfig
 from app.config import Config, DevelopmentConfig, ProductionConfig
-from app.configs import load_extentions, db, limiter, cors, csrf
-from app.configs import create_additional_claims
+from app.utils import load_extentions, db, limiter, cors, csrf
+from app.utils import create_additional_claims
 from app.models import User, TokenBlocklist, TokenBlocklist2
 from app.blueprints import (user_api_bp,auth_api, admin_api, send_email_api, kaggle_bp_api)
 from app.modules_web_site import web_site_app
@@ -38,7 +38,6 @@ from app.routes import routes
 
 
 app = Flask(__name__)
-#csrf = CSRFProtect()
 
 
 def create_app():

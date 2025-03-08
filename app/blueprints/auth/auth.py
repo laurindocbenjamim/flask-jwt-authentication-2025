@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
 from flask_restful import Api, Resource, reqparse
-from app.configs import db
+from app.utils import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
 
 from flask import (
@@ -49,15 +49,17 @@ class Login(Resource):
         
 
         user = User.query.filter_by(username=username).one_or_none()
-        if not user or not user.check_password(password):
-            return jsonify({"status_code": 401, "error": "Wrong username or password", "user": user.to_dict()})
+        if not user:
+            return make_response(jsonify(status_code=401, error="User not found."),401)
+        if not user.check_password(password):
+            return make_response(jsonify(status_code=401, error="Wrong password. Try again"),401)
         # Generate a JWT token
 
         if not user.confirmed:
             status = send_confirmation_email(user.email)
             if not status:
                 return make_response(jsonify(status_code=401, error="Your account has not been confirmed yet."),401)
-            return make_response(jsonify(status_code=201, message=f"Your account has not been confirmed yet. We've sent a confirmation link to [{user.email}]. "),200)
+            return make_response(jsonify(status_code=201, message=f"Your account has not been confirmed yet. We've sent a confirmation link to [{user.email}]. "),201)
         
         access_token = create_access_token(identity=str(user.id))
         
@@ -80,12 +82,12 @@ class Logout(Resource):
             block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
             db.session.add(block_list)
             db.session.commit()
-            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
+            return make_response(jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict()),200)
         except Exception as e:
-            return jsonify(error=str(e))        
+            return make_response(jsonify(error=str(e)),500)        
         
         #unset_jwt_cookies(response)
-        return response
+        #return response
 
 
     # Delete
@@ -101,12 +103,12 @@ class Logout(Resource):
             block_list = TokenBlocklist(jti=jti, type=ttype, created_at=now)
             db.session.add(block_list)
             db.session.commit()
-            response = jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict())
+            return make_response(jsonify(msg=f"{ttype.capitalize()} token successfully revoked", logout="Your session has been terminated!", block_list=block_list.to_dict()),200)
         except Exception as e:
-            return jsonify(error=str(e))        
+            return make_response(jsonify(error=str(e)),500)       
         
         #unset_jwt_cookies(response)
-        return response
+        #return response
 
     
 

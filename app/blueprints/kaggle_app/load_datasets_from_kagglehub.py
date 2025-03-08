@@ -9,7 +9,7 @@ import os
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
 from flask_restful import Resource
-from app.configs import db
+from app.utils import db
 
 from flask import (jsonify,
     make_response,request, current_app

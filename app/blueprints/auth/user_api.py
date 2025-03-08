@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 from flask import jsonify, current_app
 from flask_restful import Api, Resource, reqparse
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
-from app.configs import limiter
+from app.utils import limiter
 from app.models import User
 from app.factory import create_user, confirm_user_email
 from app.factory import get_user_parser

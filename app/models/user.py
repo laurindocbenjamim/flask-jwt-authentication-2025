@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 
 from datetime import datetime, timezone
-from app.configs import db
+from app.utils import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
