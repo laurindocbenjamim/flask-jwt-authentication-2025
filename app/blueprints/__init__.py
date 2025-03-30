@@ -4,3 +4,4 @@ from .api import admin_api
 from .auth import auth_api
 from .emails import send_email_api
 from .webscrapping_bp import web_scrapping_api_bp
+from .speech_recognition import bp_speech_recognition

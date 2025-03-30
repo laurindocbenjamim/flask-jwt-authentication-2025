@@ -37,8 +37,10 @@ from app.blueprints import (user_api_bp,
                             auth_api, 
                             admin_api, 
                             send_email_api,
-                            web_scrapping_api_bp
+                            web_scrapping_api_bp,
+                            bp_speech_recognition
                             )
+from app.utils.handling_errors import haddling_errors
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
@@ -127,15 +129,8 @@ def create_app():
         return response
     
 
-    # Error Handlers
-    @app.errorhandler(429)
-    def ratelimit_handler(e):
-        """Handle rate limit exceeded errors"""
-        return jsonify(status_code=429, error="Too many requests. Please try again later.")
-
-    @app.errorhandler(CSRFError)
-    def handler_csrf_error(e):
-        return jsonify(status_code=400, error=e.description)
+    # load handling errors
+    haddling_errors(app, CSRFError)
 
     @app.after_request
     def refresh_expiring_jwts(response):
@@ -179,6 +174,7 @@ def create_app():
     csrf.exempt(bp_author)
     csrf.exempt(admin_api)
     csrf.exempt(send_email_api)
+    csrf.exempt(bp_speech_recognition)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -188,6 +184,7 @@ def create_app():
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
+    app.register_blueprint(bp_speech_recognition, url_prefix='/api/v1/speech_recognition')
 
 
     routes(app=app)
