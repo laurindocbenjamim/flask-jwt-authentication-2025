@@ -32,6 +32,7 @@ praw
 psycopg2
 pycryptodome
 pydantic
+pydub
 PyMuPDF
 pymongo[srv]
 pymysql

@@ -111,6 +111,9 @@ class ConvertAudioSpeechToText(object):
                 response_format="text",
                 language= self._output_lang
             )
+
+            if 'Error code: 413' in transcription:
+                return False, "The file is too large. Please try with a smaller file."
             return True, transcription
         except KeyError as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()

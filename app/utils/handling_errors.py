@@ -8,6 +8,7 @@ image_list = [
     {"403": 'https://www.online-tech-tips.com/wp-content/uploads/2021/06/http-403.jpeg', "message": "Forbidden"},
     {"404": 'https://atlassianblog.wpengine.com/wp-content/uploads/2017/12/44-incredible-404-error-pages@3x.png', "message": "Not Found"},
     {"405": 'https://www.ionos.co.uk/digitalguide/fileadmin/DigitalGuide/Teaser/405-Method-Not-Allowed-t.jpg', "message": "Method Not Allowed"},
+    {"415": 'https://sitechecker.pro/wp-content/uploads/2023/07/415-status-code.png', "message": "Unsupported Media Type"},
     {"500": 'https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png', "message": "Internal Server Error"},
     {"502": 'https://www.online-tech-tips.com/wp-content/uploads/2021/06/http-502.jpeg', "message": "Bad Gateway"},
     {"503": 'https://www.lifewire.com/thmb/3Zne74PQmtY62N1E02VkiNg78bQ=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/shutterstock_717832600-Converted-5a29aaf3b39d030037b2cda9.png', "message": "Service Unavailable"},
@@ -115,6 +116,23 @@ def haddling_errors(app, CSRFError):
         
         return response
     
+    @app.errorhandler(415)
+    def handle_error_405(e):
+
+        error_code = 415
+        error_image = next((error["415"] for error in image_list if "415" in error), "Unsupported Media Type")
+        error_description = next((error["415"] for error in image_list if "415" in error), "Unsupported Media Type")
+        
+        error_message = f" Code {error_code} - Unsupported Media Type"
+        error_description = "The server refuses to accept the request because the payload format is in an unsupported format."
+        
+        response = make_response(render_template('errors.html', title=error_code, error_message=error_message, error_description=error_description, 
+                                             error_image=error_image, error_code=error_code), error_code)
+        response.headers['X-Something'] = 'Unsupported Media Type'
+        
+        
+        return response
+    
     @app.errorhandler(500)
     def handle_error_500(e):
 
@@ -144,3 +162,17 @@ def haddling_errors(app, CSRFError):
         response.headers['X-Something'] = 'NameError'
         
         return response
+    
+    @app.errorhandler(FileNotFoundError)
+    def handle_file_not_found_error(e):
+        error_code = 500
+        error_message = "FileNotFoundError: The specified file was not found."
+        error_description = str(e)
+        error_image = "https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png"  # Reusing the 500 error image
+
+        response = make_response(render_template('errors.html', title=error_code, error_message=error_message, error_description=error_description, 
+                                                 error_image=error_image, error_code=error_code), error_code)
+        response.headers['X-Something'] = 'NameError'
+        error_image = "https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png"
+    
+    
