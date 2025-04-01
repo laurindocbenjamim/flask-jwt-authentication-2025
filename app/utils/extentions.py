@@ -36,6 +36,7 @@ def load_extentions(*, app):
                     r"/protected": {"origins": cors_origin},
                     r"/logout-with-revoking-token": {"origins": cors_origin},
                     r"/api/v1/web-scrapping/*": {"origins": cors_origin},
+                    r"/api/v1/speech_recognition/*": {"origins": cors_origin},
     })
     cors_p.init_app(app)
     limiter.init_app(app)     
