@@ -26,7 +26,7 @@ class Config(MySmtpConfig):
     JWT_TOKEN_LOCATION = ["cookies"]
     # Enable CSRF protection for JWT cookies
     JWT_COOKIE_CSRF_PROTECT = True  # Enables CSRF protection
-    JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
+    #JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
     
     # Correctly set the secret key and algorithm
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '543210')  # Secure key
