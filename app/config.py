@@ -43,7 +43,8 @@ class Config(MySmtpConfig):
     JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"  # True in production (HTTPS)
 
     # CORS Configuration
-    CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
+    #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
+    CORS_ORIGIN = ['http://localhost:8000'] if os.getenv("FLASK_ENV") != "production" else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRF-Token']
 
@@ -53,6 +54,7 @@ class DevelopmentConfig(Config):
     PORT=5000
     DEBUG = True
     LOG_LEVEL = "DEBUG"
+
     FLASK_ENV=os.environ.get('FLASK_ENV', 'development')
     MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))
 
