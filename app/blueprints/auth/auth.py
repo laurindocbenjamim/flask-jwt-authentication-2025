@@ -10,7 +10,7 @@ from app.models import User, TokenBlocklist, TokenBlocklist2
 
 from flask import (
     Blueprint, jsonify,
-    make_response,request, current_app
+    make_response, current_app
 )
 
 from datetime import datetime
@@ -61,14 +61,36 @@ class Login(Resource):
                 return make_response(jsonify(status_code=401, error="Your account has not been confirmed yet."),401)
             return make_response(jsonify(status_code=201, message=f"Your account has not been confirmed yet. We've sent a confirmation link to [{user.email}]. "),200)
         
-        access_token = create_access_token(identity=str(user.id))
+        access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(hours=1))
         
         response = make_response(jsonify({'status_code': 200, 'message':"User logger successfull!"}),200)
+        if current_app.config['JWT_COOKIE_SECURE']:
+            response.set_cookie(
+                'access_token_cookie',
+                value=access_token,
+                #domain='.d-tuning.com',  # Note the leading dot for subdomains
+                secure=True,
+                httponly=True,
+                samesite='Lax'
+            )
+        else:
+            response.set_cookie(
+                "access_token_cookie",
+                value=access_token,
+                #domain=".yourdomain.com",  # Critical for cross-origin
+                secure=True,
+                httponly=False,  # Allow JavaScript access
+                samesite="None",
+                path="/"
+            )
+        
         """
         set_access_cookies(response, access_token, domain="www.d-tuning.com")
         removed becasue of the error: "Cookies is missing. And Token has been revoked"
         """
-        set_access_cookies(response, access_token)
+        #set_access_cookies(response, access_token) #domain="http://localhost:5000"
+        # For production, set domain and secure properly
+        
         current_app.logger.info(f"Set-Cookies headers: {response.headers}")
         return response
 

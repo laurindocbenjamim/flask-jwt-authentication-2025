@@ -21,9 +21,12 @@ class Config(MySmtpConfig):
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
+    
+    # JWT Configuration
     JWT_TOKEN_LOCATION = ["cookies"]
     # Enable CSRF protection for JWT cookies
     JWT_COOKIE_CSRF_PROTECT = True  # Enables CSRF protection
+    JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
     
     # Correctly set the secret key and algorithm
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '543210')  # Secure key
@@ -32,13 +35,17 @@ class Config(MySmtpConfig):
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_ALGORITHM = "HS256"
+    JWT_COOKIE_HTTPONLY = False  # Set to False to allow JS access (if needed)
     JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES
-    JWT_COOKIE_SAMESITE=os.environ.get('JWT_COOKIE_SAMESITE', 'Lax')
+    JWT_COOKIE_SAMESITE = "None" if os.getenv("FLASK_ENV") == "production" else "Lax"
     # If true this will only allow the cookies that contain your JWTs to be sent
     # over https. In production, this should always be set to True
-    JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"
+    JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"  # True in production (HTTPS)
 
-    CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, https://laurindocbenjamim.github.io').split(',')]
+    # CORS Configuration
+    CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
+    CORS_SUPPORTS_CREDENTIALS = True
+    CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRF-Token']
 
     ALLOWED_COUNTRIES=["Angola", "Portugal","Brasil", "Espanha","Nigeria", "Ghana", "Kenya", "Togo", "South Africa"]
 

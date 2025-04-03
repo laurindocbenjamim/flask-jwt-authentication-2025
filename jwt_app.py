@@ -1,6 +1,6 @@
 
 
-import sqlalchemy
+import sqlalchemy, os
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -31,7 +31,27 @@ if __name__ == '__main__':
             #now = datetime.now(timezone.utc)
             #db.session.add(TokenBlocklist(jti='jti', created_at=now))
             #db.session.commit()
-            dd="2023-10-01 12:00:00"
+            """print("\n\n => FLASK_ENV:___")
+            print(os.getenv("FLASK_ENV", "testting"))
+
+            print("\n\n => DATABASE_URL:___")
+            print(os.getenv("DATABASE_URL", "sqlite://"))
+
+            print("\n\n => RATE_LIMIT:___")
+            print(os.getenv("RATE_LIMIT", "100 per day,10 per minute"))
+
+            print("\n\n => JWT_COOKIE_DOMAIN:___")
+            print(app.config['JWT_COOKIE_DOMAIN'])
+
+            print("\n\n => JWT_COOKIE_SAMESITE:___")
+            print(app.config['JWT_COOKIE_SAMESITE'])
+
+            print("\n\n => JWT_COOKIE_SECURE:___")
+            print(app.config['JWT_COOKIE_SECURE']) 
+
+            print("\n\n => JWT_SECRET_KEY:___")
+            print(app.config['JWT_SECRET_KEY']) """
+
         except sqlalchemy.exc.IntegrityError as e:
             db.session.rollback()
             print(f"\n\n => This user already exists. \nError: {str(e)}")

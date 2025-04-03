@@ -23,6 +23,14 @@ from app.models import User, TokenBlocklist, TokenBlocklist2
 
 def routes(app):
 
+    @app.route("/debug-config")
+    def debug_config():
+        return {
+            "JWT_COOKIE_DOMAIN": app.config.get("JWT_COOKIE_DOMAIN"),
+            "JWT_COOKIE_SAMESITE": app.config.get("JWT_COOKIE_SAMESITE"),
+            "JWT_COOKIE_SECURE": app.config.get("JWT_COOKIE_SECURE"),
+        }
+
     @app.route('/test_send_email', methods=['GET'])
     def test_send_email():
         import smtplib

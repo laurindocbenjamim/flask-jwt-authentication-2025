@@ -6,10 +6,7 @@ sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 from flask_restful import Api, Resource, reqparse
 from app.utils import admin_required
 
-from flask import (
-    Blueprint, jsonify,
-    make_response,request
-)
+from flask import jsonify, make_response
 from flask_jwt_extended import (
     jwt_required,
     current_user,
