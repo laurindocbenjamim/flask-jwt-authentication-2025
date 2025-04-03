@@ -7,14 +7,8 @@ from flask import jsonify, make_response, request, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_restful import reqparse
 import re
-from app.factory import (
-    get_user_parser,
-    sanitize_name,
-    sanitize_username,
-    sanitize_email,
-    sanitize_phone,
-    sanitize_country
-)
+from app.factory import sanitize_name
+
 
 from app.blueprints.audio import split_audio
 

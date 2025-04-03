@@ -23,15 +23,15 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         try:
-            db.session.add(User(full_name="Bruce Wayne", username="batman", email="batman@datatuning.pt", password_hash=generate_password_hash("1234"),type_of_user="Basic"))
-            db.session.add(User(full_name="Ann Takamaki", username="panther", email="panther@datatuning.pt", password_hash=generate_password_hash("1234"),type_of_user="Admin"))
-            db.session.add(User(full_name="Jester Lavore", username="little_sapphire", email="little_sapphire@datatuning.pt", password_hash=generate_password_hash("1234"),type_of_user="Basic"))
-            db.session.commit()
+            #db.session.add(User(firstname="Bruce", lastname="Wayne", username="batman", email="batman@datatuning.pt", confirmed=True, password_hash=generate_password_hash(""),type_of_user="Basic"))
+            #db.session.add(User(firstname="Ann", lastname="Takamaki", username="panther", email="panther@datatuning.pt", confirmed=True, password_hash=generate_password_hash(""),type_of_user="Admin"))
+            #db.session.add(User(firstname="Jester", lastname="Lavore", username="little_sapphire", email="little_sapphire@datatuning.pt", confirmed=True, password_hash=generate_password_hash(""),type_of_user="Basic"))
+            #db.session.commit()
 
-            now = datetime.now(timezone.utc)
-            db.session.add(TokenBlocklist(jti='jti', created_at=now))
-            db.session.commit()
-
+            #now = datetime.now(timezone.utc)
+            #db.session.add(TokenBlocklist(jti='jti', created_at=now))
+            #db.session.commit()
+            dd="2023-10-01 12:00:00"
         except sqlalchemy.exc.IntegrityError as e:
             db.session.rollback()
             print(f"\n\n => This user already exists. \nError: {str(e)}")
@@ -44,8 +44,8 @@ if __name__ == '__main__':
                 revoked_tokens = TokenBlocklist.query.all()
                 users = User.query.all()
                 print("\n\n ======> USERS LIST <======")
-                #for user in users:
-                #    print(user.to_dict())
+                for user in users:
+                    print(user.to_dict())
                 
                 print('\n\n =====> REVOKED JWT Tokens <=====')
                 #for token in revoked_tokens:

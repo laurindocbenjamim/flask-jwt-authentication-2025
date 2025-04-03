@@ -175,4 +175,15 @@ def haddling_errors(app, CSRFError):
         response.headers['X-Something'] = 'NameError'
         error_image = "https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png"
     
-    
+    @app.errorhandler(TypeError)
+    def handle_type_error(e):
+        error_code = 500
+        error_message = "TypeError: An operation or function is applied to an object of inappropriate type."
+        error_description = str(e)
+        error_image = "https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png"  # Reusing the 500 error image
+
+        response = make_response(render_template('errors.html', title=error_code, error_message=error_message, error_description=error_description, 
+                                                 error_image=error_image, error_code=error_code), error_code)
+        response.headers['X-Something'] = 'TypeError'
+        
+        return response

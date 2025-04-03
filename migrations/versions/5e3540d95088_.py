@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 2caa76c6357f
-Revises: 5c2f85af8581
-Create Date: 2025-02-26 16:55:53.689510
+Revision ID: 5e3540d95088
+Revises: 
+Create Date: 2025-04-03 18:48:25.637124
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2caa76c6357f'
-down_revision = '5c2f85af8581'
+revision = '5e3540d95088'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -30,7 +30,7 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=128), nullable=False),
-    sa.Column('username', sa.String(length=50), nullable=False),
+    sa.Column('username', sa.String(length=50), nullable=True),
     sa.Column('firstname', sa.Text(), nullable=False),
     sa.Column('lastname', sa.Text(), nullable=False),
     sa.Column('country', sa.String(length=100), nullable=True),
@@ -45,6 +45,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('phone_number'),
     sa.UniqueConstraint('username')
     )
     op.create_table('token_blocklist',
