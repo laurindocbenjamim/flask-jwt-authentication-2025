@@ -129,6 +129,9 @@ class SendConfirmEmailToNewUserApi(Resource):
         data = parser.parse_args()
         
         email=data.get('email')
+        if not email:
+            return jsonify(status_code=400, error="Email is required")
+
         user = User.query.filter_by(email=email).first_or_404()
         if not user:
             return jsonify(status_code=401, error="User not found")
