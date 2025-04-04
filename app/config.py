@@ -20,7 +20,7 @@ class Config(MySmtpConfig):
 
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
-    ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(minutes=15)
+    ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
@@ -68,7 +68,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     PORT=5000
-    DEBUG = True
+    DEBUG = False
     LOG_LEVEL = "ERROR"
     FLASK_ENV=os.environ.get('FLASK_ENV', 'production')
     MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))

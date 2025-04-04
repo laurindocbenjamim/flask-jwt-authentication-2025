@@ -61,28 +61,19 @@ class Login(Resource):
                 return make_response(jsonify(status_code=401, error="Your account has not been confirmed yet."),401)
             return make_response(jsonify(status_code=201, message=f"Your account has not been confirmed yet. We've sent a confirmation link to [{user.email}]. "),200)
         
-        access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(hours=1))
+        access_token = create_access_token(identity=str(user.id), expires_delta=current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES'))
         
         response = make_response(jsonify({'status_code': 200, 'message':"User logger successfull!"}),200)
-        if current_app.config['JWT_COOKIE_SECURE']:
-            response.set_cookie(
+        response.set_cookie(
                 'access_token_cookie',
                 value=access_token,
                 #domain='.d-tuning.com',  # Note the leading dot for subdomains
-                secure=True,
-                httponly=True,
-                samesite='Lax'
+                secure=current_app.config['JWT_COOKIE_SECURE'],  # Required for HTTPS in production
+                httponly=False,  # Allow JS access
+                samesite=current_app.config['JWT_COOKIE_SAMESITE'],  # Required for cross-origin
+                path="/"  # Ensure it’s available site-wide
             )
-        else:
-            response.set_cookie(
-                "access_token_cookie",
-                value=access_token,
-                #domain=".yourdomain.com",  # Critical for cross-origin
-                secure=True,
-                httponly=False,  # Allow JavaScript access
-                samesite="None",
-                path="/"
-            )
+       
         
         """
         set_access_cookies(response, access_token, domain="www.d-tuning.com")
