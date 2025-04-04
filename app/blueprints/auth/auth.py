@@ -64,7 +64,9 @@ class Login(Resource):
         access_token = create_access_token(identity=str(user.id), expires_delta=current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES'))
         
         response = make_response(jsonify({'status_code': 200, 'message':"User logger successfull!"}),200)
-        response.set_cookie(
+        
+        if current_app.config['JWT_COOKIE_SECURE']:
+            response.set_cookie(
                 'access_token_cookie',
                 value=access_token,
                 #domain='.d-tuning.com',  # Note the leading dot for subdomains
@@ -73,7 +75,16 @@ class Login(Resource):
                 samesite=current_app.config['JWT_COOKIE_SAMESITE'],  # Required for cross-origin
                 path="/"  # Ensure it’s available site-wide
             )
-       
+        else:
+            response.set_cookie(
+                "access_token_cookie",
+                value=access_token,
+                #domain=".yourdomain.com",  # Critical for cross-origin
+                secure=True,  # Allow non-HTTPS in development. When set to True works in localhost
+                httponly=False,
+                samesite="None",
+                path="/"
+            )
         
         """
         set_access_cookies(response, access_token, domain="www.d-tuning.com")
