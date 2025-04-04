@@ -68,7 +68,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     PORT=5000
-    DEBUG = False
+    DEBUG = True
     LOG_LEVEL = "ERROR"
     FLASK_ENV=os.environ.get('FLASK_ENV', 'production')
     MAX_CONNECTIONS = int(os.getenv("MAX_CONNECTIONS", 100))
