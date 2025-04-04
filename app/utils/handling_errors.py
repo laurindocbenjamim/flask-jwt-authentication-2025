@@ -1,6 +1,8 @@
 
 
 from flask import make_response, render_template, redirect, jsonify
+from werkzeug.exceptions import HTTPException
+from flask_limiter.errors import RateLimitExceeded
 
 image_list = [
     {"400": 'https://www.prontomarketing.com/wp-content/uploads/2022/12/how-to-fix-400-bad-requst-error-wordpress.png', "message": "Bad Request"},
@@ -9,6 +11,7 @@ image_list = [
     {"404": 'https://atlassianblog.wpengine.com/wp-content/uploads/2017/12/44-incredible-404-error-pages@3x.png', "message": "Not Found"},
     {"405": 'https://www.ionos.co.uk/digitalguide/fileadmin/DigitalGuide/Teaser/405-Method-Not-Allowed-t.jpg', "message": "Method Not Allowed"},
     {"415": 'https://sitechecker.pro/wp-content/uploads/2023/07/415-status-code.png', "message": "Unsupported Media Type"},
+    {"429": 'https://sitechecker.pro/wp-content/uploads/2023/07/429-status-code.png', "message": "Too Many Requests"},
     {"500": 'https://miro.medium.com/v2/resize:fit:1400/1*2Z41mMgjOxkUUuvIwd7Djw.png', "message": "Internal Server Error"},
     {"502": 'https://www.online-tech-tips.com/wp-content/uploads/2021/06/http-502.jpeg', "message": "Bad Gateway"},
     {"503": 'https://www.lifewire.com/thmb/3Zne74PQmtY62N1E02VkiNg78bQ=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/shutterstock_717832600-Converted-5a29aaf3b39d030037b2cda9.png', "message": "Service Unavailable"},
@@ -132,6 +135,15 @@ def haddling_errors(app, CSRFError):
         
         
         return response
+    
+    # Custom error handler for rate limit exceeded
+    @app.errorhandler(RateLimitExceeded)
+    def ratelimit_handler(e):
+        return jsonify({
+            "error": "Too many requests",
+            "message": "You have exceeded your request limit. Please try again later.",
+            "status_code": 429
+        }), 429
     
     @app.errorhandler(500)
     def handle_error_500(e):

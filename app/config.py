@@ -17,6 +17,9 @@ class MySmtpConfig:
     RATE_LIMIT = os.getenv("RATE_LIMIT", "100 per day,10 per minute")
 
 class Config(MySmtpConfig):
+
+    DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
+
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(minutes=15)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Here you can globally configure all the ways you want to allow JWTs to
@@ -26,7 +29,7 @@ class Config(MySmtpConfig):
     JWT_TOKEN_LOCATION = ["cookies"]
     # Enable CSRF protection for JWT cookies
     JWT_COOKIE_CSRF_PROTECT = True  # Enables CSRF protection
-    #JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
+    JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
     
     # Correctly set the secret key and algorithm
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', '543210')  # Secure key
@@ -44,7 +47,12 @@ class Config(MySmtpConfig):
 
     # CORS Configuration
     #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
-    CORS_ORIGIN = ['http://localhost:8000'] if os.getenv("FLASK_ENV") != "production" else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
+    # CORS Configuration
+    CORS_ORIGIN = (
+        ['http://localhost:8000', 'http://0.0.0.0:8000']  # Allow local development origins
+        if os.getenv("FLASK_ENV") != "production"
+        else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
+    )
     CORS_SUPPORTS_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRF-Token']
 

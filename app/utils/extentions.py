@@ -31,12 +31,22 @@ def load_extentions(*, app):
     mail.init_app(app)
     cors_origin = app.config['CORS_ORIGIN']
 
-    cors_p = CORS(supports_credentials=True,  resources={r"/*": {"origins": cors_origin},
+    """cors_p = CORS(supports_credentials=True,  resources={r"/*": {"origins": cors_origin},
                     r"/api/*": {"origins": cors_origin},                   
                     r"/protected": {"origins": cors_origin},
                     r"/logout-with-revoking-token": {"origins": cors_origin},
                     r"/api/v1/web-scrapping/*": {"origins": cors_origin},
                     r"/api/v1/speech_recognition/*": {"origins": cors_origin},
-    })
-    cors_p.init_app(app)
+    })"""
+    cors_p = CORS(
+        app,
+        supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],
+        resources={
+            r"/api/*": {
+                "origins": cors_origin,
+                "expose_headers": app.config['CORS_EXPOSE_HEADERS']  # ['Content-Type', 'X-CSRF-Token']
+            }
+        }
+    )
+    #cors_p.init_app(app)
     limiter.init_app(app)     
