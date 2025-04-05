@@ -26,9 +26,12 @@ class Config(MySmtpConfig):
     # be sent to your web application. By default, this will be only headers.
     
     # JWT Configuration
-    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_TOKEN_LOCATION = ["cookies", "headers"] 
     # Enable CSRF protection for JWT cookies
     JWT_COOKIE_CSRF_PROTECT = True  # Enables CSRF protection
+
+    #JWT_HEADER_NAME = "Authorization"
+    #JWT_HEADER_TYPE = "Bearer"
     #JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
     
     # Correctly set the secret key and algorithm
@@ -49,7 +52,7 @@ class Config(MySmtpConfig):
     #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'https://9aa8-2001-818-e749-bf00-b50b-60a-65d8-ef48.ngrok-free.app']  # Allow local development origins
+        ['http://localhost:8000', 'https://9aa8-2001-818-e749-bf00-b50b-60a-65d8-ef48.ngrok-free.app', 'http://0.0.0.0:8000']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     )

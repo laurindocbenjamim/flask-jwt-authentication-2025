@@ -14,8 +14,13 @@ from flask_jwt_extended import (
 )
 
 class UserData(Resource):
-    @jwt_required()
+    @jwt_required(verify_csrf=False)  # Skip CSRF check
     def get(self):
+        """
+        verify_csrf=False bypasses the CSRF check while still validating the JWT in access_token_cookie.
+
+
+        """
         claims = get_jwt()
         response = make_response(jsonify(
             status_code=200,
