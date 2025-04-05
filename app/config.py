@@ -49,7 +49,7 @@ class Config(MySmtpConfig):
     #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://0.0.0.0:8000']  # Allow local development origins
+        ['http://localhost:8000', 'https://9aa8-2001-818-e749-bf00-b50b-60a-65d8-ef48.ngrok-free.app']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     )

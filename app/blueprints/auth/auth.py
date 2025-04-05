@@ -71,7 +71,7 @@ class Login(Resource):
                 value=access_token,
                 #domain='.d-tuning.com',  # Note the leading dot for subdomains
                 secure=current_app.config['JWT_COOKIE_SECURE'],  # Required for HTTPS in production
-                httponly=False,  # Allow JS access
+                httponly=current_app.config['JWT_COOKIE_HTTPONLY'],  # Allow JS access
                 samesite=current_app.config['JWT_COOKIE_SAMESITE'],  # Required for cross-origin
                 path="/"  # Ensure it’s available site-wide
             )
@@ -81,7 +81,7 @@ class Login(Resource):
                 value=access_token,
                 #domain=".yourdomain.com",  # Critical for cross-origin
                 secure=True,  # Allow non-HTTPS in development. When set to True works in localhost
-                httponly=False,
+                httponly=current_app.config['JWT_COOKIE_HTTPONLY'],  # Allow JS access
                 samesite="None",
                 path="/"
             )
