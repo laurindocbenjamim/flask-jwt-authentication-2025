@@ -26,7 +26,7 @@ class Config(MySmtpConfig):
     # be sent to your web application. By default, this will be only headers.
     
     # JWT Configuration
-    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_TOKEN_LOCATION = ["cookies", "headers"]  # Allow JWTs to be sent in cookies and headers
     # Enable CSRF protection for JWT cookies
     JWT_COOKIE_CSRF_PROTECT = True  # Enables CSRF protection
     #JWT_COOKIE_DOMAIN = ".d-tuning.com" if os.getenv("FLASK_ENV") == "production" else "None"  # Set in production
