@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from flask_restful import reqparse
 import re
 from app.factory import sanitize_name
+from app.utils import upload_file
 
 
 from app.blueprints.audio import split_audio
@@ -77,8 +78,12 @@ class SpeechRecognitionView(View):
                 
             #file.save(f"{UPLOAD_FOLDER}{secure_filename(file.filename)}")
             filename = os.path.join(UPLOAD_FOLDER, secure_filename(file.filename))
-            file.save(filename)
+            #file.save(filename)
+            status, filename = upload_file(request_file=request.files, file_field_name="fileInput", folder='files')
             
+            if not status:
+                return make_response(jsonify(error=f"Failed to upload file. {filename}", transcription=filename), 400)
+
             if not os.path.exists(filename) or not os.path.isfile(filename):
                 return make_response(jsonify(error="File not found",title=self._title, transcription=''), 200)   
 

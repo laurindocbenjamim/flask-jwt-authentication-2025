@@ -7,3 +7,4 @@ from .access_controller import admin_required
 from .logger_config import logger
 from .logger_config import get_message
 from .handling_errors import haddling_errors
+from .file_factory import upload_file

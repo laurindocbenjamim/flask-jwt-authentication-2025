@@ -20,6 +20,7 @@ class Config(MySmtpConfig):
 
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
+    UPLOAD_FOLDER = 'uploads'
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Here you can globally configure all the ways you want to allow JWTs to
