@@ -42,32 +42,15 @@ from app.models import User
 from app.factory import create_user, confirm_user_email
 from flask_restful import Api, Resource, reqparse
 from app.factory import sanitize_email
-from app.blueprints.emails.email_factory import get_email_confirmation_token
+from app.blueprints.emails.email_factory import get_mail_message, sendgrid_email_sender
 
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 
-def get_mail_message(*,subject, message, sender_email, recipient):
-    if not subject:
-        raise ValueError("Subject is required")
-    if not message:
-        raise ValueError("Message is required")
-    if not sender_email:
-        raise ValueError("Sender email is required")
-    if not recipient:
-        raise ValueError("Recipient is required")
-    
-    mail_content = Mail(
-    from_email=sender_email,
-    to_emails=[recipient],
-    subject=subject,
-    html_content=message)
 
-    return mail_content
 
-class SendGridEmailApi(Resource):
+class SendGridEmailSenderApi(Resource):
 
-    @limiter.limit("5 per minute")
+    @limiter.limit("30 per minute")
     def post(self):
 
         """
@@ -85,27 +68,14 @@ class SendGridEmailApi(Resource):
         if not user:
             return jsonify(status_code=401, error="User not found")
         
-        token = get_email_confirmation_token(user_id="laurindocbenjamim@gmail.com")
-
-        confirm_url = url_for('send_email.confirm_email', token=token, _external=True)
-        
-        html=render_template('confirm_email.html', confirm_url=confirm_url)
-        
-        message = get_mail_message(subject="Confirm your email address", message=html, 
+        message = get_mail_message(subject="Confirm your email address", message="Please click the link below to confirm your email address. ", 
                                    sender_email="data-tuning@laurindocbenjamim.pt", #"services@d-tuning.com", 
                                    recipient=email)
         
-        try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-            response = sg.send(message)
-            
-            return jsonify(
-                status_code=response.status_code,
-                message=response.body.decode('utf-8') if response.body else None,
-                headers=dict(response.headers)
-            )
-        except Exception as e:
-            return jsonify(status_code=400, message=str(e))
+        if not message:
+            return jsonify(error=message, response="Failed to send email")
+
+        return sendgrid_email_sender(message=message)
         
 
     

@@ -33,6 +33,9 @@ from app.models import User
 from app.factory import create_user, confirm_user_email
 from flask_restful import Api, Resource, reqparse
 from app.factory import sanitize_email
+from .email_factory import get_mail_message, get_email_confirmation_token
+from .sendgrid_email_api import SendGridEmailApi
+from sendgrid import SendGridAPIClient
 
 # Email Utilities
 def send_async_email(msg):
@@ -135,10 +138,29 @@ class SendConfirmEmailToNewUserApi(Resource):
         user = User.query.filter_by(email=email).first_or_404()
         if not user:
             return jsonify(status_code=401, error="User not found")
-        status = send_confirmation_email(email)
-        if not status:
-            return jsonify(status_code=401, message=f"Failed to send the confirmation email to '{email}'. ")
-        return jsonify(status_code=200, message=f"An email has been sent to '{email}' to confirm your registration.", recipient=email)
+        
+
+        token = get_email_confirmation_token(user_id=email)
+
+        confirm_url = url_for('send_email.confirm_email', token=token, _external=True)
+        
+        html=render_template('confirm_email.html', confirm_url=confirm_url)
+        
+        message = get_mail_message(subject="Confirm your email address", message=html, 
+                                   sender_email="data-tuning@laurindocbenjamim.pt", #"services@d-tuning.com", 
+                                   recipient=email)
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            
+            return make_response(jsonify(
+                status_code=response.status_code,
+                message=f"An email has been sent to '{email}' to confirm your registration.",
+               
+            ), 200)
+        except Exception as e:
+            return make_response(jsonify(status_code=400, message=str(e)), 400)
+       
 
     @jwt_required()
     @limiter.limit("5 per minute")
