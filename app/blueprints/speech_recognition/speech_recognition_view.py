@@ -9,6 +9,7 @@ from flask_restful import reqparse
 import re
 from app.factory import sanitize_name
 from app.utils import upload_file
+from .split_file import split_media_file
 
 
 from app.blueprints.audio import split_audio
@@ -78,6 +79,7 @@ class SpeechRecognitionView(View):
                 
             #file.save(f"{UPLOAD_FOLDER}{secure_filename(file.filename)}")
             filename = os.path.join(UPLOAD_FOLDER, secure_filename(file.filename))
+            
             #file.save(filename)
             status, filename = upload_file(request_file=request.files, file_field_name="fileInput", folder='files')
             
@@ -87,6 +89,13 @@ class SpeechRecognitionView(View):
             if not os.path.exists(filename) or not os.path.isfile(filename):
                 return make_response(jsonify(error="File not found",title=self._title, transcription=''), 200)   
 
+            MAX_SIZE = 25 * 1024 * 1024  # 25 MB = 26214400 bytes
+            file_size = os.path.getsize(filename)
+
+            if file_size > MAX_SIZE:
+                # remove the file after processing with secure filename
+                os.remove(filename)
+                return make_response(jsonify(error="Maximum content size limit 25MB",status_code=400), 400)
             #splited_files = split_audio(filename)
             
            
@@ -96,7 +105,9 @@ class SpeechRecognitionView(View):
             status, transcription = convert.generate_transcription()
 
             if not status:
-                return make_response(jsonify(error=transcription,title=self._title), 400)
+                # remove the file after processing with secure filename
+                os.remove(filename)
+                return make_response(jsonify(error=transcription,status_code=400), 400)
 
             message = f"Here is your media speech converted to the text format on {get_lang(output_lang)} language."
             
