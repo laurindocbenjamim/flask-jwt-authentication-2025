@@ -1,7 +1,9 @@
 
 # sys.path.append(os.path.abspath("flask-jwt-authentication-2025"))
 import os
-import sqlalchemy
+import secrets
+import jwt
+import uuid
 from hmac import compare_digest
 import logging
 # from sqlalchemy.exc import AttributeError
@@ -23,10 +25,14 @@ from flask_jwt_extended import (
     unset_jwt_cookies
 )
 from sqlalchemy.sql import func
-import secrets
-import jwt
 from werkzeug.security import check_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.middleware.http_proxy import ProxyMiddleware
 
+
+
+from flask import request, g
 
 from app.config import Config, DevelopmentConfig, ProductionConfig
 
@@ -38,12 +44,15 @@ from app.blueprints import (user_api_bp,
                             admin_api, 
                             send_email_api,
                             web_scrapping_api_bp,
-                            bp_speech_recognition
+                            bp_speech_recognition,
+                            auth2_api_bp,
+                            cv_bp_api
                             )
-from app.utils.handling_errors import haddling_errors
+from app.utils.handling_errors import handle_errors
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
+from app.utils import request_id_middleware
 
 
 app = Flask(__name__)
@@ -71,6 +80,21 @@ def create_app():
         pip install babel
 
     """
+
+    request_id_middleware(app=app)
+
+    # 2. If behind a proxy, add ProxyFix (but only in production!)
+    """ if app.env == 'production':
+        app.wsgi_app = ProxyFix(
+            app.wsgi_app,
+            x_for=1,       # Trust X-Forwarded-For
+            x_proto=1,      # Trust X-Forwarded-Proto
+            x_host=1,       # Trust X-Forwarded-Host
+            x_prefix=1      # Trust X-Forwarded-Prefix
+        )"""
+    
+    
+
     load_extentions(app=app)
     #csrf.init_app(app=app)
     jwt_ex = JWTManager(app)
@@ -82,6 +106,22 @@ def create_app():
     app.logger.setLevel(logging.FATAL)
     app.logger.setLevel(logging.NOTSET)
     
+
+    @app.before_request
+    def assign_request_id():
+        """Add a unique request ID to each incoming request."""
+        g.request_id = request.headers.get('X-Request-ID', str(uuid.uuid4()))
+        # Make it available on the request object as well
+        request.request_id = g.request_id
+
+    @app.after_request
+    def add_request_id_header(response):
+        """Add request ID to response headers."""
+        if hasattr(request, 'request_id'):
+            response.headers['X-Request-ID'] = request.request_id
+        return response
+
+
     # Using the additional_claims_loader, we can specify a method that will be
     # called when creating JWTs. The decorated method must take the identity
     # we are creating a token for and return a dictionary of additional
@@ -130,7 +170,7 @@ def create_app():
     
 
     # load handling errors
-    haddling_errors(app, CSRFError)
+    handle_errors(app, CSRFError)
 
     @app.after_request
     def refresh_expiring_jwts(response):
@@ -171,10 +211,12 @@ def create_app():
 
     csrf.exempt(user_api_bp)
     csrf.exempt(auth_api)
+    csrf.exempt(auth2_api_bp)
     csrf.exempt(bp_author)
     csrf.exempt(admin_api)
     csrf.exempt(send_email_api)
     csrf.exempt(bp_speech_recognition)
+    csrf.exempt(cv_bp_api)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -182,10 +224,11 @@ def create_app():
     #app.register_blueprint(bp_author)    
     app.register_blueprint(user_api_bp, url_prefix='/api/v1/user')
     app.register_blueprint(auth_api, url_prefix='/api/v1/auth')
+    app.register_blueprint(auth2_api_bp, url_prefix='/api/v1/auth2')
     app.register_blueprint(admin_api, url_prefix='/api/v1/admin')
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
     app.register_blueprint(bp_speech_recognition, url_prefix='/api/v1/speech_recognition')
-
+    app.register_blueprint(cv_bp_api)
 
     routes(app=app)
 

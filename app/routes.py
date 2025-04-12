@@ -1,6 +1,7 @@
 
 
 import secrets
+import jwt
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -16,7 +17,8 @@ from flask_jwt_extended import (
     unset_jwt_cookies
 )
 
-import jwt
+from app.config import DevelopmentConfig, ProductionConfig
+
 from werkzeug.security import check_password_hash
 from app.utils import db
 from app.models import User, TokenBlocklist, TokenBlocklist2
@@ -28,25 +30,10 @@ def routes(app):
         if app.config.get('DEVLOPER') != dev:
             abort(401)
         
-        return {
-            "JWT_COOKIE_DOMAIN": app.config.get("JWT_COOKIE_DOMAIN"),
-            "JWT_COOKIE_SAMESITE": app.config.get("JWT_COOKIE_SAMESITE"),
-            "JWT_COOKIE_SECURE": app.config.get("JWT_COOKIE_SECURE"),
-            "JWT_TOKEN_LOCATION": app.config.get("JWT_TOKEN_LOCATION"),
-            "JWT_COOKIE_CSRF_PROTECT": app.config.get("JWT_COOKIE_CSRF_PROTECT"),
-            "JWT_SECRET_KEY": app.config.get("JWT_SECRET_KEY"),
-            "JWT_ALGORITHM": app.config.get("JWT_ALGORITHM"),
-            "JWT_ACCESS_TOKEN_EXPIRES": str(app.config.get("JWT_ACCESS_TOKEN_EXPIRES")),
-            "JWT_COOKIE_HTTPONLY": app.config.get("JWT_COOKIE_HTTPONLY"),
-            "FLASK_ENV": app.config.get("FLASK_ENV"),
-            "SQLALCHEMY_DATABASE_URI": app.config.get("SQLALCHEMY_DATABASE_URI"),
-            "CORS_ORIGIN": app.config.get("CORS_ORIGIN"),
-            "CORS_SUPPORTS_CREDENTIALS": app.config.get("CORS_SUPPORTS_CREDENTIALS"),
-            "CORS_EXPOSE_HEADERS": app.config.get("CORS_EXPOSE_HEADERS"),
-            "ALLOWED_COUNTRIES": app.config.get("ALLOWED_COUNTRIES"),
-            "RATE_LIMIT": app.config.get("RATE_LIMIT"),
-            "MAX_CONNECTIONS": app.config.get("MAX_CONNECTIONS"),
-        }
+        config_vars = {key: str(value) if isinstance(value, timedelta) else value 
+                   for key, value in app.config}
+        
+        return jsonify(config_vars)
 
 
     @app.route('/test_send_email', methods=['GET'])
