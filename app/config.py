@@ -21,6 +21,9 @@ class Config(MySmtpConfig):
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
     UPLOAD_FOLDER = 'uploads'
+
+    MAX_CONTENT_LENGTH= os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024) # 25MB limit for file uploads
+
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
     # Here you can globally configure all the ways you want to allow JWTs to
