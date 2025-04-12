@@ -20,6 +20,8 @@ gunicorn==23.0.0
 hvac==2.3.0
 httpx==0.28.1
 matplotlib==3.10.0
+google-api-python-client # Interagir com as diversas APIs de serviços do Google (Cloud Storage, Gmail API, Drive API, etc.).
+google-auth # Autenticação e autorização com os serviços do Google Cloud e outras APIs do Google que utilizam OAuth 2.0.
 # openai-whisper==20240930  # Comment out or remove this line if not essential
 #openai-whisper
 openai
@@ -47,4 +49,5 @@ unidecode
 WTForms
 yfinance
 sendgrid
+reportlab
 
