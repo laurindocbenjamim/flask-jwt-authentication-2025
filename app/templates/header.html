@@ -1,0 +1,73 @@
+
+        {% if "Home" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">{{ welcome_title }}</h1>
+        <p class="lead animate__animated animate__fadeInUp">{{welcome_message}}</p>
+        <a href="#" class="btn btn-light btn-lg mt-3">Explore Courses</a>
+        </div>
+        </header>
+
+        {% elif "Our Courses" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">Our Courses</h1>
+        <p class="lead animate__animated animate__fadeInUp">Discover a world of knowledge with our diverse range of
+                courses</p>
+                </div>
+                </header>
+
+        {% elif "Python Courses" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">Python Courses</h1>
+        <p class="lead animate__animated animate__fadeInUp">Master Python programming with our comprehensive courses</p>
+        </div>
+        </header>
+
+        {% elif "Contact" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">Contact Us</h1>
+        <p class="lead animate__animated animate__fadeInUp">We're here to help! Get in touch with our team.</p>
+        </div>
+        </header>
+
+        {% elif "About" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">About Data Tuning</h1>
+        <p class="lead animate__animated animate__fadeInUp">Empowering learners through innovative online education since 2023</p>
+        </div>
+        </header>
+
+        {% elif "Our Projects" in title %}
+
+        <header class="hero text-center">
+        <div class="container">
+        <h1 class="display-4 animate__animated animate__fadeInDown">{{ welcome_title }}</h1>
+        <p class="lead animate__animated animate__fadeInUp">{{welcome_message}}</p>
+        </div>
+        </header>
+
+        {% elif "Blog" in title %}
+
+        <header class="hero text-center">
+                <div class="container">
+                <h1 class="display-4 animate__animated animate__fadeInDown">{{ welcome_title }}</h1>
+                <p class="lead animate__animated animate__fadeInUp">{{welcome_message}}</p>
+                </div>
+                </header>
+        {% elif "Login" in title %}
+                
+        {% elif "Register" in title %}
+           
+        {% else %}
+       
+        {% endif %}
+        

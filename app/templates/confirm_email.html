@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation Required</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #007bff;
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            height: 80px;
+            margin-bottom: 15px;
+        }
+        .content {
+            font-size: 1rem;
+            padding: 30px;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 25px 0;
+            background-color: #007bff;
+            color: #FFF !important;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0069d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #6cf044 !important;
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 15px;
+        }
+        .expiry-note {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px auto;
+            }
+            .header {
+                padding: 20px 15px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .button {
+                padding: 10px 20px;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://github.com/laurindocbenjamim/dev-images/blob/main/favicon-32x32.png?raw=true" alt="Company Logo" class="logo">
+            <h1>Verify Your Email Address</h1>
+        </div>
+        <div class="content">
+            <p>Thank you for signing up! To complete your registration and access your account, please verify your email address by clicking the button below:</p>
+            
+            <a href="{{ confirm_url }}" class="button">Verify Email Address</a>
+            
+            <div class="instructions">
+                <p><strong>Having trouble?</strong> If the button above doesn't work:</p>
+                <ol>
+                    <li>Copy this link: <span class="highlight">{{ confirm_url }}</span></li>
+                    <li>Paste it into your browser's address bar</li>
+                    <li>Press Enter to visit the page</li>
+                </ol>
+            </div>
+            
+            <p class="expiry-note">This verification link will expire in 24 hours. If you didn't request this email, please ignore it.</p>
+            
+            <p>Welcome aboard!<br>The <span class="highlight"><strong>Data Tuning</strong></span> Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 Data Tuning IO. All rights reserved.</p>
+            <p>Praça Mouzinho de Albuquerque | Porto, Portugal</p>
+        </div>
+    </div>
+</body>
+</html>

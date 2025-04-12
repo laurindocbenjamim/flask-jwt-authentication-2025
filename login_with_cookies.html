@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Cookies Authentication</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="components.js"></script>
+</head>
+
+<body>
+    <div class="container text-justify-center">
+        <h2 class="mt-5">Login</h2>
+        <form class="col-lg-7" id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required>
+            </div>
+            <div class="mt-3">
+                <div class="error-message text-danger" id="error-message"></div>
+                <div class="info-message text-info" id="info-message"></div>
+                <div class="success-message text-success" id="success-message"></div>
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+
+
+    </div>
+
+    <script>
+
+
+        const auth = new AuthUser();
+        const infoMessage = document.getElementById('info-message')
+        const successMessage = document.getElementById('success-message')
+        const errorMessage = document.getElementById('error-message')
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Reset previous error message
+            errorMessage.textContent = '';
+
+            // Basic validation
+            if (!username || !password) {
+                errorMessage.textContent = 'Username and password are required!';
+                return;
+            }
+
+            if (username.length < 4) {
+                errorMessage.textContent = 'Username must be at least 4 characters long.';
+                return;
+            }
+
+            const formData = JSON.stringify({ "username": username, "password": password });
+
+            const options = {
+                method: 'post',
+                body: formData,
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                },
+            };
+            console.log("Login with cookies tarting...")
+            //const response = await auth.login(options)
+            const response = await auth.makeRequest(options, 'api/v1/auth/login')
+            console.log(response)
+            if (!response.ok && !response.status_code) {
+                const message = await auth.handlingErrors(response)
+
+                const sms = await auth.getErrorsSuccessMessage(response.error ? response.error : response.message, response.status_code)
+                console.log(message)
+                console.error("Login failed! " + sms)
+                errorMessage.textContent = sms;
+                successMessage.textContent = '';
+            } else {
+                const sms = await auth.getErrorsSuccessMessage(response.error ? response.error : response.message, response.status_code)
+                console.log(sms)
+
+                if (response.status_code === 201) {
+                    infoMessage.textContent = response.message || 'Login failed. Please try again.';
+                    errorMessage.textContent = '';
+                    successMessage.textContent = '';
+                } else if (response.status_code === 400 || response.status_code === 403 || response.status_code === 401) {
+                    infoMessage.textContent = '';
+                    errorMessage.textContent = response.error || 'Login failed. Please try again.';
+                    successMessage.textContent = '';
+                } else if (response.status_code === 200) {
+                    infoMessage.textContent = '';
+                    successMessage.textContent = 'Login successful! Redirecting...';
+                    errorMessage.textContent = '';
+                    setTimeout(() => {
+                        window.location.href = auth.baseURL + '/admin.html';
+                    }, 1000);
+                } else {
+                    errorMessage.textContent = 'An unexpected error occurred. Please try again.' + sms;
+                    successMessage.textContent = '';
+                }
+            }
+            console.log('Process  finished!')
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            event.preventDefault()
+            const options = {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({ "action": "logout" }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                },
+            };
+            console.log("Logout process with cookies tarting...")
+            const endpoint = 'logout_with_cookies';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+            if (!response.ok) {
+                const message = await auth.handlingErrors(response)
+                console.log(message)
+                console.error("Logout process failed!")
+            } else {
+                console.log("Logout process done successfully!")
+            }
+            console.log('Process  finished!')
+        });
+
+        document.getElementById('testProtectionButton').addEventListener('click', async (event) => {
+            event.preventDefault()
+            accessProtectedRoute();
+        })
+
+
+        async function accessProtectedRoute() {
+            const options = {
+                method: 'get',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': auth.getCookie('csrf_access_token'),
+                },
+            };
+            console.log("Accessing protected route with cookies tarting...")
+            const endpoint = 'protected';
+            const response = await auth.makeRequest(options, endpoint)
+            console.log(response)
+
+            if (!response.ok && !response.status_code) {
+                const message = await auth.handlingErrors(response)
+                console.log(message)
+            } else {
+                if (response.status_code === 200) {
+                    localStorage.setItem('user_id', response.id)
+                    localStorage.setItem('username', response.username)
+                    localStorage.setItem('fullname', response.full_name)
+                    window.location.href = auth.baseURL + '/admin.html'
+                    console.log("Accessed protected successfully!")
+                }
+
+            }
+            console.log('Process  finished!')
+        }
+
+        function showAdminArea() {
+            const token = localStorage.getItem('jwtToken');
+            if (token) {
+                document.getElementById('adminArea').style.display = 'block';
+                //fetchUserData(token);
+            }
+        }
+
+        function fetchUserDat(token) {
+            // Simulate fetching user data
+            const userData = {
+                username: 'admin',
+                email: 'admin@example.com'
+            };
+
+            document.getElementById('userData').textContent = JSON.stringify(userData, null, 2);
+        }
+
+
+
+        function fetchUserData(method, endpoint, formData, headers) {
+            const request = method === 'POST' ? {
+                method: method,
+                body: formData,
+                headers: headers
+            } : {
+                method: method,
+                headers: headers
+            };
+
+            fetch(endpoint, request)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.access_token) {
+                        localStorage.setItem('jwtToken', data.access_token)
+                        document.getElementById('token').value = data.access_token;
+                    } else if (data.id) {
+                        localStorage.setItem('user_id', data.id)
+                        localStorage.setItem('username', data.username)
+                        localStorage.setItem('fullname', data.full_name)
+
+                        //alert(`ID: ${data.id}_ Username: ${data.username}__" Fullname: ${data.full_name}`)
+                        window.location.href = '/admin.html'
+                    }
+                    document.getElementById('userData').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

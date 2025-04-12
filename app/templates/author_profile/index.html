@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TR262JJZ');</script>
+  <!-- End Google Tag Manager -->
+
+  <link href="assets/img/favicon/favicon.ico" rel="icon">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.118.2">
+  <title>LAURINDO C. BENJAMIM - PORTFOLIO</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/jumbotron/">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      width: 100%;
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-bd-primary {
+      --bd-violet-bg: #712cf9;
+      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #6528e0;
+      --bs-btn-hover-border-color: #6528e0;
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #5a23c8;
+      --bs-btn-active-border-color: #5a23c8;
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+
+    .bd-mode-toggle .dropdown-menu .active .bi {
+      display: block !important;
+    }
+
+    /*------------------------------------------------------------------------------*/
+
+    .content {
+      position: relative;
+    }
+
+    main .container .welcome .container-fluid h1 {
+      color: #fff;
+      position: absolute;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+
+    main .container .welcome .container-fluid h1:nth-child(1) {
+      color: transparent;
+      -webkit-text-stroke: 2px rgb(35, 235, 241);
+    }
+
+    main .container .welcome .container-fluid h1:nth-child(2) {
+      color: rgb(10, 190, 49);
+      animation: animate 4s ease-in-out infinite;
+    }
+
+    @keyframes animate {
+
+      0%,
+      100% {
+        clip-path: polygon(0% 45%,
+            16% 44%,
+            33% 50%,
+            54% 60%,
+            70% 61%,
+            84% 59%,
+            100% 52%,
+            100% 100%,
+            0% 100%);
+      }
+
+      50% {
+        clip-path: polygon(0% 60%,
+            15% 65%,
+            34% 66%,
+            51% 62%,
+            67% 50%,
+            84% 45%,
+            100% 46%,
+            100% 100%,
+            0% 100%);
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/author_profile_style.css') }}">
+</head>
+
+<body>
+
+  <header class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+    <nav class="navbar fixed-top" aria-label="First navbar example">
+
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.d-tuning.com/"><i class="fa fa-terminal"
+            style="color: rgb(35, 235, 241);opacity: 0.5;"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01"
+          aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+          <!--<span class="navbar-toggler-icon"></span>-->
+          <i class="fa-solid fa-bars-staggered" style="color: #FFF;"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample01">
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('profile.laurindo_c_benjamim') }}">About</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
+              <ul class="dropdown-menu" style="background-color: rgba(23, 30, 82, 0.23); ">
+                <li><a class="dropdown-item" href="#">Projects</a></li>
+                <li><a class="dropdown-item" href="#">Articles</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" aria-disabled="true">Contact</a>
+            </li>
+
+          </ul>
+
+        </div>
+      </div>
+
+    </nav>
+
+  </header>
+
+  <main>
+    <div class="container py-4">
+
+      <div class="welcome p-5 mb-4 rounded-3">
+
+        <div class="container-fluid py-5">
+          <a href="{{ url_for('profile.laurindo_c_benjamim') }}">
+            <h1 class="display-2 fw-bold" style="width:65%"><span>Laurindo</span> C. Benjamim</h1>
+            <h1 class="display-2 fw-bold" style="width:65%"><span>Laurindo</span> C. Benjamim</h1>
+          </a>
+        </div>
+
+        <div class="container-fluid py-5">
+          <p class=" fs-4" id="hi">Hi!!</p>
+          <p class=" fs-4">
+            Nice to meet you.
+            <br>
+            Welcome to my portfolio.
+          </p>
+          <button class="btn btn-lg" style="background-color: rgb(35, 235, 241); color:#000" type="button">Get In
+            Touch</button>
+
+        </div>
+
+        <div class="mb-4 social-media">
+          <a href="https://www.linkedin.com/in/laurindocbenjamim" target="_blank"><i
+              class="fa-brands fa-linkedin fa-2x"></i></a>
+          <a href="https://github.com/laurindocbenjamim" target="_blank"><i class="fa-brands fa-github fa-2x"></i></a>
+          <a href="https://www.youtube.com/watch?v=2els0GTfHmI"><i class="fa-brands fa-square-youtube fa-2x"></i></a>
+        </div>
+
+      </div>
+
+
+
+      <footer class="pt-6 mt-5 text-body-secondary">
+        <span>&copy; 2023; All rights reserved</span>
+
+        <div class="">
+
+          <form role="search">
+            <div class="subscribe col-6 col-lg-4">
+
+              <input class="form-control input" style="
+              max-width: 250px;
+          border: none;
+          outline: none;
+          background-color: rgba(23, 30, 82, 0.23); 
+          border-radius: 0%;
+          color:#FFF" type="email" name="email" id="email" placeholder="Email" aria-label="Subscribe">
+
+              <button type="submit" class="btn" style="
+          border:none; 
+          border-radius: 0%;
+          background-color: rgb(35, 235, 241);
+          color: #000;">Subscribe Me</button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </footer>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='assets/dist/js/bootstrap.bundle.min.js') }}"></script>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TR262JJZ" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <script src="{{ url_for('static', filename='assets/js/form.js') }}"></script>
+</body>
+
+</html>

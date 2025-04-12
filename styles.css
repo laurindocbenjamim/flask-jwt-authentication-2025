@@ -1,0 +1,24 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f8f8;
+}
+
+.logo {
+    width: 250px;
+    height: 250px;
+}
+
+.pentagon {
+    fill: none;
+    stroke: black;
+    stroke-width: 3;
+}
+
+.letter {
+    stroke: black;
+    stroke-width: 4;
+    fill: none;
+}
