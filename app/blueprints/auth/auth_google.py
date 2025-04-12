@@ -25,8 +25,7 @@ cache = Cache()
 
 from app.models import User
 
-
-social_app = Blueprint("social", __name__)
+auth2_api_bp = Blueprint("auth2_api", __name__, url_prefix='/api/v1/auth2')
 google = oauth.register(
             name='google',
             client_id=os.getenv('GOOGLE_CLIENT_ID'),
@@ -40,12 +39,12 @@ google = oauth.register(
         )
     
 # Social Login
-@social_app.route('/login/google')
+@auth2_api_bp.route('/google/login')
 def google_login():
     redirect_uri = url_for('google_auth', _external=True)
     return google.authorize_redirect(redirect_uri)
 
-@social_app.route('/login/google/callback')
+@auth2_api_bp.route('/google/callback')
 def google_auth():
     token = google.authorize_access_token()
     user_info = google.get('userinfo').json()
@@ -68,7 +67,7 @@ def google_auth():
 
 
 #
-@social_app.route('/api/auth/reset-password', methods=['POST'])
+@auth2_api_bp.route('/api/auth/reset-password', methods=['POST'])
 #@limiter.limit('3/hour')
 def request_password_reset():
     email = sanitize_email(request.json.get('email'))
@@ -80,7 +79,7 @@ def request_password_reset():
         
     return jsonify(message="If account exists, reset email sent")
 
-@social_app.route('/api/auth/reset-password/<token>', methods=['POST'])
+@auth2_api_bp.route('/api/auth/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     user = User.verify_reset_token(token)
     if not user:

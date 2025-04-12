@@ -8,8 +8,10 @@ from app.utils import db
 from flask_migrate import Migrate
 from app.models import User, TokenBlocklist
 from app import create_app
+
 #from app.models import User
 from werkzeug.security import generate_password_hash
+
 
 app = create_app()
 # This function is used to migrate the database
