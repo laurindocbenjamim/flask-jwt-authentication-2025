@@ -17,12 +17,9 @@ from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager, 
     create_access_token,
-    jwt_required,
-    current_user,
     get_jwt,
     get_jwt_identity,
-    set_access_cookies,
-    unset_jwt_cookies
+    set_access_cookies
 )
 from sqlalchemy.sql import func
 from werkzeug.security import check_password_hash
@@ -49,12 +46,18 @@ from app.blueprints import (user_api_bp,
                             cv_bp_api,
                             payment_bp_api
                             )
+
 from app.utils.handling_errors import handle_errors
+
+from app.storage_cloud import cloud_storage_bp_api
 from app.modules_web_site import web_site_app
 from app.modules_author_profile import bp_author
 from app.routes import routes
-from app.utils import request_id_middleware
+#from app.utils import request_id_middleware
 
+#from dotenv import load_dotenv
+
+#load_dotenv()
 
 app = Flask(__name__)
 #csrf = CSRFProtect()
@@ -82,7 +85,7 @@ def create_app():
 
     """
 
-    request_id_middleware(app=app)
+    #request_id_middleware(app=app)
 
     # 2. If behind a proxy, add ProxyFix (but only in production!)
     """ if app.env == 'production':
@@ -108,19 +111,19 @@ def create_app():
     app.logger.setLevel(logging.NOTSET)
     
 
-    @app.before_request
+    """@app.before_request
     def assign_request_id():
-        """Add a unique request ID to each incoming request."""
+        #Add a unique request ID to each incoming request.
         g.request_id = request.headers.get('X-Request-ID', str(uuid.uuid4()))
         # Make it available on the request object as well
-        request.request_id = g.request_id
+        request.request_id = g.request_id"""
 
-    @app.after_request
+    """@app.after_request
     def add_request_id_header(response):
-        """Add request ID to response headers."""
+        #Add request ID to response headers.
         if hasattr(request, 'request_id'):
             response.headers['X-Request-ID'] = request.request_id
-        return response
+        return response"""
 
 
     # Using the additional_claims_loader, we can specify a method that will be
@@ -219,6 +222,7 @@ def create_app():
     csrf.exempt(bp_speech_recognition)
     csrf.exempt(cv_bp_api)
     csrf.exempt(payment_bp_api)
+    csrf.exempt(cloud_storage_bp_api)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -232,6 +236,7 @@ def create_app():
     app.register_blueprint(bp_speech_recognition, url_prefix='/api/v1/speech_recognition')
     app.register_blueprint(cv_bp_api)
     app.register_blueprint(payment_bp_api)
+    app.register_blueprint(cloud_storage_bp_api)
 
     routes(app=app)
 

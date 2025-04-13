@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 from flask.views import View
-from flask import jsonify, make_response, request, send_from_directory
+from flask import jsonify, make_response, current_app, request, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_restful import reqparse
 import re
@@ -16,9 +16,13 @@ from app.blueprints.audio import split_audio
 
 from .prompt_speech_to_text_generator import ConvertAudioSpeechToText
 
+from app.storage_cloud import client
+
 parser = reqparse.RequestParser()
 parser.add_argument('languageSelect', required=True, location='form', type=sanitize_name, help="Language cannot be blank!")
 parser.add_argument('outputFormat', required=True, location='form', type=sanitize_name, help="Output format cannot be blank!")
+
+
 
 
 class SpeechRecognitionView(View):
@@ -71,7 +75,15 @@ class SpeechRecognitionView(View):
            
             file = request.files['fileInput']
             #output_lang = request.form.get('output-language', 'pt')
-           
+
+            try:
+                BUCKET = current_app.config["SPACES_BUCKET"]
+
+                client.upload_fileobj(file, BUCKET, file.filename)
+            except Exception as e:
+                return jsonify(error="Failed to upload file to Cloud app", response=str(e))
+            
+
             #If the user does not select a file, the browser submits an
             # empty file without a filename.
             if file.filename == '':
@@ -82,7 +94,7 @@ class SpeechRecognitionView(View):
             
             #file.save(filename)
             status, filename = upload_file(request_file=request.files, file_field_name="fileInput", folder='files')
-            
+
             if not status:
                 return make_response(jsonify(error=f"Failed to upload file. {filename}", transcription=filename), 400)
 
