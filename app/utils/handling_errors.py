@@ -191,6 +191,15 @@ def handle_errors(app, CSRFError) -> None:
             additional_context={'error_type': 'rate_limit'}
         )
     
+    @app.errorhandler(ValueError)
+    def handle_rate_limit(e: ValueError):
+        return _create_error_response(
+            500, 
+            e,
+            json_response=True,
+            additional_context={'error_type': 'rate_limit'}
+        )
+    
 
     # Python built-in exceptions
     @app.errorhandler(Exception)
