@@ -26,6 +26,13 @@ class Config(MySmtpConfig):
 
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '12345')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '12345')
+    PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID', '12345')
+    PAYPAL_SECRET_KEY = os.environ.get('PAYPAL_SECRET_KEY', '12345')
+    STRIPE_PK = os.environ.get('STRIPE_PK', '12345')
+    STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '12345')
+
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
     
@@ -53,7 +60,7 @@ class Config(MySmtpConfig):
     #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://0.0.0.0:8000']  # Allow local development origins
+        ['http://localhost:8000', 'http://0.0.0.0:8000', 'https://f186-2001-818-e749-bf00-40f1-6948-f421-a96.ngrok-free.app']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     )
