@@ -22,7 +22,7 @@ class Config(MySmtpConfig):
 
     UPLOAD_FOLDER = 'uploads'
 
-    MAX_CONTENT_LENGTH= os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024) # 25MB limit for file uploads
+    MAX_CONTENT_LENGTH= None #int(os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024)) # 25MB limit for file uploads
 
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
@@ -32,6 +32,13 @@ class Config(MySmtpConfig):
     PAYPAL_SECRET_KEY = os.environ.get('PAYPAL_SECRET_KEY', '12345')
     STRIPE_PK = os.environ.get('STRIPE_PK', '12345')
     STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '12345')
+
+    SPACES_KEY= os.environ.get('SPACES_KEY', '')
+    SPACES_SECRET= os.environ.get('SPACES_SECRET', '')
+    SPACES_REGION= os.environ.get('SPACES_REGION', '')
+    SPACES_ENDPOINT= os.environ.get('SPACES_ENDPOINT', '')
+    SPACES_BUCKET= os.environ.get('SPACES_BUCKET', '')
+
 
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
@@ -60,7 +67,7 @@ class Config(MySmtpConfig):
     #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://0.0.0.0:8000', 'https://f186-2001-818-e749-bf00-40f1-6948-f421-a96.ngrok-free.app']  # Allow local development origins
+        ['http://localhost:8000', 'http://0.0.0.0:8000', 'https://3314-2001-818-e749-bf00-ba62-cacf-c73-b086.ngrok-free.app']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     )
