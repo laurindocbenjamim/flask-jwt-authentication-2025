@@ -16,7 +16,8 @@ from app.blueprints.audio import split_audio
 
 from .prompt_speech_to_text_generator import ConvertAudioSpeechToText
 
-from app.storage_cloud import client
+from app.storage_cloud import client, SpaceBucket
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('languageSelect', required=True, location='form', type=sanitize_name, help="Language cannot be blank!")
@@ -76,10 +77,12 @@ class SpeechRecognitionView(View):
             file = request.files['fileInput']
             #output_lang = request.form.get('output-language', 'pt')
 
-            try:
-                BUCKET = current_app.config["SPACES_BUCKET"]
+            space_bucket = SpaceBucket(file=file,file_name=f'audio/{file.filename}')
 
-                client.upload_fileobj(file, BUCKET, file.filename)
+            try:
+                response = space_bucket.upload()
+                if not response or response is None:
+                    response = "failed to upload"
             except Exception as e:
                 return jsonify(error="Failed to upload file to Cloud app", response=str(e))
             
@@ -119,12 +122,15 @@ class SpeechRecognitionView(View):
             if not status:
                 # remove the file after processing with secure filename
                 os.remove(filename)
-                return make_response(jsonify(error=transcription,status_code=400), 400)
+                response = space_bucket.delete()
+                
+                return make_response(jsonify(error=transcription,status_code=400, response= response), 400)
 
             message = f"Here is your media speech converted to the text format on {get_lang(output_lang)} language."
             
             # remove the file after processing with secure filename
             os.remove(filename)
+            response = space_bucket.delete()
             
 
             #return jsonify({"filename": convert.FILE_NAME, "status": status, "transcription": transcription})

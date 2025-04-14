@@ -33,7 +33,9 @@ def routes(app):
         config_vars = dict()
         
         config_vars['CORS_ORIGIN'] = app.config["CORS_ORIGIN"]
-         
+        config_vars['FLASK_ENV'] = app.config["FLASK_ENV"]
+        config_vars['JWT_COOKIE_CSRF_PROTECT'] = app.config["JWT_COOKIE_CSRF_PROTECT"]
+        config_vars['JWT_COOKIE_SECURE'] = app.config["JWT_COOKIE_SECURE"]
           
         return jsonify(config_vars)
 
