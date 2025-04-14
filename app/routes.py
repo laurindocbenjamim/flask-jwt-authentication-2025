@@ -30,9 +30,11 @@ def routes(app):
         if app.config.get('DEVLOPER') != dev:
             abort(401)
         
-        config_vars = {key: str(value) if isinstance(value, timedelta) else value 
-                   for key, value in app.config}
+        config_vars = dict()
         
+        config_vars['CORS_ORIGIN'] = app.config["CORS_ORIGIN"]
+         
+          
         return jsonify(config_vars)
 
 
