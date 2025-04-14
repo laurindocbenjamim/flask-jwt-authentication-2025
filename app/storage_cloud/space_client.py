@@ -1,7 +1,8 @@
 
 import os
+import io
 import boto3
-from flask import request
+from flask import send_file
 
 session = boto3.session.Session()
 client = session.client(
@@ -192,4 +193,17 @@ class SpaceBucket:
 
         except Exception as e:
             return False
-        
+    
+    def download_file(self):
+
+        try:
+            file_stream = io.BytesIO()
+            self.client.download_fileobj(Bucket=self.BUCKET, Key=self.FILE_NAME, Fileobj=file_stream)
+            file_stream.seek(0)
+            return send_file(
+                file_stream,
+                as_attachment=True,
+                download_name=self.FILE_NAME
+            )
+        except Exception as e:
+            return False
