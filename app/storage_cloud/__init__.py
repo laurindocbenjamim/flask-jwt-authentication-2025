@@ -6,6 +6,7 @@ from markupsafe import escape
 from flask_restful import Api, Resource
 from .cloud_storage_api import CloudStorageApi
 from .space_client import client
+from .space_client import SpaceBucket
 
 # Documentation: https://docs.digitalocean.com/reference/api/spaces/
 # https://docs.digitalocean.com/reference/api/spaces-api/#s3-sdk-examples
