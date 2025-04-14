@@ -130,7 +130,7 @@ class SpeechRecognitionView(View):
             
             # remove the file after processing with secure filename
             os.remove(filename)
-            response = space_bucket.delete()
+            #response = space_bucket.delete()
             
 
             #return jsonify({"filename": convert.FILE_NAME, "status": status, "transcription": transcription})
