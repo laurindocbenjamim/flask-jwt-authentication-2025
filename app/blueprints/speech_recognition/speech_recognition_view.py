@@ -117,7 +117,7 @@ class SpeechRecognitionView(View):
             #return send_from_directory(OUTPUT_FOLDER, [f for f in splited_files], as_attachment=True)
 
             convert = ConvertAudioSpeechToText(filename, output_lang)
-            status, transcription = convert.generate_transcription()
+            status, transcription = convert.generate_transcription_v2()
 
             if not status:
                 # remove the file after processing with secure filename
