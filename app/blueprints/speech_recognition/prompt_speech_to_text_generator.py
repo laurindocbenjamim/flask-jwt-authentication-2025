@@ -153,21 +153,21 @@ class ConvertAudioSpeechToText(object):
         if not self.FILE_NAME or self.FILE_NAME =='':
             return False, "File path required"
         
-        """client = OpenAI(
+        client = OpenAI(
             api_key=os.environ['OPEN_AI_API_KEY'],  # this is also the default, it can be omitted
             )
             #Library not updated
-            """
+            
         
         # Old lib and method
-        openai.api_key = os.environ['OPEN_AI_API_KEY']
+        #openai.api_key = os.environ['OPEN_AI_API_KEY']
         
         
         audio_file = open(self.FILE_NAME, "rb")
 
         try:
-            #transcription = client.audio.transcribe(
-            transcription = openai.Audio.transcribe(
+            transcription = client.audio.transcribe(
+            #transcription = openai.Audio.transcribe(
                 model="whisper-1", 
                 file=audio_file,
                 response_format="text",
