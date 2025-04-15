@@ -5,6 +5,8 @@ import sys
 import os
 from datetime import datetime
 from openai import OpenAI
+import openai
+
 
 from app.utils import get_message as set_logger_message
 
@@ -115,6 +117,64 @@ class ConvertAudioSpeechToText(object):
             if 'Error code: 413' in transcription:
                 return False, "The file is too large. Please try with a smaller file."
             return True, transcription
+        except KeyError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            set_logger_message(f"Error occured on method[generate_transcription]: \n \
+                                       KeyError: {str(sys.exc_info())}\
+                                       \nFile name: {fname}\
+                                       \nExc-instance: {fname}\
+                                       \nExc-classe: {exc_type}\
+                                       \nLine of error: {exc_tb.tb_lineno}\
+                                       \nTB object: {exc_tb}\
+                                       \nTraceback object: {str(traceback.format_exc())}\
+                                        ") 
+            return False, str(e)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            set_logger_message(f"Error occured on method[generate_transcription]: \n \
+                                       Exception: {str(sys.exc_info())}\
+                                       \nFile name: {fname}\
+                                       \nExc-instance: {fname}\
+                                       \nExc-classe: {exc_type}\
+                                       \nLine of error: {exc_tb.tb_lineno}\
+                                       \nTB object: {exc_tb}\
+                                       \nTraceback object: {str(traceback.format_exc())}\
+                                        ") 
+            return False, str(e)
+        
+
+    def generate_transcription_v2(self):
+        """
+        This is the audio generator method. It requests the audio using the API URL
+        """
+
+        if not self.FILE_NAME or self.FILE_NAME =='':
+            return False, "File path required"
+        
+        client = OpenAI(
+            api_key=os.environ['OPEN_AI_API_KEY'],  # this is also the default, it can be omitted
+            )
+        audio_file = open(self.FILE_NAME, "rb")
+
+        try:
+            transcription = client.audio.transcribe(
+                model="whisper-1", 
+                file=audio_file,
+                response_format="text",
+                language=self._output_lang
+            )
+            return True, transcription
+
+        except openai.OpenAIError as e:
+            if "413" in str(e):
+                return False, "The file is too large. Please try with a smaller file."
+            elif "Invalid file format" in str(e):
+                return False, "Invalid file format. Please upload a supported audio format."
+            else:
+                return False, f"An error occurred: {e}"
+
         except KeyError as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
