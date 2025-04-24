@@ -21,17 +21,27 @@ class Config(MySmtpConfig):
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
     UPLOAD_FOLDER = 'uploads'
+    AUDIOBOOKS_FOLDER = 'audiobooks'
+
+    ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg'}
 
     MAX_CONTENT_LENGTH= None #int(os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024)) # 25MB limit for file uploads
 
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
+
+     # API Keys
     GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '12345')
     GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '12345')
+
+    ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
+
     PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID', '12345')
     PAYPAL_SECRET_KEY = os.environ.get('PAYPAL_SECRET_KEY', '12345')
     STRIPE_PK = os.environ.get('STRIPE_PK', '12345')
     STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '12345')
+   
+    OPENAI_API_KEY = os.getenv('OPEN_AI_API_KEY')
 
     SPACES_KEY= os.environ.get('SPACES_KEY', '')
     SPACES_SECRET= os.environ.get('SPACES_SECRET', '')
