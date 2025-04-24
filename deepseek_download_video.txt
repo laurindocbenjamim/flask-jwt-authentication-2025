@@ -1,0 +1,1 @@
+pip install flask flask-restful flask-cors yt-dlp whisper

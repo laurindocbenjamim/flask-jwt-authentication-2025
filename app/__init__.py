@@ -44,7 +44,8 @@ from app.blueprints import (user_api_bp,
                             bp_speech_recognition,
                             auth2_api_bp,
                             cv_bp_api,
-                            payment_bp_api
+                            payment_bp_api,
+                            download_youtube_video_app
                             )
 
 from app.utils.handling_errors import handle_errors
@@ -61,6 +62,17 @@ from app.routes import routes
 
 app = Flask(__name__)
 #csrf = CSRFProtect()
+root_files_path = 'static'
+# Configuration
+DOWNLOAD_FOLDER = os.path.join(app.root_path,root_files_path,'downloads')
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
+COOKIES_FOLDER = os.path.join(app.root_path,root_files_path,'cookies')
+os.makedirs(COOKIES_FOLDER, exist_ok=True)
+app.config['COOKIES_FOLDER'] = COOKIES_FOLDER
+
+
 
 # Email Utilities
 def send_async_email(mail,msg):
@@ -223,6 +235,7 @@ def create_app():
     csrf.exempt(cv_bp_api)
     csrf.exempt(payment_bp_api)
     csrf.exempt(cloud_storage_bp_api)
+    csrf.exempt(download_youtube_video_app)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -237,6 +250,7 @@ def create_app():
     app.register_blueprint(cv_bp_api)
     app.register_blueprint(payment_bp_api)
     app.register_blueprint(cloud_storage_bp_api)
+    app.register_blueprint(download_youtube_video_app)
 
     routes(app=app)
 

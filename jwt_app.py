@@ -77,5 +77,6 @@ if __name__ == '__main__':
             except Exception as e:
                 print(f"Error to get Users. {str(e)}")
 
-
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    os.makedirs(app.config['AUDIOBOOKS_FOLDER'], exist_ok=True)
     app.run(debug=app.config['DEBUG'], port=app.config['PORT'])
