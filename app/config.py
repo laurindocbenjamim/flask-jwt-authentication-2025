@@ -25,7 +25,7 @@ class Config(MySmtpConfig):
 
     ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg'}
 
-    MAX_CONTENT_LENGTH= None #int(os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024)) # 25MB limit for file uploads
+    #MAX_CONTENT_LENGTH= None #int(os.environ.get('MAX_CONTENT_LENGTH',25 * 1024 * 1024)) # 25MB limit for file uploads
 
     ACCESS_EXPIRES = timedelta(minutes=40) # Default: timedelta(hours=1)
     SECRET_KEY = os.environ.get('SECRET_KEY', '12345')
