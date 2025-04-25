@@ -44,8 +44,9 @@ from app.blueprints import (user_api_bp,
                             bp_speech_recognition,
                             auth2_api_bp,
                             cv_bp_api,
-                            payment_bp_api,
-                            download_youtube_video_app
+                            payment_bp_api
+                            #download_youtube_video_app,
+                            #ai_audio_book_bp
                             )
 
 from app.utils.handling_errors import handle_errors
@@ -65,13 +66,17 @@ app = Flask(__name__)
 root_files_path = 'static'
 # Configuration
 DOWNLOAD_FOLDER = os.path.join(app.root_path,root_files_path,'downloads')
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
+AUDIOBOOKS_FOLDER = os.path.join(app.root_path,root_files_path,'audiobooks')
+app.config['AUDIOBOOKS_FOLDER'] = AUDIOBOOKS_FOLDER
+
 COOKIES_FOLDER = os.path.join(app.root_path,root_files_path,'cookies')
-os.makedirs(COOKIES_FOLDER, exist_ok=True)
 app.config['COOKIES_FOLDER'] = COOKIES_FOLDER
 
+os.makedirs(COOKIES_FOLDER, exist_ok=True)
+os.makedirs(AUDIOBOOKS_FOLDER, exist_ok=True)
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 
 # Email Utilities
@@ -235,7 +240,8 @@ def create_app():
     csrf.exempt(cv_bp_api)
     csrf.exempt(payment_bp_api)
     csrf.exempt(cloud_storage_bp_api)
-    csrf.exempt(download_youtube_video_app)
+    #csrf.exempt(download_youtube_video_app)
+    #csrf.exempt(ai_audio_book_bp)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -250,7 +256,8 @@ def create_app():
     app.register_blueprint(cv_bp_api)
     app.register_blueprint(payment_bp_api)
     app.register_blueprint(cloud_storage_bp_api)
-    app.register_blueprint(download_youtube_video_app)
+    #app.register_blueprint(download_youtube_video_app)
+    #app.register_blueprint(ai_audio_book_bp)
 
     routes(app=app)
 

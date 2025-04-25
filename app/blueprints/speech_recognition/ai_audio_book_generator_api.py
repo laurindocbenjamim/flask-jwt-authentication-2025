@@ -3,7 +3,7 @@ import io
 import uuid
 import warnings
 from datetime import datetime
-from flask import Blueprint, request, jsonify, send_from_directory
+from flask import Blueprint, request, current_app, jsonify, send_from_directory
 from flask_restful import Api, Resource
 from werkzeug.utils import secure_filename
 import openai
@@ -11,7 +11,6 @@ from elevenlabs.client import ElevenLabs
 from google.cloud import texttospeech
 from pydub import AudioSegment
 from pydub.effects import normalize
-from config import Config
 import logging
 
 # Configure logging
@@ -21,34 +20,43 @@ logger = logging.getLogger(__name__)
 # Suppress pydub warnings
 warnings.filterwarnings("ignore", message="Couldn't find ffmpeg or avconv")
 
-app = Blueprint("ai_audio_book",__name__, url_prefix="")
-
-api = Api(app)
 
 # Initialize AI clients
 openai.api_key = os.environ['OPEN_AI_API_KEY']
 
-# Initialize ElevenLabs client
 elevenlabs_client = None
-if app.config['ELEVENLABS_API_KEY']:
-    try:
-        elevenlabs_client = ElevenLabs(
-            api_key=app.config['ELEVENLABS_API_KEY'],
-            timeout=30
-        )
-        logger.info("ElevenLabs client initialized successfully")
-    except Exception as e:
-        logger.error(f"ElevenLabs init error: {str(e)}")
+google_client = None
+
+# Initialize ElevenLabs client
+
+def initialize_elevenlabs_client():
+    if current_app.config['ELEVENLABS_API_KEY']:
+        try:
+            elevenlabs_client = ElevenLabs(
+                api_key=current_app.config['ELEVENLABS_API_KEY'],
+                timeout=30
+            )
+            logger.info("ElevenLabs client initialized successfully")
+            return elevenlabs_client
+        except Exception as e:
+            logger.error(f"ElevenLabs init error: {str(e)}")
+            return None
 
 # Initialize Google TTS client
-google_client = None
-if app.config['GOOGLE_APPLICATION_CREDENTIALS']:
-    try:
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = app.config['GOOGLE_APPLICATION_CREDENTIALS']
-        google_client = texttospeech.TextToSpeechClient()
-        logger.info("Google TTS client initialized successfully")
-    except Exception as e:
-        logger.error(f"Google TTS init error: {str(e)}")
+
+
+def initialize_google_tts():
+    if current_app.config['GOOGLE_CLIENT_SECRET']:
+        try:
+            os.environ['GOOGLE_CLIENT_SECRET'] = current_app.config['GOOGLE_CLIENT_SECRET']
+            google_client = texttospeech.TextToSpeechClient()
+            logger.info("Google TTS client initialized successfully")
+            return google_client
+        except Exception as e:
+            logger.error(f"Google TTS init error: {str(e)}")
+            return None
+    
+
 
 # Available Models and Voices
 MODELS = {
@@ -108,52 +116,53 @@ MODELS = {
     }
 }
 
-if elevenlabs_client:
-    MODELS['elevenlabs'] = {
-        'name': 'ElevenLabs',
-        'voices': {
-            'Rachel': {'languages': ['en']},
-            'Domi': {'languages': ['en']},
-            'Bella': {'languages': ['en']},
-            'Antoni': {'languages': ['en']},
-            'Elli': {'languages': ['en']},
-            'Josh': {'languages': ['en']},
-            'Arnold': {'languages': ['en']},
-            'Adam': {'languages': ['en']},
-            'Sam': {'languages': ['en']},
-            'Lia': {'languages': ['pt']},
-            'Dani': {'languages': ['pt']}
-        },
-        'language_mapping': {
-            'pt': {
-                'pt-PT': 'Portuguese (Portugal)',
-                'pt-BR': 'Portuguese (Brazil)'
+def create_elevenlabs_models():
+    if initialize_elevenlabs_client():
+        MODELS['elevenlabs'] = {
+            'name': 'ElevenLabs',
+            'voices': {
+                'Rachel': {'languages': ['en']},
+                'Domi': {'languages': ['en']},
+                'Bella': {'languages': ['en']},
+                'Antoni': {'languages': ['en']},
+                'Elli': {'languages': ['en']},
+                'Josh': {'languages': ['en']},
+                'Arnold': {'languages': ['en']},
+                'Adam': {'languages': ['en']},
+                'Sam': {'languages': ['en']},
+                'Lia': {'languages': ['pt']},
+                'Dani': {'languages': ['pt']}
+            },
+            'language_mapping': {
+                'pt': {
+                    'pt-PT': 'Portuguese (Portugal)',
+                    'pt-BR': 'Portuguese (Brazil)'
+                }
             }
         }
-    }
-
-if google_client:
-    MODELS['google'] = {
-        'name': 'Google TTS',
-        'voices': {
-            'pt-PT-Standard-A': {'languages': ['pt-PT'], 'gender': 'FEMALE'},
-            'pt-PT-Wavenet-A': {'languages': ['pt-PT'], 'gender': 'FEMALE'},
-            'pt-BR-Standard-A': {'languages': ['pt-BR'], 'gender': 'FEMALE'},
-            'pt-BR-Wavenet-A': {'languages': ['pt-BR'], 'gender': 'FEMALE'},
-            'en-US-Standard-B': {'languages': ['en'], 'gender': 'MALE'},
-            'en-US-Wavenet-D': {'languages': ['en'], 'gender': 'MALE'}
-        },
-        'language_mapping': {
-            'pt': {
-                'pt-PT': 'Portuguese (Portugal)',
-                'pt-BR': 'Portuguese (Brazil)'
+def create_google_models():
+    if initialize_google_tts():
+        MODELS['google'] = {
+            'name': 'Google TTS',
+            'voices': {
+                'pt-PT-Standard-A': {'languages': ['pt-PT'], 'gender': 'FEMALE'},
+                'pt-PT-Wavenet-A': {'languages': ['pt-PT'], 'gender': 'FEMALE'},
+                'pt-BR-Standard-A': {'languages': ['pt-BR'], 'gender': 'FEMALE'},
+                'pt-BR-Wavenet-A': {'languages': ['pt-BR'], 'gender': 'FEMALE'},
+                'en-US-Standard-B': {'languages': ['en'], 'gender': 'MALE'},
+                'en-US-Wavenet-D': {'languages': ['en'], 'gender': 'MALE'}
+            },
+            'language_mapping': {
+                'pt': {
+                    'pt-PT': 'Portuguese (Portugal)',
+                    'pt-BR': 'Portuguese (Brazil)'
+                }
             }
         }
-    }
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 def generate_tts_openai(text, voice, language='en', speed=1.0):
     try:
@@ -169,6 +178,9 @@ def generate_tts_openai(text, voice, language='en', speed=1.0):
         raise ValueError(f"OpenAI TTS failed: {str(e)}")
 
 def generate_tts_elevenlabs(text, voice, language='en'):
+
+    initialize_elevenlabs_client()
+
     if not elevenlabs_client:
         raise ValueError("ElevenLabs not configured")
     
@@ -191,6 +203,9 @@ def generate_tts_elevenlabs(text, voice, language='en'):
         raise ValueError(f"ElevenLabs TTS failed: {str(e)}")
 
 def generate_tts_google(text, voice, language='en-US'):
+    
+    initialize_google_tts()
+
     if not google_client:
         raise ValueError("Google TTS not configured")
     
@@ -357,7 +372,7 @@ class AudioBookResource(Resource):
                 background_path = os.path.join('static', 'audio', 'default-bg.mp3')
             elif background_file and allowed_file(background_file.filename):
                 filename = secure_filename(background_file.filename)
-                background_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                background_path = os.path.join(current_app.root_path,'static',current_app.config['UPLOAD_FOLDER'], filename)
                 background_file.save(background_path)
 
             # Mix audio
@@ -366,7 +381,7 @@ class AudioBookResource(Resource):
             # Save result
             audiobook_id = uuid.uuid4().hex
             filename = f"audiobook_{audiobook_id}.mp3"
-            path = os.path.join(app.config['AUDIOBOOKS_FOLDER'], filename)
+            path = os.path.join(current_app.root_path,'static', current_app.config['AUDIOBOOKS_FOLDER'], filename)
 
             with open(path, 'wb') as f:
                 f.write(mixed.read())
@@ -374,7 +389,8 @@ class AudioBookResource(Resource):
             return {
                 'id': audiobook_id,
                 'filename': filename,
-                'url': f'/audiobooks/{filename}',
+                #'url': f'/audiobooks/{filename}',
+                'url': path,
                 'timestamp': datetime.utcnow().isoformat()
             }, 201
 
@@ -389,40 +405,16 @@ class AudioBookResource(Resource):
 
 class ModelsResource(Resource):
     def get(self):
+        create_elevenlabs_models()
+        #create_google_models()
+
         return jsonify(MODELS)
 
 class AudioBookFileResource(Resource):
     def get(self, filename):
-        return send_from_directory(app.config['AUDIOBOOKS_FOLDER'], filename)
-
-api.add_resource(AudioBookResource, '/api/audiobooks')
-api.add_resource(ModelsResource, '/api/models')
-api.add_resource(AudioBookFileResource, '/audiobooks/<string:filename>')
-
-@app.route('/')
-def index():
-    return send_from_directory('static', 'index.html')
+        secure_file_name = secure_filename(filename)
+        file_path = os.path.join(current_app.root_path,'static',current_app.config['AUDIOBOOKS_FOLDER'])
+        return send_from_directory(file_path, secure_file_name)
 
 
-# Add this new endpoint for file uploads
-@app.route('/api/upload', methods=['POST'])
-def upload_file():
-    if 'background' not in request.files:
-        return {'error': 'No file uploaded'}, 400
-    
-    file = request.files['background']
-    if file.filename == '':
-        return {'error': 'No selected file'}, 400
-    
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        return {'filePath': filepath}, 200
-    
-    return {'error': 'Invalid file type'}, 400
-
-@app.route('/<path:path>')
-def static_files(path):
-    return send_from_directory('static', path)
 

@@ -8,3 +8,4 @@ from .speech_recognition import bp_speech_recognition
 from .cv_customizer import cv_bp_api
 from .payment import payment_bp_api
 from .video import download_youtube_video_app
+from .speech_recognition import ai_audio_book_bp
