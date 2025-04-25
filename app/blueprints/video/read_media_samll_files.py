@@ -1,4 +1,4 @@
-import os, re
+import os
 from flask_restful import Resource
 from flask import send_file, Response, current_app, request
 from werkzeug.utils import secure_filename
@@ -79,43 +79,24 @@ class ReadVideo(Resource):
 
         
         #return f"Ola {file_size > self.MAX_STREAM_SIZE }. Range {range_header}"
-        return self.load_file(video_path, range_header, file_size)
 
+        if file_size > self.MAX_STREAM_SIZE or range_header:
+            
+            # Use streaming method
+            def generate():
+                with open(video_path, 'rb') as f:
+                    while True:
+                        chunk = f.read(8192)
+                        if not chunk:
+                            break
+                        yield chunk
 
-
-    def load_file(self,video_path, range_header, file_size):
-        if range_header:
-            byte1, byte2 = 0, None
-
-            match = re.search(r'bytes=(\d+)-(\d*)', range_header)
-            if match:
-                byte1 = int(match.group(1))
-                if match.group(2):
-                    byte2 = int(match.group(2))
-
-            byte2 = byte2 if byte2 is not None else file_size - 1
-            length = byte2 - byte1 + 1
-
-            with open(video_path, 'rb') as f:
-                f.seek(byte1)
-                data = f.read(length)
-
-            response = Response(data, status=206, mimetype='video/mp4')
-            response.headers.add('Content-Range', f'bytes {byte1}-{byte2}/{file_size}')
-            response.headers.add('Accept-Ranges', 'bytes')
-            response.headers.add('Content-Length', str(length))
-            return response
-
-        # No Range: send the whole file
-        def generate():
-            with open(video_path, 'rb') as f:
-                while True:
-                    data = f.read(8192)
-                    if not data:
-                        break
-                    yield data
-
-        return Response(generate(), mimetype='video/mp4')
+            return Response(generate(), mimetype='video/mp4')
+        else:
+            # Set appropriate file permissions (if necessary)
+            #os.chmod(video_path, 0o755) 
+            # Small file, send as whole
+            return send_file(video_path, mimetype='video/mp4')
 
         
     
