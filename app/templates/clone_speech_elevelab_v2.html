@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Cloner & TTS</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">AI Voice Lab</h1>
+        <div id="alert-placeholder"></div>
+
+        <!-- Voice Cloning Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>1. Add a New Voice (Clone)</h2>
+            </div>
+            <div class="card-body">
+                <form id="cloneVoiceForm">
+                    <div class="form-group">
+                        <label for="voiceName">New Voice Name:</label>
+                        <input type="text" class="form-control" id="voiceName" name="name" required>
+                         <small class="form-text text-muted">If cloning for a specific accent (e.g., Angolan Portuguese), name it accordingly and use audio samples with that accent.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="audioFiles">Upload Audio Samples (MP3, WAV, etc.):</label>
+                        <input type="file" class="form-control-file" id="audioFiles" name="files" multiple required accept="audio/*">
+                        <small class="form-text text-muted">Min 1 file, >30s total recommended. Clear audio without background noise is best. Max 25 files.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Clone Voice
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Text-to-Speech Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2>2. Generate Audio with a Voice</h2>
+            </div>
+            <div class="card-body">
+                <form id="ttsForm">
+                    <div class="form-group">
+                        <label for="selectVoice">Select Voice:</label>
+                        <div class="input-group">
+                            <select class="form-control" id="selectVoice" name="voice_id" required>
+                                <option value="">Loading voices...</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="refreshVoicesBtn" title="Refresh voice list">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                         <small class="form-text text-muted">For specific accents (e.g., Angolan Portuguese), ensure the selected voice was cloned with that accent.</small>
+                    </div>
+                    
+                    <!-- Language Selector (Primarily for user clarity and potential model hint) -->
+                    <div class="form-group">
+                        <label for="textLanguage">Language of Text (Model: eleven_multilingual_v2):</label>
+                        <select class="form-control" id="textLanguage" name="language">
+                            <option value="pt">Portuguese</option>
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="pl">Polish</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ar">Arabic</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <!-- Add other languages supported by eleven_multilingual_v2 as needed -->
+                        </select>
+                        <small class="form-text text-muted">Select the language of your input text. The accent is primarily determined by the chosen voice.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="textToSpeak">Text to Speak:</label>
+                        <textarea class="form-control" id="textToSpeak" name="text" rows="3" required placeholder="Digite o texto em Português aqui..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Generate Audio
+                    </button>
+                </form>
+                <div class="mt-3" id="audioPlayerContainer" style="display:none;">
+                    <h4>Generated Audio:</h4>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+            </div>
+        </div>
+         <footer class="text-center mt-4">
+            <p><small>Powered by <a href="https://elevenlabs.io" target="_blank">ElevenLabs</a> API. Ensure `eleven_multilingual_v2` model is used for non-English text.</small></p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> <!-- Needed for Bootstrap's JS components like alert close -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+As long as they've been computers, there have been people finding ways to infiltrate them,
+manipulate them and disrupt them.
+Massive and ongoing Chinese heart.
+Investigating a hack, Chinese hack of major telecommunications companies.
+Cyber espionage is really a normal fact of life, but the growth and intensity of China's
+cyber security industry, including its hacking, has taken the world by surprise.
+China has gone after electrical grids, water treatment facilities and telephoms associated
+with the United States' critical infrastructure.
+The Chinese may not be as sophisticated as the United States, but on every level, China
+has been moving with substantial determination.
+Last year, a Chinese cyber security firm had its secrets basically leaked online.
+It was really astonishing because it gave us an insight into the inner workings of Chinese
+cyber security.
+China has, over the last 20 years, systemically tried to grow and shape its hacker ecosystem
+into something that it can plug directly into its cyber operations.
+Their goal in accessing and maintaining access to the systems is to provide military leadership,
+the option to stop their function.
+Okay, let's get started.
+Ready?
+Yes, sir.
+Let's take it off in five, four, three, two, one.
+This is one of many global hacking competitions.
+Since 2007, Pointer Own has attracted some of the world's best hackers or researchers.
+Not all hackers are criminals with malicious intentions.
+The focus on real-world devices, their goal is to find weaknesses or holes in software,
+known as vulnerabilities, and exploit them for a cash prize.
+And now you can see inside the RF enclosure, we have a camera.
+This year, we're doing EV chargers, including the Tesla wall connector.
+Many people don't realize that an EV charger actually can communicate to a vehicle and vice
+versa.
+Let's say you pull up to a charger and you just plug in your car.
+You come back later, your car is charged, you drive off.
+Now unbeknownst to you, your vehicle was compromised.
+Few days later, you might need to charge again.
+Then you went to a second charging station and your vehicle compromised a second EV charger.
+So it keeps spreading and spreading and spreading.
+And once you take over a vehicle like that, you can do a lot of different things.
+You could potentially mess with systems that really operate the function of the car.
+And in the worst case scenario, you could take over the autopilot of one of the self-driving
+cars and actually cause a wreck with self-driving capabilities.
+So that's one of the things that we were really looking to see this year, not to just
+get bugs identified, but to get them fixed before they're exploited by someone on the
+black market.
+So, right, we have a success.
+We're just going to have to make a good acceleration.
+They were able to get it on their second attempt, so they will head off to the disclosure
+room, talk about all of the details.
+Once escorted off stage, this hacking team must then share the vulnerabilities they found
+directly with the company.
+In this case, Tesla.
+From the minute it's done, the vendors are able to start working on fixes.
+Teams from 13 countries, including Vietnam, France, Germany and North America, are taking
+part, but none from China.
+There was a time, however, when Chinese teams were an unstoppable force.
+Teams from 10cent and 360, who they did very well in years past, and they really saw
+upon to own as an opportunity to show their research prowess.
+They stopped in 2018 after the Chinese government decided to restrict Chinese teams being
+able to compete in competitions outside of China.
+This absence from international competitions was one of several government policies that
+many cyber security experts believe is part of a broader strategy, developing in China
+for over a decade.
+When Xi Jinping comes into power in 2013, Edward Snowden had already leaked documents from
+the NSA detailing US offensive capabilities.
+They're watching the Arab Spring happen.
+They are very aware that regime instability can occur from lack of control over content
+in the Internet.
+They made a decision to really go deep and hard on this and invested in their talent,
+invested in their programs, invested in their tech.
+From 2015 to 2017, the government put a bunch of policies in place at universities that improved
+the cyber security degree curriculum.
+In 2018, they started promoting hacking competitions through government ministries.
+They ended up spinning up a very famous hacking competition called Tianfu Cup.
+The difference between Tianfu Cup and other international hacking competitions was that
+Tianfu Cup would take vulnerabilities and feed them straight into the Chinese intelligence
+community.
+So say you a Chinese researcher have a really cool vulnerability that you found in the
+iPhone and you exploit it at this competition.
+The organizers of that competition will take that very cool iPhone vulnerability and send
+it to the Chinese police who will then use it to spy on the weaker population in Xinjiang.
+We know that that happened back in 2021.
+And finally in 2021, they've rolled out a policy that has not been matched anywhere else
+in the world.
+The regulation on the management of software vulnerabilities requires businesses,
+quote, doing business in China to provide software vulnerabilities to the government within
+48 hours of them becoming aware of them.
+That means the government gets almost immediate access to newly discovered vulnerabilities.
+The Chinese Ministry of Foreign Affairs has stated that the regulations aim is to prevent
+the leakage and unauthorized disclosure of vulnerable information.
+It also supports reporting these vulnerabilities to the product providers directly.
+While the US government is also known to collect vulnerabilities, researchers and companies
+are not legally obliged to disclose information to them.
+We're talking about agencies like the Central Intelligence Agency and the National Security
+Agency who have discovered vulnerabilities that they don't want to reveal so that they
+can attack systems in other countries.
+China is the same.
+In many ways, Chinese and US hacking teams have similar goals.
+They want to control the information environment.
+They're also potentially preparing their military for cyber action in the event of an attack.
+As part of that strategy and to compete alongside other cyber superpowers, China's state-sponsored
+hacking competitions have grown significantly.
+In the United States, the hacker competitions are far more decentralized than they are in
+China.
+But in the Chinese case and then hacker competitions globally, is that really amazing
+talents are regularly exposed and then sucked up by the intelligence agencies all by clever
+corporations.
+According to an Atlantic Council report, 129 different hacking competitions have occurred
+in China since 2004, with most starting after Xi Jinping came into power.
+The largest of which was the state-sponsored Wang Ding-Ku, hosting 35,000 participants.
+In 2024, the world was offered a rare glimpse into this hacking ecosystem through a purported
+data leak from Chinese cyber security firm, Isoon, a leak that industry experts believe
+to be authentic.
+The documents posted to co-chair and site GitHub seem to suggest the Chinese government
+contracts smaller private firms to hack on its behalf.
+There were some pretty interesting documents that showcased the hackers inside Isoon doing
+the operations themselves.
+There's chat logs between multiple engineers in Isoon over WeChat going, hey, do you think
+you can get into the system, the person responds with, yeah, like 80% chance, and if I don't
+get in, I'll leave immediately.
+And then a couple of seconds later, you see the chat bubble go mail server, mail server,
+meaning that they got into the outlook inbox of whoever they were hacking at the time.
+The other particularly unique element that is revealed in the Isoon documents is how pervasive
+hacking is in the Chinese state.
+Isoon itself had contracts not just with national or provincial law enforcement, but also city
+law enforcement branches.
+This is the equivalent of the Pittsburgh or Cincinnati Ohio Police Department contracting
+out services to a bunch of hackers.
+It showed the link between not only the cyber security firms with the government, but
+also the through line from these hacking contests and the vulnerabilities that they discover,
+going to a lot of these firms that they then use to ostensibly hack on behalf of the Chinese
+government.
+Isoon employees and government officials have now been charged by US prosecutors.
+Chinese hackers busted.
+The Department is accusing China's intelligence services of hiring the suspect to target
+specific victims with these cyber attacks.
+In response, China has denied involvement with Isoon and accused the US of conducting
+its own cyber espionage attacks.
+The tensions between the US and China have really rippled across the world and a lot of
+the consequences of that have taken the form of cyber espionage campaigns and disruption
+campaigns.
+The targets include foreign companies and state agencies in India, Malaysia and Taiwan,
+as well as the British government and a couple of think tanks in London.
+According to news reports, in the last year, two suspected Chinese state-backed hacking
+groups have been identified in US infrastructure.
+One called Salt Typhoon by Microsoft was allegedly tied to a breach of the US Treasury,
+as well as telecommunication networks.
+So Verizon, AT&T, Lumen, had call data and call records taken of many US citizens that were
+already in the hands of that company.
+Meanwhile, the FBI says another group known as Vault Typhoon has also infiltrated critical
+infrastructure.
+The term that the experts use is called living off the land.
+So you can't see them because they're not doing anything out of the ordinary.
+They're existing within the environment that they have embedded themselves into, so that
+makes them really, really hard to detect.
+Hi, are you James?
+Hi, that's me.
+Hey, nice to meet you.
+Nice to meet you.
+You better come in.
+Dreygos is a US-based industrial control system security firm, with miniature facilities
+that simulate how critical infrastructure could be hacked.
+It's all connected through networks for the most part, and some of these could be accessible
+from the internet.
+That's kind of a large vulnerability to it.
+What I have set up here is just a computer that's outside of the network, it's trying
+to get into the network.
+Just using the tools that are available on the laptop, just figuring out how to get into
+the system.
+I'm just checking if normal remote access tools are going to be available and logged in
+as though I were the operator and adjust the water flow.
+Here you'll see it.
+An intruder in key systems opens up countries to potential disruption attacks, crippling
+them in times of conflict or unrest.
+So let's say the electricity has been compromised and now no one has power in the city.
+You may have a generator backup that uses oil, but your oil refinery now has no power,
+so you're not making any more oil either.
+So it kind of has this domino effect where even your backups are the things that power
+your backups will slowly become unavailable as resources run out.
+So the hospital would be in trouble.
+They should have generators, but yes, they would be in trouble within a day.
+And all the other kind of critical services would also be impacted.
+Yeah.
+Experts say a recent volt typhoon hack on the US territory of Guam, which has the closest
+military base to Taiwan may be part of a strategic cyber warfare plan.
+According to a Bloomberg investigation, hackers hit telecom, federal and military networks,
+and may never fully be removed.
+Having Guam's systems be impacted in that way has really put out the signal that the
+military forces in the US may be disabled from being able to respond in a way that is
+immediate and urgent.
+Zhongfang, Iguan, Jianjue,反對,並伊法打擊黑客攻擊行為.
+The United States Information and Communications Technology sector has been booming for about
+50 to 70 years.
+The Chinese telecommunications sector has been booming for about 20 years.
+It's pretty hard to imagine that China could have overtaken their United States.
+China distinguishes itself mostly by the scale of its operation, by the way in which it
+penetrates almost anything.
+To quantify what we're up against, the PRC has a bigger hacking program than that of every
+major nation combined.
+In fact, when it comes to mitigating risks against Chinese hacking activity, it's not very
+likely that you're going to prevent a Chinese hacker from wanting to keep doing what they're
+doing.
+You're being able to push for more international norms around responsible disclosure, around
+making sure that technology stays safe online is a really important policy position that
+Western governments are trying to continue to push.

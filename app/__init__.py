@@ -43,10 +43,10 @@ from app.blueprints import (user_api_bp,
                             web_scrapping_api_bp,
                             bp_speech_recognition,
                             auth2_api_bp,
-                            cv_bp_api
-                            #payment_bp_api
-                            #download_youtube_video_app,
-                            #ai_audio_book_bp
+                            cv_bp_api,
+                            payment_bp_api,
+                            download_youtube_video_app,
+                            ai_audio_book_bp
                             )
 
 from app.utils.handling_errors import handle_errors
@@ -238,10 +238,10 @@ def create_app():
     csrf.exempt(send_email_api)
     csrf.exempt(bp_speech_recognition)
     csrf.exempt(cv_bp_api)
-    #csrf.exempt(payment_bp_api)
+    csrf.exempt(payment_bp_api)
     csrf.exempt(cloud_storage_bp_api)
-    #csrf.exempt(download_youtube_video_app)
-    #csrf.exempt(ai_audio_book_bp)
+    csrf.exempt(download_youtube_video_app)
+    csrf.exempt(ai_audio_book_bp)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -254,10 +254,10 @@ def create_app():
     app.register_blueprint(send_email_api, url_prefix='/api/v1/email')
     app.register_blueprint(bp_speech_recognition, url_prefix='/api/v1/speech_recognition')
     app.register_blueprint(cv_bp_api)
-    #app.register_blueprint(payment_bp_api)
+    app.register_blueprint(payment_bp_api)
     app.register_blueprint(cloud_storage_bp_api)
-    #app.register_blueprint(download_youtube_video_app)
-    #app.register_blueprint(ai_audio_book_bp)
+    app.register_blueprint(download_youtube_video_app)
+    app.register_blueprint(ai_audio_book_bp)
 
     routes(app=app)
 

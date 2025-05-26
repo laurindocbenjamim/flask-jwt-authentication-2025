@@ -12,7 +12,7 @@ cors = None
 csrf = CSRFProtect()
 mail = Mail()
 #limiter = Limiter(key_func=get_remote_address, default_limits=[current_app.config['RATE_LIMIT']])
-limiter = Limiter(key_func=get_remote_address, default_limits=["100 per day","10 per minute"])
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day","50 per minute"])
 
 # Method to load the application extentions
 def load_extentions(*, app):
@@ -31,13 +31,7 @@ def load_extentions(*, app):
     mail.init_app(app)
     cors_origin = app.config['CORS_ORIGIN']
 
-    """cors_p = CORS(supports_credentials=True,  resources={r"/*": {"origins": cors_origin},
-                    r"/api/*": {"origins": cors_origin},                   
-                    r"/protected": {"origins": cors_origin},
-                    r"/logout-with-revoking-token": {"origins": cors_origin},
-                    r"/api/v1/web-scrapping/*": {"origins": cors_origin},
-                    r"/api/v1/speech_recognition/*": {"origins": cors_origin},
-    })"""
+    
     cors_p = CORS(
         app,
         supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'],

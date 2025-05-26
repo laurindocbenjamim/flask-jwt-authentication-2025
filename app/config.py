@@ -7,16 +7,24 @@ from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 class MySmtpConfig:
-    MAIL_SERVER=os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-    MAIL_PORT=int(os.environ.get('MAIL_PORT', 587))
-    MAIL_USE_TLS=os.environ.get('MAIL_USE_TLS', 'true').lower() == 'true'
-    MAIL_USERNAME=os.environ.get('MAIL_USERNAME')
+    MAIL_SERVER='smtp.gmail.com'
+    MAIL_PORT=587
+    MAIL_USE_TLS=True
+    
+    MAIL_USERNAME="iledmd3@gmail.com"
     MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@example.com')
+    MAIL_DEFAULT_SENDER="iledmd3@gmail.com"
+
+    SMTP_HOST='smtp.gmail.com'
+    SMTP_PORT=465
+
     CONFIRMATION_EXPIRATION=timedelta(hours=24)
-    RATE_LIMIT = os.getenv("RATE_LIMIT", "100 per day,10 per minute")
+    RATE_LIMIT = "100 per day,10 per minute"
+    MAX_CONNECTIONS=100
 
 class Config(MySmtpConfig):
+
+    FLASK_ENV='development'
 
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
@@ -44,11 +52,17 @@ class Config(MySmtpConfig):
     OPENAI_API_KEY = os.getenv('OPEN_AI_API_KEY')
 
     SPACES_KEY= os.environ.get('SPACES_KEY', '')
+    SPACES_BUCKET='data-tuning.storage'
+    SPACES_REGION='nyc3'
     SPACES_SECRET= os.environ.get('SPACES_SECRET', '')
-    SPACES_REGION= os.environ.get('SPACES_REGION', '')
     SPACES_ENDPOINT= os.environ.get('SPACES_ENDPOINT', '')
-    SPACES_BUCKET= os.environ.get('SPACES_BUCKET', '')
+    
+    DB_PORT=5432
+    DATABASE_URL='sqlite:///development.db'
+    DISABLE_COLLECTSTATIC=1
 
+    MYSQL_DB_PORT=3306
+    MYSQL_DB_SERVER='185.12.116.142'
 
     # Here you can globally configure all the ways you want to allow JWTs to
     # be sent to your web application. By default, this will be only headers.
@@ -73,11 +87,11 @@ class Config(MySmtpConfig):
     # over https. In production, this should always be set to True
     JWT_COOKIE_SECURE = os.getenv("FLASK_ENV") == "production"  # True in production (HTTPS)
 
-    # CORS Configuration
-    #CORS_ORIGIN = [origin.strip() for origin in os.environ.get('CORS_ORIGIN', 'https://www.d-tuning.com, www.laurindocbenjmim.pt, https://laurindocbenjamim.github.io').split(',')]
+ 
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://0.0.0.0:8000', 'https://3314-2001-818-e749-bf00-ba62-cacf-c73-b086.ngrok-free.app']  # Allow local development origins
+        ['http://localhost:8000', 'http://192.168.1.216:8000', 'http://192.168.1.224:8000', 
+         'http://192.168.56.1:8000', 'http://0.0.0.0:8000']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
     )

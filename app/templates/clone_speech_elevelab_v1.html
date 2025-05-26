@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Cloner & TTS</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
+
+<style>
+    body {
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+}
+.container {
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.card-header h2 {
+    margin-bottom: 0;
+}
+/* For spinner inside button */
+button .spinner-border {
+    margin-right: 5px;
+}
+</style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">AI Voice Lab</h1>
+        <div id="alert-placeholder"></div>
+
+        <!-- Voice Cloning Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>1. Add a New Voice (Clone)</h2>
+            </div>
+            <div class="card-body">
+                <form id="cloneVoiceForm">
+                    <div class="form-group">
+                        <label for="voiceName">New Voice Name:</label>
+                        <input type="text" class="form-control" id="voiceName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="audioFiles">Upload Audio Samples (MP3, WAV, etc. Min 1 file, >30s total recommended):</label>
+                        <input type="file" class="form-control-file" id="audioFiles" name="files" multiple required accept="audio/*">
+                        <small class="form-text text-muted">Select one or more audio files. Clear audio without background noise is best. Max 25 files.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Clone Voice
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Text-to-Speech Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2>2. Generate Audio with a Voice</h2>
+            </div>
+            <div class="card-body">
+                <form id="ttsForm">
+                    <div class="form-group">
+                        <label for="selectVoice">Select Voice (from your ElevenLabs account):</label>
+                        <div class="input-group">
+                            <select class="form-control" id="selectVoice" name="voice_id" required>
+                                <option value="">Loading voices...</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="refreshVoicesBtn" title="Refresh voice list">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                         <small class="form-text text-muted">This lists all voices in your ElevenLabs account (cloned by you or pre-made).</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="textToSpeak">Text to Speak:</label>
+                        <textarea class="form-control" id="textToSpeak" name="text" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Generate Audio
+                    </button>
+                </form>
+                <div class="mt-3" id="audioPlayerContainer" style="display:none;">
+                    <h4>Generated Audio:</h4>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+            </div>
+        </div>
+         <footer class="text-center mt-4">
+            <p><small>Powered by <a href="https://elevenlabs.io" target="_blank">ElevenLabs</a> API.</small></p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

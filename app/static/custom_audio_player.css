@@ -1,0 +1,160 @@
+/* === Add these styles to your static/css/style.css === */
+
+/* Custom Audio Player Styles */
+#customAudioPlayerContainer h4 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.custom-audio-player {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.custom-audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.control-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.control-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+.control-button:active {
+    background-color: #004085;
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.control-button .icon {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+.pause-icon, .volume-mute-icon {
+    display: none; 
+}
+
+.seek-bar-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-display {
+    font-size: 0.85em;
+    color: #555;
+    min-width: 40px;
+    text-align: center;
+    font-family: 'Consolas', 'Monaco', monospace;
+    background-color: #e9ecef;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.seek-bar, .volume-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background: #ddd;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+.seek-bar {
+    flex-grow: 1;
+}
+.volume-bar {
+    width: 80px;
+}
+
+.seek-bar:hover, .volume-bar:hover {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.seek-bar::-webkit-slider-thumb,
+.volume-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+
+.seek-bar::-moz-range-thumb,
+.volume-bar::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+
+.seek-bar::-webkit-slider-thumb:hover,
+.volume-bar::-webkit-slider-thumb:hover,
+.seek-bar::-moz-range-thumb:hover,
+.volume-bar::-moz-range-thumb:hover {
+    background: #0056b3;
+}
+
+.volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Smooth transitions for main form buttons */
+.btn-primary, .btn-success {
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, transform 0.1s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover, .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+.btn-primary:active, .btn-success:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+#refreshVoicesBtn {
+     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, transform 0.1s ease, box-shadow 0.15s ease;
+}
+#refreshVoicesBtn:hover {
+    transform: translateY(-1px); /* Subtle lift */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+ #refreshVoicesBtn:active {
+    transform: translateY(0px);
+}
+
+/* === End of styles to add === */
