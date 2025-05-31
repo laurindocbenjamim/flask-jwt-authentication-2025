@@ -48,7 +48,7 @@ from app.blueprints import (user_api_bp,
                             download_youtube_video_app,
                             ai_audio_book_bp
                             )
-
+from app.blueprints import workflow_bp
 from app.utils.handling_errors import handle_errors
 
 from app.storage_cloud import cloud_storage_bp_api
@@ -242,6 +242,7 @@ def create_app():
     csrf.exempt(cloud_storage_bp_api)
     csrf.exempt(download_youtube_video_app)
     csrf.exempt(ai_audio_book_bp)
+    csrf.exempt(workflow_bp)
 
     # Binding the blueprint Views
     app.register_blueprint(web_site_app)
@@ -258,6 +259,7 @@ def create_app():
     app.register_blueprint(cloud_storage_bp_api)
     app.register_blueprint(download_youtube_video_app)
     app.register_blueprint(ai_audio_book_bp)
+    app.register_blueprint(workflow_bp)
 
     routes(app=app)
 

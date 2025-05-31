@@ -1,4 +1,6 @@
 #Authlib==1.4.1
+
+waitress # to create a production-ready WSGI server
 boto3==1.36.23
 bs4==0.0.2
 email-validator==2.2.0
@@ -55,4 +57,5 @@ WTForms
 yfinance
 sendgrid
 #reportlab
+
 

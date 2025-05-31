@@ -90,7 +90,7 @@ class Config(MySmtpConfig):
  
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://192.168.1.216:8000', 'http://192.168.1.224:8000', 
+        ['http://localhost:8000', 'http://192.168.1.224:8000', 'https://192.168.1.224:8000', 
          'http://192.168.56.1:8000', 'http://0.0.0.0:8000']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']

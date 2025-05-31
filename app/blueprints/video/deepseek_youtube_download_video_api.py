@@ -28,6 +28,9 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 
+# Define your folders
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 class YouTubeDownloader(Resource):
     def post(self):
@@ -65,16 +68,28 @@ class YouTubeDownloader(Resource):
             return {'error': str(e)}, 500
 
     def process_download(self, url, data, cookie_file):
+
+        """
+        If gets error like: [0;31mERROR:[0m [youtube] k8D9fnnK314: Requested format is not available. Use --list-formats for a list of available formats
+        then you can try to update yt-dlp:
+        ```bash
+        # Update yt-dlp to the latest version
+        # Make sure you have yt-dlp installed, if not, install it first
+        python -m pip install --upgrade yt-dlp
+        
+        """
+        
         ydl_opts = {
             'outtmpl': os.path.join(current_app.config['DOWNLOAD_FOLDER'], '%(title)s.%(ext)s'),
             'quiet': True,
             'no_warnings': True,
             'cookiefile': cookie_file,
             'extract_flat': False,
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-            'overwrites': True  # This will automatically overwrite existing files
+            # 'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', # Comment out or remove
+            'overwrites': True
         }
-
+        
+    
         # Always download the video first (we'll extract audio from it if needed)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)

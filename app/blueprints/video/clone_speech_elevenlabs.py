@@ -122,7 +122,8 @@ class TextToSpeechResource(Resource):
             "text": text,
             "model_id": "eleven_multilingual_v2", 
             "voice_settings": {
-                "stability": 0.35,          # Lower for more expressive, higher for more monotonous
+                "speed": 1.00,            # 1.00 is normal speed, adjust as needed
+                "stability": 0.50,          # Lower for more expressive, higher for more monotonous
                 "similarity_boost": 0.75,   # Higher makes it sound more like the original voice
                 # "style": 0.45,            # (0 to 1) Only for eleven_multilingual_v2. Controls "style exaggeration"
                                             # Might subtly influence accent perception but isn't a direct accent control.
