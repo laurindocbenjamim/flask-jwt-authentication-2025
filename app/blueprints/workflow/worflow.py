@@ -286,14 +286,35 @@ class WorkflowMedia(Resource):
     def post(self):
         try:
 
-            return {"status": "error", "json_data": f'{request.is_json}', 
-                    "form_data": f'{request.form['nodeTitle']}', "message": "This endpoint is not implemented yet."}, 501
-        
-            data = request.get_json() # Frontend sends JSON
-            model_type = data.get('modelType')
-            action = data.get('action') # e.g., 'transcribe_audio', 'text_to_speech', 'image_generation'
-            input_data = data.get('inputData') # This could be a URL to media, or text for TTS
+            
+            # Check if the request is JSON or form data
+            if request.is_json: 
+                data = request.get_json() # Frontend sends JSON
+                model_type = data.get('modelType')
+                action = data.get('action') # e.g., 'transcribe_audio', 'text_to_speech', 'image_generation'
+                input_data = data.get('inputData') # This could be a URL to media, or text for TTS
 
+                return {"status": "error", "json_data": f'{input_data}', 
+                    "form_data": f'{action}', "message": "This endpoint is not implemented yet."}, 501
+
+
+            elif request.form:
+                
+                data = request.form.to_dict()  # If not JSON, assume form data (e.g., from a file upload node)
+                # If not JSON, assume form data (e.g., from a file upload node)
+                model_type = data.get('nodelType')
+                action = data.get('action')
+                input_data = data.get('inputData')
+                return {"status": "error", "nodeltype": f'{model_type}', 
+                    "input_data": f'{input_data}', "message": "This endpoint is not implemented yet."}, 501
+
+            else:
+                
+                raise APIError("Unsupported request format. Expected JSON or form data.", 400)
+                return {"status": "error", "json_data": f'{request.is_json}', 
+                    "form_data": f'{request.form['nodeTitle']}', "message": "This endpoint is not implemented yet."}, 501
+
+            # If input_data is a file upload, it should be in request.files
             # Input validation
             if not all([model_type, action, input_data]):
                 raise APIError("Missing modelType, action, or inputData.", 400)
