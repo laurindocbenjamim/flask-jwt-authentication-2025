@@ -28,7 +28,9 @@ class Config(MySmtpConfig):
 
     DEVLOPER = os.environ.get('DEVLOPER', 'laurindocbenjamim')
 
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = 'uploads' 
+    TEMP_FRAMES_FOLDER = 'temp_frames' # New folder for waveform frames
+    GENERATED_FILES_FOLDER = 'generated_files' # Folder for generated files
     AUDIOBOOKS_FOLDER = 'audiobooks'
 
     ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg'}
@@ -90,7 +92,7 @@ class Config(MySmtpConfig):
  
     # CORS Configuration
     CORS_ORIGIN = (
-        ['http://localhost:8000', 'http://192.168.1.224:8000', 'https://192.168.1.224:8000', 
+        ['http://localhost:8000', 'http://192.168.1.224:8000', 'https://192.168.1.224:8000','https://192.168.1.224:8080', 
          'http://192.168.56.1:8000', 'http://0.0.0.0:8000']  # Allow local development origins
         if os.getenv("FLASK_ENV") != "production"
         else ['https://www.d-tuning.com', 'www.laurindocbenjmim.pt', 'https://laurindocbenjamim.github.io']
