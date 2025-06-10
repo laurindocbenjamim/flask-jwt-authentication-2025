@@ -34,6 +34,8 @@ openai>=1.0.0
 pdf2image
 pdfkit
 pdfplumber
+googletrans
+gTTS
 yt-dlp 
 
 pillow
