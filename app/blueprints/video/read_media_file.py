@@ -1,6 +1,6 @@
 import os, re
 from flask_restful import Resource
-from flask import send_file, Response, current_app, request
+from flask import send_file, make_response, jsonify, Response, current_app, request
 from werkzeug.utils import secure_filename
 
 
@@ -118,4 +118,33 @@ class ReadVideo(Resource):
         return Response(generate(), mimetype='video/mp4')
 
         
-    
+
+class SelectFiles(Resource):
+    def get(self, directory="uploads"):
+        """
+        Returns a list of files in the specified directory.
+
+        Args:
+            directory (str): The name of the directory to list files from. Defaults to "uploads".
+
+        Returns:
+            dict: A dictionary containing the list of files in the directory.
+        """
+
+        directory = secure_filename(directory)
+
+        upload_folder = os.path.join(
+            current_app.root_path, 
+            'static', 
+            current_app.config['DOWNLOAD_FOLDER']
+        )
+
+        if not os.path.exists(upload_folder):
+            return {"message": "Folder not found."}, 404
+
+        files = [
+            f for f in os.listdir(upload_folder) 
+            if os.path.isfile(os.path.join(upload_folder, f))
+        ]
+
+        return {"files": files}, 200

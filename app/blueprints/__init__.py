@@ -9,3 +9,5 @@ from .cv_customizer import cv_bp_api
 from .payment import payment_bp_api
 from .video import download_youtube_video_app
 from .speech_recognition import ai_audio_book_bp
+from .workflow import workflow_bp
+from .podcast_creator import podtcast_bp
