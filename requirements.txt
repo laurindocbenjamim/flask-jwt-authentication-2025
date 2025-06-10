@@ -57,6 +57,6 @@ unidecode
 WTForms
 yfinance
 sendgrid
-#reportlab
+reportlab
 
 

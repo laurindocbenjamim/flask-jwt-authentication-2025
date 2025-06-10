@@ -1,8 +1,8 @@
 import os
 import uuid
 from flask import current_app as app, request, jsonify, send_from_directory
-from flask_restful import Resource
-
+from flask_restful import Resource, Api
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pydub import AudioSegment
 # Updated MoviePy imports for version 2.2.1
@@ -12,27 +12,31 @@ from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 import logging
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont # Import ImageFont
 import shutil # For cleaning up temp directories
 import matplotlib
 matplotlib.use('Agg') # Use 'Agg' backend for non-interactive plotting (important for server environments)
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
-from PIL import Image, ImageDraw, ImageFont # Import ImageFont
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-# Configuration
-
 ALLOWED_AUDIO_EXTENSIONS = {'wav', 'mp3', 'webm', 'ogg', 'aac'}
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
-# Define a constant for background audio volume (in dB)
-# A negative value means quieter. -10 dB is a good starting point for background music under speech.
-BACKGROUND_AUDIO_VOLUME_DB = -20
+# Define constants for audio processing
+BACKGROUND_AUDIO_VOLUME_DB = -20 # A negative value means quieter. -20 dB should make it significantly lower.
+WAVEFORM_AMPLITUDE_MULTIPLIER = 1.5 # Increase this value to make the waveform peaks higher.
+
+# Constants for recorded voice processing (equalization and noise removal)
+# These values are examples and can be adjusted based on desired audio characteristics.
+RECORDED_VOICE_HIGH_PASS_FREQ_HZ = 100 # Cut frequencies below this (e.g., to remove hum/muddiness)
+RECORDED_VOICE_LOW_PASS_FREQ_HZ = 8000  # Cut frequencies above this (e.g., to reduce hiss/harshness)
+RECORDED_VOICE_GAIN_DB = 3              # Apply a slight gain to the voice for presence
 
 
 # Define the path to your font file
@@ -42,6 +46,7 @@ font_file_path = os.path.join(os.path.dirname(__file__), 'fonts/Inter', 'Inter-V
 if not os.path.exists(os.path.dirname(font_file_path)):
     os.makedirs(os.path.dirname(font_file_path), exist_ok=True)
     logging.info(f"Created font directory: {os.path.dirname(font_file_path)}")
+
 
 def allowed_file(filename, allowed_extensions):
     """Checks if a filename has an allowed extension."""
@@ -68,6 +73,32 @@ def hex_to_rgb(hex_color):
     """Converts a hex color string to an RGB tuple."""
     hex_color = hex_color.lstrip('#')
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+def equalize_and_denoise_recorded_voice(audio_segment):
+    """
+    Applies basic equalization and noise reduction (filtering) to an AudioSegment.
+    This is a simplified approach using pydub's built-in filters.
+    For advanced noise reduction, dedicated libraries like 'noisereduce' might be needed.
+    """
+    logging.info("Applying equalization and noise reduction to recorded voice.")
+    processed_audio = audio_segment
+
+    # Apply high-pass filter for noise reduction (e.g., remove hum/rumble)
+    if RECORDED_VOICE_HIGH_PASS_FREQ_HZ > 0:
+        processed_audio = processed_audio.high_pass_filter(RECORDED_VOICE_HIGH_PASS_FREQ_HZ)
+        logging.info(f"Applied high-pass filter at {RECORDED_VOICE_HIGH_PASS_FREQ_HZ} Hz.")
+
+    # Apply low-pass filter for noise reduction (e.g., reduce hiss/harshness)
+    if RECORDED_VOICE_LOW_PASS_FREQ_HZ > 0:
+        processed_audio = processed_audio.low_pass_filter(RECORDED_VOICE_LOW_PASS_FREQ_HZ)
+        logging.info(f"Applied low-pass filter at {RECORDED_VOICE_LOW_PASS_FREQ_HZ} Hz.")
+
+    # Apply overall gain for equalization/presence
+    if RECORDED_VOICE_GAIN_DB != 0:
+        processed_audio = processed_audio.apply_gain(RECORDED_VOICE_GAIN_DB)
+        logging.info(f"Applied {RECORDED_VOICE_GAIN_DB} dB gain.")
+
+    return processed_audio
 
 def generate_waveform_frames(audio_filepath, video_duration, fps, video_width, video_height, waveform_style, waveform_color_hex, temp_dir):
     """Generates a sequence of waveform image frames using Matplotlib."""
@@ -124,20 +155,20 @@ def generate_waveform_frames(audio_filepath, video_duration, fps, video_width, v
                     bar_heights = normalized_amplitudes_plot[bar_indices]
                     
                     x_positions = np.linspace(0, video_width / 100, num_bars)
-                    ax.bar(x_positions, bar_heights * (video_height / 200), width=(video_width / 100) / num_bars * 0.8, 
+                    ax.bar(x_positions, bar_heights * (video_height / 200) * WAVEFORM_AMPLITUDE_MULTIPLIER, width=(video_width / 100) / num_bars * 0.8, 
                            color=waveform_color_hex, align='center', bottom=0)
-                    ax.bar(x_positions, bar_heights * (-video_height / 200), width=(video_width / 100) / num_bars * 0.8, 
+                    ax.bar(x_positions, bar_heights * (-video_height / 200) * WAVEFORM_AMPLITUDE_MULTIPLIER, width=(video_width / 100) / num_bars * 0.8, 
                            color=waveform_color_hex, align='center', bottom=0) # Mirror for centered effect
 
                 elif waveform_style == 'lines' or waveform_style == 'smooth-lines':
                     x_positions = np.linspace(0, video_width / 100, len(normalized_amplitudes_plot))
-                    ax.plot(x_positions, normalized_amplitudes_plot * (video_height / 200), 
+                    ax.plot(x_positions, normalized_amplitudes_plot * (video_height / 200) * WAVEFORM_AMPLITUDE_MULTIPLIER, 
                             color=waveform_color_hex, linewidth=2)
                 elif waveform_style == 'circles':
                     # Represent as a pulsating circle based on RMS amplitude
                     rms_amplitude = np.sqrt(np.mean(normalized_amplitudes_plot**2))
                     max_radius = min(video_width, video_height) / 400 # Max radius relative to video size
-                    current_radius = rms_amplitude * max_radius
+                    current_radius = rms_amplitude * max_radius * WAVEFORM_AMPLITUDE_MULTIPLIER
                     
                     circle = Circle((video_width / 200, video_height / 200), current_radius, 
                                     color=waveform_color_hex, fill=False, linewidth=3)
@@ -148,7 +179,7 @@ def generate_waveform_frames(audio_filepath, video_duration, fps, video_width, v
                 else:
                     # Default to lines if style is unknown
                     x_positions = np.linspace(0, video_width / 100, len(normalized_amplitudes_plot))
-                    ax.plot(x_positions, normalized_amplitudes_plot * (video_height / 200), 
+                    ax.plot(x_positions, normalized_amplitudes_plot * (video_height / 200) * WAVEFORM_AMPLITUDE_MULTIPLIER, 
                             color=waveform_color_hex, linewidth=2)
 
             frame_path = os.path.join(temp_dir, f"frame_{i:05d}.png")
@@ -170,6 +201,7 @@ class PodcastGenerate(Resource):
         TEMP_FRAMES_FOLDER = os.path.join(app.root_path, 'static', app.config['TEMP_FRAMES_FOLDER'])
         GENERATED_FILES_FOLDER = os.path.join(app.root_path, 'static', app.config['GENERATED_FILES_FOLDER'])
 
+      
         logging.info("Received request for podcast generation.")
 
         uploaded_audio_file = request.files.get('uploadedAudio')
@@ -208,6 +240,9 @@ class PodcastGenerate(Resource):
                 logging.info(f"Recorded audio file saved to: {recorded_audio_path}")
                 
                 recorded_audio_segment = AudioSegment.from_file(recorded_audio_path)
+                
+                # Apply equalization and noise reduction to the recorded voice
+                recorded_audio_segment = equalize_and_denoise_recorded_voice(recorded_audio_segment)
 
                 if final_audio_segment: # If uploaded audio exists, overlay recorded audio
                     # Extend background audio if recorded audio is longer
@@ -277,7 +312,7 @@ class PodcastGenerate(Resource):
 
             output_video_filename = f"waveform_video_{uuid.uuid4()}.mp4" # Always output MP4 video
             output_video_filepath = os.path.join(GENERATED_FILES_FOLDER, output_video_filename)
-
+            logging.info(f"TEMP_FRAMES_FOLDER to: {TEMP_FRAMES_FOLDER}")
             temp_frames_dir = os.path.join(TEMP_FRAMES_FOLDER, str(uuid.uuid4()))
             os.makedirs(temp_frames_dir, exist_ok=True)
 
@@ -314,40 +349,37 @@ class PodcastGenerate(Resource):
 
             # 4. Create the text overlay clip
             all_clips = [background_clip, waveform_clip]
-            if not os.path.exists(font_file_path):
-                logging.warning(f"Font file not found at: {font_file_path}. Text overlay will be skipped.")
-                return {'message': 'Font file not found'}, 400
-            else:
-                if text_overlay:
-                    ImageFont.truetype(font_file_path, size=10) # Try to load with a small size
-                    
-                    text_clip = TextClip(font='DajaVuSans-Bold', # Use a default font if custom font fails
-                                                text=text_overlay,
-                                                font_size=50, # Use fontsize instead of font_size
-                                                color='white',
-                                                stroke_color='black',
-                                                stroke_width=1
-                                                #bg_color='transparent'
-                                                )
-                    # Updated syntax for moviepy 2.2.1
-                    text_clip = text_clip.with_position(('center', 0.05)).with_duration(audio_clip.duration)
-                    all_clips.append(text_clip)
-                
-                # Composite all clips
-                final_video_clip = CompositeVideoClip(all_clips, size=(video_width, video_height))
+            if text_overlay:
 
-                # 5. Set the audio of the final video clip
-                final_video_clip = final_video_clip.with_audio(audio_clip)
+                #ImageFont.truetype(font_file_path, size=10) # Try to load with a small size
 
-                # 6. Write the final video file
-                # Use 'libx264' for video codec and 'aac' for audio codec for MP4
-                final_video_clip.write_videofile(output_video_filepath, 
-                                                fps=video_fps, 
-                                                codec='libx264', 
-                                                audio_codec='aac',
-                                                threads=4) # Use multiple threads for faster encoding
-                logging.info(f"Video generated successfully: {output_video_filepath}")
+                text_clip = TextClip(text_overlay, 
+                                     font_size=50, 
+                                     color='white', 
+                                     # Removed 'font' argument to avoid TypeError
+                                     stroke_color='black',
+                                     stroke_width=1
+                                     # Removed bg_color='transparent' as it causes error
+                                     )
+                # Updated syntax for moviepy 2.2.1
+                text_clip = text_clip.with_position(('center', 0.05)).with_duration(audio_clip.duration)
+                all_clips.append(text_clip)
                 
+            # Composite all clips
+            final_video_clip = CompositeVideoClip(all_clips, size=(video_width, video_height))
+
+            # 5. Set the audio of the final video clip
+            final_video_clip = final_video_clip.with_audio(audio_clip)
+
+            # 6. Write the final video file
+            # Use 'libx264' for video codec and 'aac' for audio codec for MP4
+            final_video_clip.write_videofile(output_video_filepath, 
+                                            fps=video_fps, 
+                                            codec='libx264', 
+                                            audio_codec='aac',
+                                            threads=4) # Use multiple threads for faster encoding
+            logging.info(f"Video generated successfully: {output_video_filepath}")
+            
             # Construct the URL for download
             video_url = f"/api/v2/podcast/download/{os.path.basename(output_video_filepath)}"
             logging.info(f"Generated video download URL: {video_url}")
@@ -357,23 +389,6 @@ class PodcastGenerate(Resource):
 
         except Exception as e:
             logging.error(f"Error during video generation: {e}", exc_info=True)
-
-            if recorded_audio_path and os.path.exists(recorded_audio_path):
-                logging.info(f"Removing recorded audio file: {recorded_audio_path}")
-                os.remove(recorded_audio_path)
-            
-            if uploaded_audio_path and os.path.exists(uploaded_audio_path):
-                logging.info(f"Removing uploaded audio file: {uploaded_audio_path}")
-                os.remove(uploaded_audio_path)
-            if temp_audio_filepath and os.path.exists(temp_audio_filepath):
-                logging.info(f"Removing temporary audio file: {temp_audio_filepath}")
-                os.remove(temp_audio_filepath)
-            if background_image_filepath and os.path.exists(background_image_filepath):
-                logging.info(f"Removing background image file: {background_image_filepath}")
-                os.remove(background_image_filepath)
-            if temp_frames_dir and os.path.exists(temp_frames_dir):
-                logging.info(f"Removing temporary frames directory: {temp_frames_dir}")
-                shutil.rmtree(temp_frames_dir)
             # Check for FFmpeg specific errors
             if "ffmpeg" in str(e).lower() and "not found" in str(e).lower():
                 error_message = "FFmpeg is not installed or not accessible in your system's PATH. Please install FFmpeg."
@@ -391,13 +406,17 @@ class PodcastGenerate(Resource):
             if temp_audio_filepath and os.path.exists(temp_audio_filepath):
                 os.remove(temp_audio_filepath)
                 logging.info(f"Cleaned up temporary merged audio: {temp_audio_filepath}")
+            # Clean up temporary frames directory
             if temp_frames_dir and os.path.exists(temp_frames_dir):
                 shutil.rmtree(temp_frames_dir)
                 logging.info(f"Cleaned up temporary frames directory: {temp_frames_dir}")
 
 class DownloadFile(Resource):
     def get(self, filename):
-        GENERATED_FILES_FOLDER = os.path.join(app.root_path, 'static', app.config['GENERATED_FILES_FOLDER']) 
+
+        GENERATED_FILES_FOLDER = os.path.join(app.root_path, 'static', app.config['GENERATED_FILES_FOLDER'])
+
+
         logging.info(f"Received download request for: {filename}")
         try:
             return send_from_directory(GENERATED_FILES_FOLDER, filename, as_attachment=True)
