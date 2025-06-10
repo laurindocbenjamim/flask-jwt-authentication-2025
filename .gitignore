@@ -23,7 +23,8 @@ app/static/logs/
 
 # Documents
 *.pdf
-
+*.pem
+*.docx
 # OS generated files
 .DS_Store
 Thumbs.db

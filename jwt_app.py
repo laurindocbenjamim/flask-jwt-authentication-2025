@@ -1,6 +1,7 @@
 
 
 import sqlalchemy, os
+import logging
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
@@ -12,6 +13,8 @@ from app import create_app
 #from app.models import User
 from werkzeug.security import generate_password_hash
 
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = create_app()
 # This function is used to migrate the database
@@ -56,26 +59,26 @@ if __name__ == '__main__':
 
         except sqlalchemy.exc.IntegrityError as e:
             db.session.rollback()
-            print(f"\n\n => This user already exists. \nError: {str(e)}")
+            logging.error(f"This user already exists. \nError: {str(e)}")
         except Exception as e:
             db.session.rollback()
-            print(f"\n\n => Exception: {str(e)}")
+            logging.error(f"Error initializing the database: {str(e)}")
         finally:
-            print('\n\n => DB Query processed!')
+            logging.info("=====> Database initialized <=====")
             try:
                 revoked_tokens = TokenBlocklist.query.all()
                 users = User.query.all()
-                print("\n\n ======> USERS LIST <======")
+                logging.info("=====> USERS LIST <=====")
                 for user in users:
-                    print(user.to_dict())
-                
-                print('\n\n =====> REVOKED JWT Tokens <=====')
+                    logging.info(user.to_dict())
+                print('\n\n')
+                logging.info("=====> REVOKED JWT Tokens <=====")
                 #for token in revoked_tokens:
                 #    print(token)
                 print('\n\n')
                 #print(f"CORS-ORIGIN: {app.config['CORS_ORIGIN']}")
             except Exception as e:
-                print(f"Error to get Users. {str(e)}")
+                logging.error(f"Error retrieving users or revoked tokens: {str(e)}")
 
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['AUDIOBOOKS_FOLDER'], exist_ok=True)
